@@ -1,0 +1,19 @@
+__pycache__/
+db.sqlite3
+
+# migration
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+*.so
+*.vscode
