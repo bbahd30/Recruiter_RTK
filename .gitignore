@@ -1,13 +1,12 @@
 __pycache__/
 db.sqlite3
-config.py
+*.gitignore
 # migration
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
-
 # Environments
-.env
+*.env
 .venv
 env/
 venv/
