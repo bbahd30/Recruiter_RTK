@@ -10,7 +10,7 @@ class Member(AbstractUser):
     name = models.CharField(max_length=40)
     enroll_no = models.IntegerField(null = True, blank=True)
     profile_pic = models.ImageField(upload_to = '', blank = True, null=True)
-    recruitment_year = models.PositiveSmallIntegerField(blank=True, null=True)    
+    college_joining_year = models.PositiveSmallIntegerField(blank=True, null=True)    
     academic_year = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
@@ -37,7 +37,8 @@ class Round(models.Model):
     )
     round_name = models.CharField(max_length=100)
     round_type = models.CharField(max_length=20, choices=round_choices, default="int")
-    season_id = models.OneToOneField(Season, on_delete=CASCADE)
+    # can this be a foreign key?
+    season_id = models.ManyToManyField(Season)
 
     def __str__(self):
         return self.round_name 
@@ -79,10 +80,14 @@ class Applicant(models.Model):
     )
     role = models.CharField(max_length=15, choices= role_choices, default="dev")
     project = models.BooleanField(default=False)
-    projectLink = models.CharField(max_length=500)
-    cg = models.IntegerField(blank=True)
+    projectLink = models.CharField(max_length=500, null=True, blank=True)
+    cg = models.IntegerField(blank=True, null=True)
     status = models.ForeignKey(Round, on_delete=CASCADE)        # at which round the student has reached
     
+    # phone_no = models.IntegerField(blank= True, null = True, unique = True)
+    # converted season_id to foreign key
+    season_id = models.ForeignKey(Season, on_delete = CASCADE)
+
     def __str__(self):
         return self.name
 
@@ -95,7 +100,8 @@ class InterviewPanel(models.Model):
     name = models.CharField(max_length=30)
     status = models.CharField(max_length=12, choices=status_choices, default=2)
     members = models.ManyToManyField(Member)
-    location = models.CharField(max_length=80)
+    location = models.CharField(max_length=100)
+    applicant_id = models.ManyToManyField(Applicant)
 
     def __str__(self):
         return self.name
@@ -107,9 +113,9 @@ class Interview(models.Model):
     )
     # accepted, rejected
     status = models.CharField(max_length=20, choices=status_choice, default=0)
-    remarks = models.CharField(max_length=500)
+    remarks = models.CharField(max_length=500, null = True, blank = True)
     round_id = models.ForeignKey(Round, on_delete=CASCADE)
-    marks = models.FloatField()
+    marks = models.FloatField(null = True, blank = True)
     time_slot = models.TimeField()
     interview_panel_id = models.ManyToManyField(InterviewPanel)
 
@@ -122,6 +128,7 @@ class Score(models.Model):
         Stores the score and remarks
     '''
     question_id = models.ManyToManyField(Question)
+    # Converting many to many field to foreign key for student id so that the student id can provide access
     student_id = models.ManyToManyField(Applicant)
     marks_awarded = models.FloatField()
     remarks = models.CharField(max_length=50)
