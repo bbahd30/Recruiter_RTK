@@ -7,6 +7,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.staticfiles.views import serve
 from django.conf.urls.static import static
 from . import settings
+from django.views.generic import TemplateView
 
 # router = DefaultRouter()
 # router.register(r'members', MemberViewset, basename='members')
@@ -21,8 +22,8 @@ from . import settings
 
 router = DefaultRouter()
 
-router.register(r'seasons/(?P<year>[0-9]+)/applicants', ApplicantViewsetImpData, basename='applicants'),
-# router.register()
+
+# router.register(r'frontend/', index, basename='index')
 
 
 router.register(r'seasons', SeasonViewset, basename='seasons')
@@ -37,9 +38,15 @@ router.register(r'interview', InterviewViewset, basename='interview')
 router.register(r'scores', ScoreViewset, basename='scores')
 
 urlpatterns = [
+    # path('login/', index, name = 'index'),
+    # path('', TemplateView.as_view(template_name="../../frontend/build/index.html")),
+    re_path(r'^seasons/(?P<year>[0-9]+)/applicants/$', ApplicantViewsetImpData.as_view({
+        'get':'get_data'
+    }), name='get_data'),
+
     path('admin/', admin.site.urls),
     path('enter/', enter, name='enter'),
-    path('loginpage/', loginpage, name='loginpage'),
+    path('login/', loginpage, name='loginpage'),
     path('authorize/', authorize, name='authorize'),
     path('dashboard/', dashboard, name='dashboard'),
 
