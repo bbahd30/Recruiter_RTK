@@ -9,26 +9,8 @@ from django.conf.urls.static import static
 from . import settings
 from django.views.generic import TemplateView
 
-# router = DefaultRouter()
-# router.register(r'members', MemberViewset, basename='members')
-# router.register(r'seasons', SeasonViewset, basename='seasons')
-# router.register(r'rounds', RoundViewset, basename='rounds')
-# router.register(r'sections', SectionViewset, basename='sections')
-# router.register(r'questions', QuestionViewset, basename='questions')
-# router.register(r'applicants', ApplicantViewset, basename='applicants')
-# router.register(r'interviewPanels', InterviewPanelViewset, basename='interviewPanels')
-# router.register(r'interview', InterviewViewset, basename='interview')
-# router.register(r'scores', ScoreViewset, basename='scores')
-
 router = DefaultRouter()
-
-
-# router.register(r'frontend/', index, basename='index')
-
-
-router.register(r'seasons', SeasonViewset, basename='seasons')
-
-
+# router.register(r'seasons', SeasonViewset, basename='seasons')
 router.register(r'members', MemberViewset, basename='members')
 router.register(r'rounds', RoundViewset, basename='rounds')
 router.register(r'sections', SectionViewset, basename='sections')
@@ -38,21 +20,34 @@ router.register(r'interview', InterviewViewset, basename='interview')
 router.register(r'scores', ScoreViewset, basename='scores')
 
 urlpatterns = [
-    # path('login/', index, name = 'index'),
-    # path('', TemplateView.as_view(template_name="../../frontend/build/index.html")),
-    re_path(r'^seasons/(?P<year>[0-9]+)/applicants/$', ApplicantViewsetImpData.as_view({
-        'get':'get_data'
-    }), name='get_data'),
-
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('enter/', enter, name='enter'),
     path('login/', loginpage, name='loginpage'),
     path('authorize/', authorize, name='authorize'),
     path('dashboard/', dashboard, name='dashboard'),
-
-    path('', include(router.urls)),
     path('auth/', include('rest_framework.urls')),
-    path('logout/', logout_member, name = 'logout_member')
+    path('logout/', logout_member, name = 'logout_member'),
+
+    # re_path(r'^seasons/(?P<season_id>[0-9]+)/(applicants/(?P<applicant_id>[0-9]+)/)$',ApplicantViewsetImpData.as_view
+    # re_path(r'^seasons(/?P<season_id>[0-9]+(/applicants)?)?/?$',ApplicantViewsetImpData.as_view
+    # ({
+    #      'get':'get_data'
+    # }), name='get_data'),
+
+        # re_path(r'^seasons/(?P<season_id>[0-9]+)?/?(applicants/?(?P<applicant_id>[0-9]+)?)?/?$',
+
+    re_path(r'^seasons/(?P<season_id>[0-9]+/?(applicants/?(?P<applicant_id>[0-9]+)?)?)?/?$',
+    ApplicantViewsetImpData.as_view
+    ({
+         'get':'get_data'
+    }), name='get_data'),
+
+    
+    # re_path(r'^seasons/(?P<season_id>[0-9]+)?(/applicants)?/(?P<applicant_id>[0-9]+)?/$',ApplicantViewsetImpData.as_view
+    # ({
+    #      'get':'get_data'
+    # }), name='get_data')
 ]
 
 urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))

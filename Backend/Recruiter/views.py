@@ -136,12 +136,25 @@ class QuestionViewset(viewsets.ModelViewSet):
 class ApplicantViewsetImpData(viewsets.ModelViewSet):
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializerImpData
+    # permission_classes = 
 
     @action(detail=False, methods=['get'])
-    def get_data(self,request,year):
-        print("jslfj")
-        print(year)
-        return HttpResponse("hoi")
+    def get_data(self, request, **kwargs):
+        # students = Applicant.objects.filter(season_id=season_id)
+        print(kwargs['season_id'])
+        try:
+            print(len(kwargs['season_id'])) 
+        except:
+            print("lsfjsl")  
+        return Response("sjll")
+        # if not applicant_id:
+        #     applicants_data = ApplicantSerializerImpData(students, many=True).data
+        #     return Response(applicants_data)
+        # else:
+        #     applicant_data = ApplicantSerializerImpData(students.filter(id=applicant_id), many=True).data
+        #     return Response(applicant_data)
+
+
         
 # class ApplicantViewset(viewsets.ModelViewSet):
 #     queryset = Applicant.objects.all()
