@@ -1,4 +1,3 @@
-from this import d
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .links import client_data
@@ -134,36 +133,40 @@ class QuestionViewset(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
 
 class ApplicantViewsetImpData(viewsets.ModelViewSet):
+    '''
+        ApplicantViewset for Imp data, only accessible to the 3rd or 4th yearites, so applying the permission class, so made a different viewset, so that the access to others is not given by the has_permission method. 
+    '''
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializerImpData
-    # permission_classes = 
+    # permission_classes = [ImpDataPermission]
+
+class SeasonWiseViewset(viewsets.ModelViewSet):
+    queryset = Season.objects.all()
+    serializer_class = SeasonSerializer
+    permission_classes = [ImpDataPermission]
 
     @action(detail=False, methods=['get'])
     def get_data(self, request, **kwargs):
-        # students = Applicant.objects.filter(season_id=season_id)
-        print(kwargs['season_id'])
-        try:
-            print(len(kwargs['season_id'])) 
-        except:
-            print("lsfjsl")  
-        return Response("sjll")
-        # if not applicant_id:
-        #     applicants_data = ApplicantSerializerImpData(students, many=True).data
-        #     return Response(applicants_data)
-        # else:
-        #     applicant_data = ApplicantSerializerImpData(students.filter(id=applicant_id), many=True).data
-        #     return Response(applicant_data)
-
-
-        
-# class ApplicantViewset(viewsets.ModelViewSet):
-#     queryset = Applicant.objects.all()
-#     serializer_class = ApplicantSerializerImpData
-#     # permission_classes = [UnableToSeePreviousSeason,IsAbleToSeePersonalInfo,]
-    
-
-#     # def get_applicant(request, year, id):
-#     #     print("hey oc")
+        if not kwargs:
+            season_data = SeasonSerializer(Season.objects.all(), many = True)
+            return Response(season_data.data)
+        else:
+            s_id = kwargs.get('season_id')
+            if len(kwargs) == 1:
+                season_data = SeasonSerializer(Season.objects.get(id = s_id))                    
+                return Response(season_data.data)
+            else:
+                model = kwargs.get('model')
+                if model == 'applicants':
+                    model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id), many = True)
+                    print(kwargs)
+                    if len(kwargs) == 2:
+                        return Response(model_data.data)
+                    else:
+                        print(model_data)
+                        model_id = kwargs.get('model_id')
+                        model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id).filter(id = model_id), many = True)
+                        return Response(model_data.data)
 
 
 class InterviewPanelViewset(viewsets.ModelViewSet):
@@ -173,12 +176,12 @@ class InterviewPanelViewset(viewsets.ModelViewSet):
 class InterviewViewset(viewsets.ModelViewSet):
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer
-    permission_classes = [IsAbleToSeePersonalInfo,UnableToSeePreviousSeason]
+    permission_classes = [IsAbleToSeePersonalInfo]
 
 class ScoreViewset(viewsets.ModelViewSet):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
-    permission_classes = [IsAbleToSeePersonalInfo, UnableToSeePreviousSeason]
+    permission_classes = [IsAbleToSeePersonalInfo]
 
 
 

@@ -7,7 +7,6 @@ from django.views.decorators.cache import cache_control
 from django.contrib.staticfiles.views import serve
 from django.conf.urls.static import static
 from . import settings
-from django.views.generic import TemplateView
 
 router = DefaultRouter()
 # router.register(r'seasons', SeasonViewset, basename='seasons')
@@ -28,26 +27,34 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('auth/', include('rest_framework.urls')),
     path('logout/', logout_member, name = 'logout_member'),
+    # note:
+    # '''
+    #     This one captures the applicant keyword after the season_id hence telling whether to show applicants of that season or not or only that season data
+    #     As gives the kwargs to be '1/applicants' instead of '1'
+    #     re_path(r'^seasons/(?P<season_id>[0-9]+/?(applicants/?(?    P<applicant_id>[0-9]+)?)?)?/?$',
+    #     ApplicantViewsetImpData.as_view
+    #     ({
+    #          'get':'get_data'
+    #     }), name='get_data'),
+    # '''
 
-    # re_path(r'^seasons/(?P<season_id>[0-9]+)/(applicants/(?P<applicant_id>[0-9]+)/)$',ApplicantViewsetImpData.as_view
-    # re_path(r'^seasons(/?P<season_id>[0-9]+(/applicants)?)?/?$',ApplicantViewsetImpData.as_view
+    # note:
+    # '''
+    #     Works by giving only the ids in kwargs
+    # '''
+    # re_path(r'^seasons/(?P<season_id>[0-9]+)?(/applicants/(?P<applicant_id>[0-9]+)?)?/?$',
+    # ApplicantViewsetImpData.as_view
     # ({
     #      'get':'get_data'
     # }), name='get_data'),
 
-        # re_path(r'^seasons/(?P<season_id>[0-9]+)?/?(applicants/?(?P<applicant_id>[0-9]+)?)?/?$',
-
-    re_path(r'^seasons/(?P<season_id>[0-9]+/?(applicants/?(?P<applicant_id>[0-9]+)?)?)?/?$',
-    ApplicantViewsetImpData.as_view
+    # note:
+    # Final regex which captures the models name as well with the season id whose data has to be displayed
+    re_path(r'^seasons/(?P<season_id>[0-9]+)?/?(?P<model>[A-Za-z]+)?/?(?P<model_id>[0-9]+)?/?$',
+    SeasonWiseViewset.as_view
     ({
          'get':'get_data'
     }), name='get_data'),
 
-    
-    # re_path(r'^seasons/(?P<season_id>[0-9]+)?(/applicants)?/(?P<applicant_id>[0-9]+)?/$',ApplicantViewsetImpData.as_view
-    # ({
-    #      'get':'get_data'
-    # }), name='get_data')
 ]
-
 urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))
