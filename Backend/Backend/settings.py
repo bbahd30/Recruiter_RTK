@@ -15,12 +15,22 @@ SECRET_KEY = 'django-insecure-t@1&^^2b)fva+02q^*7$yf^zj74q38*rx^2@a@qyfn9*h-#h-o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# note:
+ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = (
+    'http://localhost:3000',
+    'http://10.26.2.242:3000'
+)
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000'
+)
 AUTH_USER_MODEL = 'Recruiter.Member'
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,6 +47,8 @@ REST_FRAMEWORK = {
      
 }
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,9 +130,9 @@ STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = (
-os.path.join(BASE_DIR, 'static'),
-)
+# STATICFILES_DIRS = (
+# os.path.join(BASE_DIR, 'static'),
+# )
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
