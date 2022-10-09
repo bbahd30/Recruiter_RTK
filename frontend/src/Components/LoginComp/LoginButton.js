@@ -21,7 +21,7 @@ const LoginButton = () => {
                         </Grid>
                         <Grid item>
                             <form >
-                                <a href={Links.login_link} style={{textDecoration: "none"}}>
+                                <a href={Links.authorize} style={{textDecoration: "none"}}>
                                     <Button style=  {{
                                         borderRadius: 35,
                                         backgroundColor: "#21b6ae",

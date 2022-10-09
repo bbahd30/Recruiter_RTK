@@ -1,8 +1,9 @@
 // import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
-import LoginButton from './Components/LoginComponent/LoginButton';
-import Login from './Components/LoginComponent/Login'
+import LoginButton from './Components/LoginComp/LoginButton';
+import Login from './Components/LoginComp/Login'
+import MainScreen from './Components/DashboardComponents/MainScreen';
 
 function App()
 {
@@ -14,6 +15,7 @@ function App()
         <Routes>
           <Route path="/" element={<LoginButton />} />  
           <Route path="/login/" element={<Login />} />
+          <Route path='/dashboard/' element={<MainScreen />} />
         </Routes>
     </BrowserRouter>
     
