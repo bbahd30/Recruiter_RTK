@@ -1,0 +1,51 @@
+{
+    'userId': 15555,
+    'username': '21114028', 
+    'person': 
+        {
+            'shortName': '', 
+            'fullName': 'Bhoomi Bonal', 
+            'roles': [
+                    {
+                        'role': 'Student', 
+                        'activeStatus': 'ActiveStatus.IS_ACTIVE'
+                    }, 
+                    {
+                        'role': 'Maintainer', 
+                        'activeStatus': 'ActiveStatus.IS_ACTIVE'
+                    }], 
+            'customRoles': [], 
+            'displayPicture': '/media/kernel/display_pictures/88404153-a434-4763-a0c7-45a749f0e400.jpg'
+        }, 
+        
+        'student': {
+                        'startDate': '2021-11-27', 
+                        'enrolmentNumber': '21114028', 
+                        'branch name': 'B.Tech. (Computer Science and Engineering)', 
+                        'branch degree name': 'B.Tech. - Bachelor of Technology', 
+                        'currentYear': 2, 
+                        'currentSemester': 3, 
+                        'branch department name': 'Computer Science and Engineering Department', 
+                        'endDate': None
+                    },
+        'biologicalInformation': 
+                    {
+                        'dateOfBirth': '2003-12-30', 
+                        'bloodGroup': 'B+'
+                    }, 
+        'contactInformation': 
+                {
+                    'emailAddress': 'bhoomibonalahd30@gmail.com', 
+                    'emailAddressVerified': False, 
+                    'primaryPhoneNumber': '9456037622', 
+                    'instituteWebmailAddress': 'b_bonal@cs.iitr.ac.in', 
+                    'secondaryPhoneNumber': '9756201301'
+                }, 
+
+        'residentialInformation': 
+                        {
+                            'residence name': 'Non-resident', 
+                            'roomNumber': ''
+                        }, 
+                    'socialInformation': {}
+}
