@@ -36,16 +36,22 @@ router.register(r'interviewPanels', InterviewPanelViewset, basename='interviewPa
 router.register(r'interview', InterviewViewset, basename='interview')
 router.register(r'scores', ScoreViewset, basename='scores')
 
-urlpatterns = [
+urlpatterns = [ 
     path('admin/', admin.site.urls),
     path('enter/', enter, name='enter'),
-    path('loginpage/', loginpage, name='loginpage'),
+    path('checkStatus/', checkStatus, name='checkStatus'),
     path('authorize/', authorize, name='authorize'),
-    path('dashboard/', dashboard, name='dashboard'),
 
     path('', include(router.urls)),
     path('auth/', include('rest_framework.urls')),
-    path('logout/', logout_member, name = 'logout_member')
+    path('logout/', logout_member, name = 'logout_member'),
+
+    path('loginpage/', firstPage, name='firstPage'),
+    path('dashboard/', dashboard, name='dashboard'),
+    # path('login/', views.login_view, name='api-login'),
+    # path('logout/', views.logout_view, name='api-logout'),
+    # path('session/', views.session_view, name='api-session'),
+    # path('whoami/', views.whoami_view, name='api-whoami'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))

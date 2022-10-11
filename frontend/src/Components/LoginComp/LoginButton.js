@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Paper, Button } from '@mui/material';
 import * as Links from "../../Links";
+import LoginStatus from './LoginStatus';
 
 const LoginButton = () => {
 
@@ -11,7 +12,9 @@ const LoginButton = () => {
         margin: '20vh auto',
     }
     return (
+
         <div>
+            <LoginStatus />
             <Grid>
                 <Paper elevation= {3} style = {BoxStyle}>
                     <Grid style={{position: 'relative', top: '110px'}}>
