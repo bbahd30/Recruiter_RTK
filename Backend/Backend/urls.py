@@ -2,6 +2,7 @@ from unicodedata import name
 from django.contrib import admin
 from django.urls import path, include, re_path
 from Recruiter.views import *
+from Recruiter.userViews import *
 from rest_framework.routers import DefaultRouter
 from django.views.decorators.cache import cache_control
 from django.contrib.staticfiles.views import serve
@@ -22,7 +23,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('enter/', enter, name='enter'),
-    path('login/', loginpage, name='loginpage'),
+    # path('login/', enter, name='loginpage'),
     path('authorize/', authorize, name='authorize'),
     path('dashboard/', dashboard, name='dashboard'),
     path('auth/', include('rest_framework.urls')),

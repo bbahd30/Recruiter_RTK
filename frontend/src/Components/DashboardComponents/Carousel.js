@@ -64,7 +64,6 @@ const Carousel = () =>
       .then((response) =>
       {
         setSeason(response.data)
-        console.log(response.data)
       })
       .catch((error) =>
       {
