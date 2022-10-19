@@ -1,14 +1,12 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import * as Links from '../../Links'
 import { Navigate, useNavigate } from 'react-router-dom';
 
-const Login = () =>
-{
+const Login = () => {
     const [member, setStatus] = useState({ "status": "loggedOut" });
     const navigate = useNavigate();
-    useEffect(() =>
-    {
+    useEffect(() => {
         console.log("*************************************")
         let params = new URLSearchParams(window.location.search);
         let auth_code = params.get("code");
@@ -21,26 +19,21 @@ const Login = () =>
                         withCredentials: true
                     }
                 })
-            .then((res) =>
-            {
+            .then((res) => {
                 console.log(res);
-                if (res.status === 201 || res.status === 202)
-                {
-                    if (res.data.status === "loggedInNow")
-                    {
+                if (res.status === 201 || res.status === 202) {
+                    if (res.data.status === "loggedInNow") {
                         setStatus({ "status": "loggedIn" })
                         navigate(`/seasons`);
                         console.log("towards seasons")
                     }
-                    else
-                    {
+                    else {
                         navigate(`/`);
                     }
                 }
             })
             // todo:
-            .catch((error) =>
-            {
+            .catch((error) => {
                 console.log(error);
             });
     }, []);

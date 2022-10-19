@@ -1,26 +1,27 @@
 import { AppBar, Avatar, Button, Paper, Toolbar, Typography, Container } from '@mui/material';
 import React from 'react';
 import Icon from '@mui/material/Icon';
-// import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
+import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 // import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-const Navbar = () => {
+const Navbar = () =>
+{
     return (
         <>
-            <AppBar position='static' sx={{background: '#21b6ae'}}>
-                <Toolbar sx={{display: 'flex', justifyContent: "space-between"}}>
-                    <Typography variant="h5" sx={{ display: {sm: "block" } }}>
+            <AppBar position='static' sx={{ background: '#21b6ae' }}>
+                <Toolbar sx={{ display: 'flex', justifyContent: "space-between" }}>
+                    <Typography variant="h5" sx={{ display: { sm: "block" } }}>
                         Recruiter
                     </Typography>
-                    {/* <WorkHistoryIcon /> */}
+                    <WorkHistoryIcon />
 
-                    <Avatar 
+                    <Avatar
                         sx={{ width: 30, height: 30 }}
                         src="https://www.pngitem.com/pimgs/m/421-4213036_avatar-hd-png-download.png"
                     />
-                    
+
                 </Toolbar>
-                
+
             </AppBar>
         </>
     );
@@ -29,7 +30,7 @@ const Navbar = () => {
 export default Navbar;
 
 
-{/* <WorkHistoryIcon /> */}
+{/* <WorkHistoryIcon /> */ }
 //                     //     <Typography component={'span'}>Recruiter</Typography>
 //                     // </div>
 
