@@ -38,18 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Recruiter',
     'rest_framework',
-    'Recruiter.apps.RecruiterConfig',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'], 
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny', ),
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer"
-    ],
-}
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
      
+}
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
@@ -134,9 +131,9 @@ STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
-# STATICFILES_DIRS = (
-# os.path.join(BASE_DIR, 'static'),
-# )
+STATICFILES_DIRS = (
+os.path.join(BASE_DIR, 'static'),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
