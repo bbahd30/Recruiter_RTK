@@ -46,7 +46,6 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
     path('logout/', logout_member, name = 'logout_member'),
 
-    path('loginpage/', firstPage, name='firstPage'),
     path('dashboard/', dashboard, name='dashboard'),
     # path('login/', views.login_view, name='api-login'),
     # path('logout/', views.logout_view, name='api-logout'),

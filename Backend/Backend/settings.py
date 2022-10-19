@@ -16,16 +16,17 @@ SECRET_KEY = 'django-insecure-t@1&^^2b)fva+02q^*7$yf^zj74q38*rx^2@a@qyfn9*h-#h-o
 DEBUG = True
 
 # note:
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+]
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = (
+CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://10.26.2.242:3000'
-)
+]
 
-CORS_ORIGIN_WHITELIST = (
+CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
-)
+]
 AUTH_USER_MODEL = 'Recruiter.Member'
 # Application definition
 
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'], 
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny', ),
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer"
     ],

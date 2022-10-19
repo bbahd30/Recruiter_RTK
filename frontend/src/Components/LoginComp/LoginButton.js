@@ -3,7 +3,8 @@ import { Grid, Paper, Button } from '@mui/material';
 import * as Links from "../../Links";
 import LoginStatus from './LoginStatus';
 
-const LoginButton = () => {
+const LoginButton = () =>
+{
 
     const BoxStyle = {
         height: '45vh',
@@ -16,21 +17,21 @@ const LoginButton = () => {
         <div>
             <LoginStatus />
             <Grid>
-                <Paper elevation= {3} style = {BoxStyle}>
-                    <Grid style={{position: 'relative', top: '110px'}}>
-                        
+                <Paper elevation={3} style={BoxStyle}>
+                    <Grid style={{ position: 'relative', top: '110px' }}>
+
                         <Grid item>
-                            <h2>Welcome to Recruiter</h2> 
+                            <h2>Welcome to Recruiter</h2>
                         </Grid>
                         <Grid item>
                             <form >
-                                <a href={Links.authorize} style={{textDecoration: "none"}}>
-                                    <Button style=  {{
+                                <a href={Links.authorize} style={{ textDecoration: "none" }}>
+                                    <Button style={{
                                         borderRadius: 35,
                                         backgroundColor: "#21b6ae",
                                         padding: "18px 36px",
                                         fontSize: "18px"
-                                    }}variant="contained">
+                                    }} variant="contained">
                                         Sign in using Omniport
                                     </Button>
                                 </a>
