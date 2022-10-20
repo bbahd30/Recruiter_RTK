@@ -1,11 +1,13 @@
 import React from 'react';
 import Slider from "react-slick";
 import { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Links from '../../Links';
-
-
+import AddIcon from '@mui/icons-material/Add';
+import CustomizedDialogs from './Dialog';
+import LoginButton from '../LoginComp/LoginButton';
+import AddSeasonForm from './AddSeasonForm';
 const Carousel = () =>
 {
   var settings =
@@ -76,39 +78,58 @@ const Carousel = () =>
     navigate(`/seasons/${id}`);
   }
 
+  const addSeasonFunction = () =>
+  {
+
+  }
 
   useEffect(() =>
   {
     fetchSeasonData();
   }, []);
 
-
   return (
     <>
-      <h1>SEASONS</h1>
+      {/* <h1>SEASONS</h1> */}
       <div className='seasonCont'>
 
-        <Slider {...settings}>
-          {seasons.map(season =>
-          (
-            <div className='seasonCard' key={season.id} id={"season" + season.id} onClick={() => { navigateToSeason(season.id) }}>
-              <div className='season-year'>{season.year}</div>
-              <div className='season-name'>
-                {season.season_name}
-              </div>
-              <div className='season-image'>
-                <img
-                  src={require('../../Images/2019.png')}
-                  width={"80px"} height={"70px"} />
-              </div>
-              <div className='season-description'>
-                {season.description}
-              </div>
+        <Slider {...settings} className="slider">
+          {
+            seasons.map(season =>
+            (
+              <div className='seasonCard' key={season.id} id={"season" + season.id} onClick={() => { navigateToSeason(season.id) }}>
+                <div className='season-year'>{season.year}</div>
+                <div className='season-name'>
+                  {season.season_name}
+                </div>
+                <div className='season-image'>
+                  <img
+                    src={require('../../Images/2019.png')}
+                    width={"80px"} height={"70px"} />
+                </div>
+                <div className='season-description'>
+                  {season.description}
+                </div>
 
-            </div>
-          ))}
+              </div>
+            ))}
         </Slider>
-      </div >
+        <div>
+          <CustomizedDialogs
+            buttonChild=
+            {
+              <AddIcon sx={{ fontSize: "50px" }} />
+            }
+            dataChild=
+            {
+              <AddSeasonForm />
+            }
+            title="Add Season" />
+
+
+        </div>
+
+      </div>
     </>
   );
 };

@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import * as Links from '../../Links';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-
+import LoginStatus from '../LoginComp/LoginStatus';
+import Navbar from './Navbar';
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
 {
@@ -26,7 +27,6 @@ const Dashboard = (props) =>
 {
     const [season, setSeason] = useState([]);
     const [applicants, setApplicants] = useState([]);
-
     const { id } = useParams();
 
     const getSeasonData = () =>
@@ -52,14 +52,14 @@ const Dashboard = (props) =>
     useEffect(() =>
     {
         // defining the season_id for backend data
-        console.log(id)
         getSeasonData();
         getApplicantsData();
     }, []);
 
     return (
         <div>
-
+            <LoginStatus />
+            <Navbar />
         </div>
     );
 };
