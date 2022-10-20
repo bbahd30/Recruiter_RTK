@@ -1,11 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import * as Links from '../../Links';
+import axios from 'axios';
+import { Grid, Paper, Button } from '@mui/material';
+import TextField from '@mui/material/TextField';
 
 const AddSeason = () =>
 {
-    const initial = { year: "", name: "", description: "" };
+    const paperStyle =
+    {
+        padding: '10px 20px',
+        width: '20vw'
+    }
+    const initial = { year: "", seasonName: "", description: "" };
     const [formValues, setFormValues] = useState(initial);
     const [formErrors, setFormErrors] = useState([]);
-    const [isSubmit, setIsSubmit] = useState(false);
+    const [added, setAdded] = useState(false);
+    const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+
+    const handleChange = (e) =>
+    {
+        const { name, value } = e.target;
+        setFormValues({ ...formValues, [name]: value });
+        setIsSubmitClicked(true);
+    }
+
+    const handleSubmit = (e) =>
+    {
+        e.preventDefault();
+        setFormErrors(validate(formValues));
+    }
 
     const validate = (values) =>
     {
@@ -20,74 +43,107 @@ const AddSeason = () =>
         {
             errors.year = "Enter a valid year.";
         }
-        if (!values.name)
+        if (!values.seasonName)
         {
-            errors.name = "Season name is required";
+            errors.seasonName = "Season name is required";
         }
         return errors;
     }
 
-    // for getting input from the user
-    const handleChange = (e) =>
+    const saveToData = (formValues) =>
     {
-        const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value });
-        console.log(formValues);
-    }
-
-    const handleSubmit = (e) =>
-    {
-        console.log(formValues)
-        e.preventDefault();
-        setFormErrors(validate(formValues));
-        setIsSubmit(true);
+        const url = Links.seasons_api;
+        axios
+            .post
+            (
+                url,
+                {
+                    year: formValues.year,
+                    season_name: formValues.seasonName,
+                    description: formValues.description
+                })
+            .then
+            ((response) =>
+            {
+                if (response.data['msg'] === "Season Added")
+                {
+                    setAdded(true);
+                }
+            })
     }
 
     useEffect(() =>
     {
-        if (Object.keys(formErrors).length === 0 && isSubmit)
+        if (Object.keys(formErrors).length === 0 && isSubmitClicked)
         {
-            // redirect 
+            saveToData(formValues);
+            setFormValues({ year: "", seasonName: "", description: "" });
+            setTimeout(() =>
+            {
+                setAdded(false);
+            }, (4000));
         }
     }, [formErrors])
+
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <div className='field'>
-                    <label>Season year</label>
-                    <input
-                        type="year"
-                        name="year"
-                        placeholder='Year'
-                        value={formValues.year}
-                        onChange={handleChange}
-                    />
-                    <p>{formErrors.year}</p>
-                </div>
-                <div className='field'>
-                    <label>Season Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder='Season Name'
-                        value={formValues.name}
-                        onChange={handleChange}
-                    />
-                    <p>{formErrors.name}</p>
-                </div>
-                <div className='field'>
-                    <label>Season Description</label>
-                    <input
-                        type="text"
-                        name="description"
-                        placeholder='Season Description'
-                        value={formValues.description}
-                        onChange={handleChange}
-                    />
-                </div>
-            </div>
-            <button type='submit' onClick={handleSubmit}>Add</button>
-        </form>
+        <Grid textAlign={'center'}>
+            <Paper elevation={0} style={paperStyle}>
+
+                {added ?
+                    (
+                        <Button variant="text" type='submitClicked' sx={{ marginBottom: "30px" }} transition="all .2s"
+                        >Season successfully added</Button>
+                    )
+                    :
+                    <div></div>}
+
+                <Grid>
+                    <form onSubmit={handleSubmit} alignitem={'center'}>
+                        <TextField
+                            id="outlined-basic"
+                            label="Season Year"
+                            placeholder='Enter Season Year'
+                            variant="outlined"
+                            fullWidth
+                            onChange={handleChange}
+                            name="year"
+                            value={formValues.year}
+                            error={Boolean(formErrors.year)}
+                            sx={{ marginBottom: '20px' }}
+                            helperText={formErrors.year}
+                        />
+                        <TextField
+                            id="outlined-basic"
+                            label="Season Name"
+                            placeholder='Enter Season Name'
+                            variant="outlined"
+                            fullWidth
+                            onChange={handleChange}
+                            name="seasonName"
+                            value={formValues.seasonName}
+                            error={Boolean(formErrors.seasonName)}
+                            sx={{ marginBottom: '20px' }}
+                            helperText={formErrors.seasonName}
+                        />
+                        <TextField
+                            id="outlined-basic"
+                            label="Season Description"
+                            placeholder='Enter Season Description'
+                            variant="outlined"
+                            fullWidth
+                            onChange={handleChange}
+                            name="description"
+                            value={formValues.description}
+                            error={Boolean(formErrors.description)}
+                            sx={{ marginBottom: '20px' }}
+                            helperText={formErrors.description}
+                        />
+                        <Button variant="contained" type='submitClicked' onClick={handleSubmit} sx={{ marginTop: '30px' }}>Add</Button>
+
+                    </form>
+                </Grid>
+            </Paper>
+        </Grid >
     );
 };
 

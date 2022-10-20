@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .links import client_data
 from Recruiter.models import Member
+from rest_framework import status
 import requests
 from .serializers import *
 from rest_framework import viewsets
@@ -72,6 +73,43 @@ class SeasonWiseViewset(viewsets.ModelViewSet):
                         model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id).filter(id = model_id), many = True)
                         return Response(model_data.data)
 
+    @action(detail=False, methods=['post'])
+    def post(self, request, **kwargs):
+        if self.request.method == 'POST':
+            if not kwargs:
+                print(request.data)
+                new_season = Season(
+                    year = request.data.get('year'),
+                    season_name = request.data.get('season_name'),
+                    description = request.data.get('description')
+                )
+                new_season.save();
+                return Response(
+                    {
+                        'msg' : "Season Added"
+                    },
+                    status= status.HTTP_201_CREATED
+                )
+            else:
+                s_id = kwargs.get('season_id')
+                if len(kwargs) == 1:
+                    # todo: will do nothing as asked a specific season
+                    return Response(
+                        {
+                            'msg': "Invalid Post Request"
+                        }, 
+                        status= status.HTTP_400_BAD_REQUEST
+                    )
+                else:
+                    model = kwargs.get('model')
+                    if model == 'applicants':
+                        if len(kwargs) == 2:
+                            new_applicant = Applicant(
+                                
+                            )
+                            new_applicant.save();
+                            return Response("Added applicant")
+        return Response("Invalid Request")
 
 class InterviewPanelViewset(viewsets.ModelViewSet):
     queryset = InterviewPanel.objects.all()

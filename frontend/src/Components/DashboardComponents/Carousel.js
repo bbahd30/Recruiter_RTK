@@ -78,11 +78,6 @@ const Carousel = () =>
     navigate(`/seasons/${id}`);
   }
 
-  const addSeasonFunction = () =>
-  {
-
-  }
-
   useEffect(() =>
   {
     fetchSeasonData();
@@ -124,7 +119,8 @@ const Carousel = () =>
             {
               <AddSeasonForm />
             }
-            title="Add Season" />
+            title="Add Season"
+          />
 
 
         </div>

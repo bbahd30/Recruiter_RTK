@@ -80,7 +80,7 @@ export default function CustomizedDialogs(props)
                 </DialogContent>
                 {/* <DialogActions>
                     <Button autoFocus onClick={handleClose}>
-                        
+
                     </Button>
                 </DialogActions> */}
             </BootstrapDialog>
