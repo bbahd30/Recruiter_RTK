@@ -1,9 +1,27 @@
+body
+{
+    font-family: 'Poppins', sans-serif;
+    /* overflow-x: hidden; */
+}
+
 :root
 {
   --green: #21b6ae;
 }
-
-.App {
+.navSection
+{
+  display: flex;
+}
+.logoSpan
+{
+  font-size: 50px;
+  font-weight: 900;
+}
+/* .App {
+  text-align: center;
+} */
+.loginButton
+{
   text-align: center;
 }
 /* 
