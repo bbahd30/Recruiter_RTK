@@ -67,7 +67,7 @@ function Dashboard(props)
     return (
         <div>
             <LoginStatus />
-            <SideBar />
+            <SideBar id={id} />
             <Box sx={{ backgroundColor: '#5b004c', padding: '50px 0 50px 20%', display: 'flex', justifyContent: 'space-around' }}>
                 <div>
                     <Typography variant='h5' color='white'>{season.year}</Typography>

@@ -11,12 +11,12 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Navbar from './Navbar';
+import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 
-export default function SideBar()
+export default function SideBar(props)
 {
     const [state, setState] = useState(false);
-
     const toggleDrawer = (open) => (event) =>
     {
         setState(open);
@@ -30,10 +30,24 @@ export default function SideBar()
         >
             <List>
                 <ListItem>
-                    <ListItemText>Dashboard</ListItemText>
+                    <Link to={"/seasons/" + props.id}>
+                        Dashboard
+                    </Link>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <Link to={"/seasons/" + props.id + "/rtstage"}>
+                            Rounds and Tests
+                        </Link>
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <Link to={"/seasons/" + props.id + "/interviewstage"}>
+                        Interview Round
+                    </Link>
                 </ListItem>
             </List>
-        </Box>
+        </Box >
     );
 
     return (

@@ -7,7 +7,7 @@ import * as Links from '../../Links';
 import AddIcon from '@mui/icons-material/Add';
 import CustomizedDialogs from './Dialog';
 import LoginButton from '../LoginComp/LoginButton';
-import AddSeasonForm from './AddSeasonForm';
+import AddSeasonForm from '../Forms/AddSeasonForm';
 const Carousel = () =>
 {
   var settings =

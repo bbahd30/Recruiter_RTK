@@ -19,9 +19,6 @@ function App()
           <Route path="/login/" element={<Login />} />
           <Route path='/seasons/' element={<SeasonScreen />} />
 
-          {/* <Route path='/seasons/:id' element={<Dashboard />}>
-            <Route path='rtstage' element={<RTStage />} />
-          </Route> */}
 
           <Route path='/seasons/:id'>
             <Route index element={<Dashboard />} />

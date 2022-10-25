@@ -111,8 +111,25 @@ body
 
 
 
+/* TEST SCREEN */
+.testScreen
+{
+  margin: 50px 20%;
+  border: 2px solid blueviolet;
+  padding: 20px;
+}
 
-
+.parentBtn
+{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.btn
+{
+  display: inline-block;
+  margin-top: 20px;
+}
 
 
 
