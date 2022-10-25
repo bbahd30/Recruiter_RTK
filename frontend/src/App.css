@@ -7,6 +7,7 @@ body
 :root
 {
   --green: #21b6ae;
+  --purple: #5b004c;
 }
 .navSection
 {
@@ -56,6 +57,7 @@ body
 .seasonCont
 {
   width: 90%;
+  text-align: center;
   margin: 0 auto;
   margin-top: 20vh;
   border: 5px solid var(--green);
@@ -99,7 +101,13 @@ body
 
 
 
-
+/* ApplicantData */
+.table
+{
+  border: 2px solid var(--purple);
+  border-radius: 18px;
+  margin: 40px;
+}
 
 
 

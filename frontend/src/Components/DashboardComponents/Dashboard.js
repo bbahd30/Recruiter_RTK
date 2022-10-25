@@ -1,12 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import * as Links from '../../Links';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import LoginStatus from '../LoginComp/LoginStatus';
 import SideBar from './SideBar';
-import { Box, display } from '@mui/system';
-import { Button, Table, Typography } from '@mui/material';
-import TabularData from '../TableComponents/TabularData';
+import { Box } from '@mui/system';
+import { Button, Typography } from '@mui/material';
+import ApplicantData from '../Stages/ApplicantData';
+import * as Links from '../../Links';
+import axios from 'axios';
+import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -27,7 +28,7 @@ function withRouter(Component)
     return ComponentWithRouterProp;
 }
 
-const Dashboard = (props) =>
+function Dashboard(props)
 {
     const [season, setSeason] = useState([]);
     const [applicants, setApplicants] = useState([]);
@@ -61,38 +62,7 @@ const Dashboard = (props) =>
         getApplicantsData();
     }, []);
 
-    const tableCells = [
-        {
-            id: 'Name',
-            numeric: false,
-            disablePadding: true,
-            label: 'Name',
-        },
-        {
-            id: 'Enrollment Number',
-            numeric: true,
-            disablePadding: false,
-            label: 'Enrollment Number',
-        },
-        {
-            id: 'Role',
-            numeric: true,
-            disablePadding: false,
-            label: 'Role',
-        },
-        {
-            id: 'Phone Number',
-            numeric: true,
-            disablePadding: false,
-            label: 'Phone Number',
-        },
-        {
-            id: 'Status',
-            numeric: true,
-            disablePadding: false,
-            label: 'Status',
-        },
-    ];
+
 
     return (
         <div>
@@ -111,9 +81,11 @@ const Dashboard = (props) =>
             </Box>
             <Box sx={{ backgroudColor: 'aqua' }} height='30px'>
                 {
-                    <TabularData data={applicants} tableCells={tableCells} />
+                    <ApplicantData data={applicants} />
                 }
             </Box>
+
+
         </div>
     );
 };
