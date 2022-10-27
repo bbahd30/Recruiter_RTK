@@ -3,20 +3,21 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SideBar from '../DashboardComponents/SideBar';
-import FormProvider from '../UtilityComponents/FormProvider';
 import * as Links from '../../Links';
+import CarouselProvider from '../UtilityComponents/CarouselProvider';
+import AddRoundForm from '../Forms/AddRoundForm';
+import { useNavigate } from 'react-router-dom';
 
 const RTStage = () =>
 {
-    const fields = [];
     const { id } = useParams();
-    const [forms, setForms] = useState([]);
     const [rounds, setRounds] = useState([]);
+    const navigate = useNavigate();
 
     const fetchRoundsData = () =>
     {
         axios
-            .get(Links.rounds_api)
+            .get(Links.seasons_api + `${id}/rounds/`)
             .then((response) =>
             {
                 console.log(response.data);
@@ -27,25 +28,52 @@ const RTStage = () =>
                 console.log(error);
             });
     }
+
     useEffect(() =>
     {
         fetchRoundsData();
     }, []);
 
+    const navigateToRound = (id, sId) =>
+    {
+        navigate(`../rounds/${id}`, { state: { sId: sId } });
+    }
+
+    const CarouselSlider = CarouselProvider();
+
     return (
-        <div>
+        <>
             <SideBar id={id} />
-            <Box sx={{ backgroudColor: "blue" }}>
-                {
-                    rounds.map(round =>
-                    (
-                        <div key={round.id}>
-                            {round.round_name}
-                        </div>
-                    ))
-                }
-            </Box>
-        </div>
+            <div className='carouselCont'>
+                <CarouselSlider formComponent={<AddRoundForm />} title="Add Round">
+                    {
+                        rounds.map(round =>
+                        ( //note: imp as not { it is (
+                            <div
+                                className='carouselCard'
+                                key={round.id}
+                                id={"round" + round.id}
+                                onClick={() => { navigateToRound(round.id, id) }}
+                            >
+                                {/* todo: add the round type */}
+                                <div className='season-name'>
+                                    {round.round_name}
+                                </div>
+                                <div className='carouselIndividualImg'>
+                                    {/* <img
+                                        src={require('')}
+                                        width={"80px"} height={"70px"} /> */}
+                                </div>
+                                <div className='carouselData'>
+                                    {(round.round_type === 'int' ? "Interview" : "Test")}
+                                </div>
+
+                            </div>
+                        ))
+                    }
+                </CarouselSlider>
+            </div>
+        </>
     );
 };
 

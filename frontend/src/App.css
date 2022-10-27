@@ -54,20 +54,20 @@ body
 
 
 /* note: for season screen */
-.seasonCont
+.carouselCont
 {
   width: 90%;
   text-align: center;
   margin: 0 auto;
   margin-top: 20vh;
-  border: 5px solid var(--green);
-  border-radius: 9px;
   padding: 50px 35px;
 }
-.seasonCard
+.carouselCard
 {
-  border: 3px solid var(--green);
+  padding: 10px;
+  border: transparent;
   border-radius: 8px;
+  border: 1px solid var(--purple);
   height: fit-content;
 }
 
@@ -77,20 +77,20 @@ body
   font-weight: bolder;
   padding: 20px 5px;
 }
-.season-image img
+.carouselIndividualImg img
 {
   margin: auto;
 }
 .slick-slide > div
 {
-  margin: 0 1rem;
+  margin: 0 1.5rem;
 }
 
 .slick-list
 {
   margin: 0 -10px;
 }
-.season-description
+.carouselData
 {
   margin: 30px 20px;
 }

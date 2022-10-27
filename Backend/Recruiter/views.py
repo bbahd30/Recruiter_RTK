@@ -1,9 +1,9 @@
+from http.client import HTTPMessage
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .links import client_data
 from Recruiter.models import Member
 from rest_framework import status
-import requests
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -45,6 +45,41 @@ class ApplicantViewsetImpData(viewsets.ModelViewSet):
     serializer_class = ApplicantSerializerImpData
     # permission_classes = [ImpDataPermission]
 
+# note: CUSTOMIZED VIEWSETS
+class InterviewPanelViewset(viewsets.ModelViewSet):
+    queryset = InterviewPanel.objects.all()
+    serializer_class = InterviewPanelSerializer
+
+class InterviewViewset(viewsets.ModelViewSet):
+    queryset = Interview.objects.all()
+    serializer_class = InterviewSerializer
+    permission_classes = [IsAbleToSeePersonalInfo]
+
+class ScoreViewset(viewsets.ModelViewSet):
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer
+    permission_classes = [IsAbleToSeePersonalInfo]
+
+
+class RoundWiseSectionViewset(viewsets.ModelViewSet):
+    queryset = Round.objects.all()
+
+    @action(detail=False, methods=['get'])
+    def get_data(self, request, **kwargs):
+        if not kwargs:
+            return HttpResponse("Using rounds api")
+        else:
+            r_id = kwargs.get('round_id')
+            model = kwargs.get('model')
+            if model == 'sections':
+                model_data = SectionSerializer(Section.objects.filter(round_id = r_id), many = True)
+                if len(kwargs) == 2:
+                    return Response(model_data.data)
+                model_id = kwargs.get('model_id')
+                model_data = SectionSerializer(Section.objects.filter(round_id = r_id).filter(id = model_id), many = True)
+                return Response(model_data.data)
+            return HttpResponse("check roundwiseviewset")        
+
 class SeasonWiseViewset(viewsets.ModelViewSet):
     queryset = Season.objects.all()
     serializer_class = SeasonSerializer
@@ -64,13 +99,21 @@ class SeasonWiseViewset(viewsets.ModelViewSet):
                 model = kwargs.get('model')
                 if model == 'applicants':
                     model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id), many = True)
-                    print(kwargs)
                     if len(kwargs) == 2:
                         return Response(model_data.data)
                     else:
                         print(model_data)
                         model_id = kwargs.get('model_id')
                         model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id).filter(id = model_id), many = True)
+                        return Response(model_data.data)
+
+                elif model == 'rounds':
+                    model_data = RoundSerializer(Round.objects.filter(season_id = s_id), many = True)
+                    if len(kwargs) == 2:
+                        return Response(model_data.data)
+                    else:
+                        model_id = kwargs.get('model_id')
+                        model_data = RoundSerializer(Round.objects.filter(season_id = s_id).filter(id = model_id), many = True)
                         return Response(model_data.data)
 
     @action(detail=False, methods=['post'])
@@ -110,17 +153,3 @@ class SeasonWiseViewset(viewsets.ModelViewSet):
                             new_applicant.save();
                             return Response("Added applicant")
         return Response("Invalid Request")
-
-class InterviewPanelViewset(viewsets.ModelViewSet):
-    queryset = InterviewPanel.objects.all()
-    serializer_class = InterviewPanelSerializer
-
-class InterviewViewset(viewsets.ModelViewSet):
-    queryset = Interview.objects.all()
-    serializer_class = InterviewSerializer
-    permission_classes = [IsAbleToSeePersonalInfo]
-
-class ScoreViewset(viewsets.ModelViewSet):
-    queryset = Score.objects.all()
-    serializer_class = ScoreSerializer
-    permission_classes = [IsAbleToSeePersonalInfo]

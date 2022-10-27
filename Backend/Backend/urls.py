@@ -56,6 +56,11 @@ urlpatterns = [
     ({
          'get':'get_data'
     }), name='get_data'),
+    re_path(r'^rounds/(?P<round_id>[0-9]+)/(?P<model>[A-Za-z]+)/?(?P<model_id>[0-9]+)?/?$',
+    RoundWiseSectionViewset.as_view
+    ({
+         'get':'get_data'
+    }), name='get_data'),
 
 ]
 urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))

@@ -4,10 +4,12 @@ import LoginStatus from '../LoginComp/LoginStatus';
 import SideBar from './SideBar';
 import { Box } from '@mui/system';
 import { Button, Typography } from '@mui/material';
-import ApplicantData from '../Stages/ApplicantData';
 import * as Links from '../../Links';
 import axios from 'axios';
 import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
+import { Table, TableBody, TableCell, TableRow } from '@mui/material';
+import TableProvider from '../UtilityComponents/TableProvider';
+
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -55,6 +57,46 @@ function Dashboard(props)
             });
     }
 
+    const tableCells = [
+        {
+            id: 'Name',
+            numeric: false,
+            disablePadding: true,
+            label: 'Name',
+        },
+        {
+            id: 'Enrollment Number',
+            numeric: true,
+            disablePadding: false,
+            label: 'Enrollment Number',
+        },
+        {
+            id: 'Role',
+            numeric: true,
+            disablePadding: false,
+            label: 'Role',
+        },
+        {
+            id: 'Phone Number',
+            numeric: true,
+            disablePadding: false,
+            label: 'Phone Number',
+        },
+        {
+            id: 'Status',
+            numeric: true,
+            disablePadding: false,
+            label: 'Status',
+        },
+    ];
+
+    const
+        {
+            MyTableHead,
+            MyTablePagination,
+            recordsAfterPagingAndSorting
+        } = TableProvider(tableCells, applicants)
+
     useEffect(() =>
     {
         // defining the season_id for backend data
@@ -79,9 +121,28 @@ function Dashboard(props)
                     <img src={require('../../Images/welcome.svg').default} width="800px"></img>
                 </div>
             </Box>
-            <Box sx={{ backgroudColor: 'aqua' }} height='30px'>
+            <Box>
                 {
-                    <ApplicantData data={applicants} />
+                    <div className='table'>
+                        <Table>
+                            <MyTableHead />
+                            <TableBody>
+                                {
+                                    recordsAfterPagingAndSorting().map((item) =>
+                                    (
+                                        <TableRow key={item.id}>
+                                            <TableCell>{item.name}</TableCell>
+                                            <TableCell>{item.enroll_no}</TableCell>
+                                            <TableCell>{item.role}</TableCell>
+                                            <TableCell>{item.phone_number}</TableCell>
+                                            <TableCell>{item.status}</TableCell>
+                                        </TableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                        <MyTablePagination />
+                    </div>
                 }
             </Box>
 
