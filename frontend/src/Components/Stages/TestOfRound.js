@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SideBar from '../DashboardComponents/SideBar';
 import { useLocation } from 'react-router-dom';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
-import CarouselProvider from '../UtilityComponents/CarouselProvider';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Typography } from '@mui/material';
 import AddTestForm from '../Forms/AddTestForm';
 import axios from 'axios';
 import * as Links from '../../Links';
-import { borderLeft } from '@mui/system';
+import MyDialogBox from '../UtilityComponents/MyDialogBox';
+import AddIcon from '@mui/icons-material/Add';
+import AddQuestionForm from '../Forms/AddQuestionForm';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
 
 const TestOfRound = () =>
 {
@@ -17,8 +20,10 @@ const TestOfRound = () =>
 
     const [sections, setSections] = useState([]);
     const roundId = useParams();
-    const [sectionsToShowArr, setArray] = useState([]);
     const [questions, setQuestions] = useState([]);
+
+    const [sectionsToShowIDs, setSectionsToShowIDs] = useState([]);
+
     const fetchTest = () =>
     {
         axios
@@ -26,10 +31,14 @@ const TestOfRound = () =>
             .then((response) =>
             {
                 setSections(response.data);
-                sections.map(section =>
-                (
-                    setArray(sectionsToShowArr => [...sectionsToShowArr, section.id])
-                ))
+                const len = response.data.length;
+                for (let i = 0; i < len; i++)
+                {
+                    if (sectionsToShowIDs.indexOf(response.data[i].id) === -1)
+                    {
+                        setSectionsToShowIDs(sectionsToShowIDs => sectionsToShowIDs.concat(response.data[i].id))
+                    }
+                }
             })
             .catch((error) =>
             {
@@ -39,65 +48,158 @@ const TestOfRound = () =>
 
     const fetchQuestions = () =>
     {
-        axios
-            .get(Links.rounds_api + `${roundId.id}/sections/`)
-            .then((response) =>
-            {
-
-            })
-            .catch((error) =>
-            {
-                console.log(error);
-            });
+        sectionsToShowIDs.map(sectionID =>
+        (
+            axios
+                .get(Links.sections_api + `${sectionID}/questions/`)
+                .then((response) =>
+                {
+                    for (let i = 0; i < response.data.length; i++)
+                    {
+                        if (!questions.some((question) => (question.id === response.data[i].id)))
+                        {
+                            setQuestions(questions => questions.concat(response.data[i]))
+                            // todo:
+                            console.log("added " + response.data[i].question_text)
+                        }
+                    }
+                })
+                .catch((error) =>
+                {
+                    console.log(error);
+                })
+        ))
     }
 
-    // const setSectionsToShow = () =>
-    // {
-    //     sections.map(section =>
-    //     (
-    //         setArray(sectionsToShowArr => [...sectionsToShowArr, section.id])
-    //     ))
-    // }
+    const editBtn = () =>
+    {
+
+    }
     useEffect(() =>
     {
         fetchTest();
-        console.log(sectionsToShowArr)
-    }, [])
-
+        fetchQuestions();
+    }, [sectionsToShowIDs])
 
     const divStyle =
     {
         padding: '10px 20px',
-        width: '75%',
+        width: '50%',
         borderRadius: '8px 2px 2px 8px',
         margin: '20px auto',
+    }
+    const innerDivStyle =
+    {
+        borderLeft: '3px solid var(--green)',
+        margin: '10px auto',
+    }
+    const quesData =
+    {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%'
     }
     return (
         <>
             <SideBar id={seasonID} />
             <Box>
-                {
-                    sections.map(section =>
-                    (
-                        <Accordion
-                            key={section.id}
-                            style={divStyle}
-                            className='section-boxes'
-                        >
-                            <AccordionSummary >
-                                <h2>
-                                    Section: {section.section_name}
-                                    {/* todo: add accordion condtion of only one open at once */}
-                                </h2>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    {sectionsToShowArr} sec
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                    ))
-                }
+                <h1 className='addSection'>Sections</h1>
+                <div>
+                    {
+                        sections.map(section =>
+                        (
+                            <Accordion
+                                key={section.id}
+                                style={divStyle}
+                                className='section-boxes'
+                            >
+                                <AccordionSummary >
+                                    <h2>
+                                        Section: {section.section_name}
+                                        {/* todo: add accordion condtion of only one open at once */}
+                                    </h2>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <>
+                                        {
+                                            questions.map(question =>
+                                            (
+                                                // (question.section_id.indexOf(section.id) != -1) ?
+                                                (question.section_id == section.id) ?
+                                                    <Accordion key={question.id}
+                                                        style={innerDivStyle}
+                                                        className='section-boxes'
+                                                    >
+                                                        <AccordionSummary>
+                                                            <div className='questionAcc'>
+                                                                <div>
+                                                                    {question.question_text}
+                                                                </div>
+                                                                <div id='questionMarks'>
+                                                                    <div>
+                                                                        {question.total_marks}
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </AccordionSummary>
+                                                        <AccordionDetails>
+
+                                                            <>
+                                                                {question.assignee_id.map
+                                                                    ((assignee) =>
+                                                                    (
+                                                                        <div style={quesData} >
+                                                                            <div key={assignee.id}>
+                                                                                {assignee.name}
+                                                                            </div>
+                                                                            <div onClick={editBtn}>
+                                                                                <ModeEditIcon />
+                                                                            </div>
+                                                                        </div>
+                                                                    ))
+                                                                }
+                                                            </>
+
+                                                        </AccordionDetails>
+                                                    </Accordion> : ("")
+                                            ))
+
+                                        }
+                                        <div className='addSign'>
+                                            <MyDialogBox
+
+                                                buttonChild=
+                                                {
+                                                    "Add Questions"
+                                                }
+                                                dataChild=
+                                                {
+                                                    <AddQuestionForm sectionID={section.id} />
+                                                }
+                                                title="Add Questions"
+                                            />
+                                        </div>
+                                    </>
+                                </AccordionDetails>
+                            </Accordion>
+
+                        ))
+                    }
+                </div>
+                <div className='addSection'>
+                    <MyDialogBox
+                        buttonChild=
+                        {
+                            "Add Sections"
+                        }
+                        dataChild=
+                        {
+                            <AddTestForm />
+                        }
+                        title="Add Sections"
+                    />
+                </div>
 
             </Box>
         </ >

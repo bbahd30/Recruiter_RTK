@@ -142,7 +142,30 @@ body
   border: 1px solid var(--green);
   border-left: 7px solid var(--pink);
 }
+.addSign
+{
+  margin-top: 20px;
+  margin-left: 5px;
+  /* text-align: center; */
+}
+.questionAcc
+{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 900;
+}
+#questionMarks
+{
+  /* font-size: 28px; */
+  color: var(--green);
 
+}
+.addSection
+{
+  text-align: center;
+}
 
 
 

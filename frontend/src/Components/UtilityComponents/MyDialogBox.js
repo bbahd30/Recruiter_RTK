@@ -22,7 +22,7 @@ function BootstrapDialogTitle(props)
     const { children, onClose, ...other } = props;
 
     return (
-        <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        <DialogTitle sx={{ m: 0, p: 2 }} {...other} >
             {children}
             {onClose ? (
                 <IconButton
@@ -61,8 +61,8 @@ export default function MyDialogBox(props)
     };
 
     return (
-        <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+        <>
+            <Button variant="contained" onClick={handleClickOpen} >
                 {props.buttonChild}
             </Button>
             <BootstrapDialog
@@ -82,6 +82,6 @@ export default function MyDialogBox(props)
                     </Button>
                 </DialogActions> */}
             </BootstrapDialog>
-        </div>
+        </>
     );
 }

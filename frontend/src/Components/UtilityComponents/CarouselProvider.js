@@ -57,7 +57,7 @@ const CarouselProvider = () =>
                 <MyDialogBox
                     buttonChild=
                     {
-                        <AddIcon sx={{ fontSize: "50px" }} />
+                        <AddIcon sx={{ fontSize: "40px" }} />
                     }
                     dataChild=
                     {

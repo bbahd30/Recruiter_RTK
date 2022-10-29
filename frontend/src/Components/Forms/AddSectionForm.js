@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Grid, Paper, Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-const AddSeason = () =>
+const AddSectionForm = () =>
 {
     const paperStyle =
     {
@@ -151,4 +151,4 @@ const AddSeason = () =>
     );
 };
 
-export default AddSeason;
+export default AddSectionForm;

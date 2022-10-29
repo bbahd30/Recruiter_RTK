@@ -52,7 +52,6 @@ function Dashboard(props)
             .get(Links.seasons_api + `${id}/applicants/`)
             .then((response) =>
             {
-                console.log(response.data)
                 setApplicants(response.data);
             });
     }

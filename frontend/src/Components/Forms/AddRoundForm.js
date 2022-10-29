@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as Links from '../../Links';
 import axios from 'axios';
-import { Grid, Paper, Button } from '@mui/material';
+import { Grid, Paper, Button, MenuItem } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import FormProvider from '../UtilityComponents/FormProvider';
 import { useParams } from 'react-router-dom';
 
 const AddRoundForm = () =>
@@ -13,8 +12,9 @@ const AddRoundForm = () =>
         padding: '10px 20px',
         width: '20vw'
     }
+
     const params = useParams();
-    const initial = { round_name: "", round_type: "", season_id: params['id'] };
+    const initial = { round_name: "", round_type: "" };
     const [formValues, setFormValues] = useState(initial);
     const [formErrors, setFormErrors] = useState([]);
     const [added, setAdded] = useState(false);
@@ -24,11 +24,11 @@ const AddRoundForm = () =>
     {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
-        setIsSubmitClicked(true);
     }
 
     const handleSubmit = (e) =>
     {
+        setIsSubmitClicked(true);
         e.preventDefault();
         setFormErrors(validate(formValues));
     }
@@ -36,7 +36,6 @@ const AddRoundForm = () =>
     const validate = (values) =>
     {
         const errors = {};
-        const yearRegex = /^[0-9]{4}$/;
 
         if (!values.round_name)
         {
@@ -59,16 +58,22 @@ const AddRoundForm = () =>
                 url,
                 {
                     round_name: formValues.round_name,
-                    round_type: formValues.round_type
+                    round_type: formValues.round_type,
+                    season_id: params.id
                 })
             .then
             ((response) =>
             {
-                if (response.data['msg'] === "Season Added")
+                // todo:
+                if (response.data['msg'] === "Round Added")
                 {
                     setAdded(true);
                 }
             })
+            .catch((error) =>
+            {
+                console.log(error);
+            });
     }
 
     useEffect(() =>
@@ -76,7 +81,7 @@ const AddRoundForm = () =>
         if (Object.keys(formErrors).length === 0 && isSubmitClicked)
         {
             saveToData(formValues);
-            setFormValues({ year: "", seasonName: "", description: "" });
+            setFormValues({ round_name: "", round_type: "" });
             setTimeout(() =>
             {
                 setAdded(false);
@@ -100,43 +105,37 @@ const AddRoundForm = () =>
                     <form onSubmit={handleSubmit} alignitem={'center'}>
                         <TextField
                             id="outlined-basic"
-                            label="Season Year"
-                            placeholder='Enter Season Year'
+                            label="Round Name"
+                            placeholder='Enter Round Name'
                             variant="outlined"
                             fullWidth
                             onChange={handleChange}
-                            name="year"
-                            value={formValues.year}
-                            error={Boolean(formErrors.year)}
+                            name="round_name"
+                            value={formValues.round_name}
+                            error={Boolean(formErrors.round_name)}
                             sx={{ marginBottom: '20px' }}
-                            helperText={formErrors.year}
+                            helperText={formErrors.round_name}
                         />
                         <TextField
                             id="outlined-basic"
-                            label="Season Name"
-                            placeholder='Enter Season Name'
+                            label="Round Type"
+                            select
                             variant="outlined"
                             fullWidth
                             onChange={handleChange}
-                            name="seasonName"
-                            value={formValues.seasonName}
-                            error={Boolean(formErrors.seasonName)}
+                            name="round_type"
+                            value={formValues.round_type || ""}
+                            error={Boolean(formErrors.round_type)}
                             sx={{ marginBottom: '20px' }}
-                            helperText={formErrors.seasonName}
-                        />
-                        <TextField
-                            id="outlined-basic"
-                            label="Season Description"
-                            placeholder='Enter Season Description'
-                            variant="outlined"
-                            fullWidth
-                            onChange={handleChange}
-                            name="description"
-                            value={formValues.description}
-                            error={Boolean(formErrors.description)}
-                            sx={{ marginBottom: '20px' }}
-                            helperText={formErrors.description}
-                        />
+                            helperText={formErrors.round_type}
+                        >
+                            <MenuItem value='int'>
+                                Interview
+                            </MenuItem>
+                            <MenuItem value='test'>
+                                Test
+                            </MenuItem>
+                        </TextField>
                         <Button variant="contained" type='submitClicked' onClick={handleSubmit} sx={{ marginTop: '30px' }}>Add</Button>
 
                     </form>

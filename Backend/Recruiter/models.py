@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.db.models import CASCADE
 from django.contrib.auth.models import AbstractUser    
@@ -59,7 +60,7 @@ class Question(models.Model):
         Created for questions to be added during the test or interview
     '''
 
-    section_id = models.ManyToManyField(Section)
+    section_id = models.ForeignKey(Section, on_delete = CASCADE, default = 1)
     question_text = models.CharField(max_length=500)
     ans = models.CharField(max_length=500)
     total_marks = models.FloatField()

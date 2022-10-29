@@ -5,3 +5,6 @@ export const members_api = `${localhost}members/`
 export const check_status = `${localhost}checkStatus/`
 export const seasons_api = `${localhost}seasons/`
 export const rounds_api = `${localhost}rounds/`
+export const sections_api = `${localhost}sections/`
+export const questions_api = `${localhost}questions/`
+

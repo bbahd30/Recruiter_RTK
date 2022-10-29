@@ -49,7 +49,7 @@ const SeasonScreen = () =>
 
     return (
         <div>
-            {/* <LoginStatus /> */}
+            <LoginStatus />
             <Navbar />
             <div className='carouselCont'>
                 <CarouselSlider formComponent={<AddSeasonForm />} title="Add Season">

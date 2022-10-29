@@ -20,7 +20,6 @@ const RTStage = () =>
             .get(Links.seasons_api + `${id}/rounds/`)
             .then((response) =>
             {
-                console.log(response.data);
                 setRounds(response.data)
             })
             .catch((error) =>
