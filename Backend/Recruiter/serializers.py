@@ -14,6 +14,9 @@ class SeasonSerializer(serializers.ModelSerializer):
         depth = 1
 
 class RoundSerializer(serializers.ModelSerializer):
+    # slug
+    # todo:
+    # season_id = serializers.PrimaryKeyRelatedField(source = '')
     class Meta:
         model = Round
         fields = '__all__'
@@ -29,7 +32,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = '__all__'
-        depth = 1
+        # depth = 1
 
 class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:

@@ -38,7 +38,7 @@ class Round(models.Model):
     round_name = models.CharField(max_length=100)
     round_type = models.CharField(max_length=20, choices=round_choices, default="int")
     # can this be a foreign key?
-    season_id = models.ManyToManyField(Season)
+    season_id = models.ForeignKey(Season, on_delete = CASCADE, default= 1)
 
     def __str__(self):
         return self.round_name 

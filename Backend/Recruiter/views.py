@@ -45,7 +45,6 @@ class ApplicantViewsetImpData(viewsets.ModelViewSet):
     serializer_class = ApplicantSerializerImpData
     # permission_classes = [ImpDataPermission]
 
-# note: CUSTOMIZED VIEWSETS
 class InterviewPanelViewset(viewsets.ModelViewSet):
     queryset = InterviewPanel.objects.all()
     serializer_class = InterviewPanelSerializer
@@ -60,6 +59,25 @@ class ScoreViewset(viewsets.ModelViewSet):
     serializer_class = ScoreSerializer
     permission_classes = [IsAbleToSeePersonalInfo]
 
+# note: CUSTOMIZED VIEWSETS
+class SectionWiseQuestionViewset(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+
+    @action(detail=False, methods=['get'])
+    def get_data(self, request, **kwargs):
+        if not kwargs:
+            return HttpResponse("Using questions api")
+        else:
+            r_id = kwargs.get('section_id')
+            model = kwargs.get('model')
+            if model == 'questions':
+                model_data = QuestionSerializer(Question.objects.filter(section_id = r_id), many = True)
+                if len(kwargs) == 2:
+                    return Response(model_data.data)
+                model_id = kwargs.get('model_id')
+                model_data = QuestionSerializer(Question.objects.filter(section_id = r_id).filter(id = model_id), many = True)
+                return Response(model_data.data)
+            return HttpResponse("check SectionWiseQuestionViewset") 
 
 class RoundWiseSectionViewset(viewsets.ModelViewSet):
     queryset = Round.objects.all()
@@ -153,3 +171,43 @@ class SeasonWiseViewset(viewsets.ModelViewSet):
                             new_applicant.save();
                             return Response("Added applicant")
         return Response("Invalid Request")
+
+
+# todo: generalising parent child       
+# model_dict = {
+#     'rounds': Round,
+#     'sections': Section
+# }
+
+# serializer_dict = {
+#     'rounds': RoundSerializer,
+#     'sections': SectionSerializer
+# }
+
+# class ParentWiseChildViewset(viewsets.ModelViewSet):
+#     queryset = model_dict.get('rounds').objects.all()
+#     parent_id_attribute = ""
+#     @action(detail=False, methods=['get'])
+#     def get_data(self, request, **kwargs):
+#         if not kwargs:
+#             return HttpResponse("Using parent api")
+#         else:
+#             model = kwargs.get('model')
+#             p_id = kwargs.get('p_id')
+#             parent_model = model_dict.get(kwargs.get('p_model'))
+#             child_model = model_dict.get(model)
+#             p_serializer = serializer_dict.get(kwargs.get('p_model'))
+#             child_serializer = serializer_dict.get(model)
+            
+#             # if model == 'sections':
+#             parent_id_attribute = kwargs.get('p_model')[:-1] + "_id"
+#             child_id_attribute = model[:-1] + "_id"
+
+
+#             model_data = p_serializer(parent_model.objects.filter(parent_id_attribute = p_id), many = True)
+#             if len(kwargs) == 2:
+#                 return Response(model_data.data)
+#             model_id = kwargs.get('model_id')
+#             model_data = p_serializer(parent_model.objects.filter( = p_id).filter(child_id_attribute = model_id), many = True)
+#             return Response(model_data.data)
+#             return HttpResponse("check roundwiseviewset")   

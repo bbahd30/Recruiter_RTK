@@ -6,7 +6,9 @@ body
 
 :root
 {
-  --green: #21b6ae;
+  --pink: #CE5983;
+  --yellow: #FFDF52;
+  --green: #30A2A9;
   --purple: #5b004c;
 }
 .navSection
@@ -134,10 +136,12 @@ body
 
 
 
-
-
-
-
+/* sections */
+.section-boxes
+{
+  border: 1px solid var(--green);
+  border-left: 7px solid var(--pink);
+}
 
 
 

@@ -17,6 +17,7 @@ const TestOfRound = () =>
 
     const [sections, setSections] = useState([]);
     const roundId = useParams();
+    const [sectionsToShowArr, setArray] = useState([]);
     const [questions, setQuestions] = useState([]);
     const fetchTest = () =>
     {
@@ -25,8 +26,10 @@ const TestOfRound = () =>
             .then((response) =>
             {
                 setSections(response.data);
-                console.log(response.data);
-                console.log(sections)
+                sections.map(section =>
+                (
+                    setArray(sectionsToShowArr => [...sectionsToShowArr, section.id])
+                ))
             })
             .catch((error) =>
             {
@@ -40,21 +43,27 @@ const TestOfRound = () =>
             .get(Links.rounds_api + `${roundId.id}/sections/`)
             .then((response) =>
             {
-                setSections(response.data);
-                console.log(response.data);
-                console.log(sections)
+
             })
             .catch((error) =>
             {
                 console.log(error);
             });
     }
-    console.log(sections)
 
+    // const setSectionsToShow = () =>
+    // {
+    //     sections.map(section =>
+    //     (
+    //         setArray(sectionsToShowArr => [...sectionsToShowArr, section.id])
+    //     ))
+    // }
     useEffect(() =>
     {
         fetchTest();
+        console.log(sectionsToShowArr)
     }, [])
+
 
     const divStyle =
     {
@@ -75,14 +84,15 @@ const TestOfRound = () =>
                             style={divStyle}
                             className='section-boxes'
                         >
-                            <AccordionSummary>
+                            <AccordionSummary >
                                 <h2>
                                     Section: {section.section_name}
+                                    {/* todo: add accordion condtion of only one open at once */}
                                 </h2>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
-
+                                    {sectionsToShowArr} sec
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>

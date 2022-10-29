@@ -6,7 +6,7 @@ import Login from './Components/LoginComp/Login'
 import SeasonScreen from './Components/SeasonScreen';
 import Dashboard from './Components/DashboardComponents/Dashboard';
 import RTStage from './Components/Stages/RTStage';
-import Tests from './Components/Stages/Tests';
+import TestOfRound from './Components/Stages/TestOfRound';
 
 function App()
 {
@@ -24,8 +24,7 @@ function App()
           <Route path='/seasons/:id'>
             <Route index element={<Dashboard />} />
             <Route path='rtstage' element={<RTStage />} />
-            <Route path='rounds/:id' element={<Tests />} />
-
+            <Route path='rounds/:id' element={<TestOfRound />} />
           </Route>
 
 

@@ -56,11 +56,22 @@ urlpatterns = [
     ({
          'get':'get_data'
     }), name='get_data'),
+
+    # note: for using customized api only when want data for posting using the modelviewset default ones
     re_path(r'^rounds/(?P<round_id>[0-9]+)/(?P<model>[A-Za-z]+)/?(?P<model_id>[0-9]+)?/?$',
     RoundWiseSectionViewset.as_view
     ({
          'get':'get_data'
-    }), name='get_data'),
-
+    })),
+     re_path(r'^sections/(?P<section_id>[0-9]+)/(?P<model>[A-Za-z]+)/?(?P<model_id>[0-9]+)?/?$',
+    SectionWiseQuestionViewset.as_view
+    ({
+         'get':'get_data'
+    })),     
+#     re_path(r'^(?P<p_model>[A-Za-z]+)/(?P<p_id>[0-9]+)/(?P<model>[A-Za-z]+)/?(?P<model_id>[0-9]+)?/?$',
+#     ParentWiseChildViewset.as_view
+#     ({
+#          'get':'get_data'
+#     })),
 ]
 urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))
