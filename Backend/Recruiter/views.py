@@ -1,11 +1,9 @@
-from http.client import HTTPMessage
-from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseRedirect
 from .links import client_data
 from Recruiter.models import Member
 from rest_framework import status
 from .serializers import *
 from rest_framework import viewsets
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import *
@@ -43,6 +41,7 @@ class QuestionViewset(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
 
     def create(self, request, **kwargs):
+        print("Lljflsjf")
         question = Question.objects.create(
             question_text = request.data.get('question_text'),
             ans = request.data.get('ans'),

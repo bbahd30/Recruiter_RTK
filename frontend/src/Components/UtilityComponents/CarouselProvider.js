@@ -11,7 +11,7 @@ const CarouselProvider = () =>
         {
             dots: true,
             infinite: false,
-            slidesToShow: 3,
+            slidesToShow: 4,
             // infinite: props.length > 3,
             speed: 500,
             slidesToScroll: 4,

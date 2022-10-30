@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AddQuestionForm from '../Forms/AddQuestionForm';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import EditFunction from '../UtilityComponents/EditFunction';
-
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 const TestOfRound = () =>
 {
@@ -101,23 +101,55 @@ const TestOfRound = () =>
             <SideBar id={seasonID} />
             <Box>
                 <h1 className='addSection'>Sections</h1>
+                <div className='addSection'>
+                    <MyDialogBox
+                        buttonChild=
+                        {
+                            "Add Sections"
+                        }
+                        dataChild=
+                        {
+                            <AddTestForm />
+                        }
+                        title="Add Sections"
+                    />
+                </div>
                 <div>
                     {
                         sections.map(section =>
                         (
-                            <Accordion
+                            <div
                                 key={section.id}
                                 style={divStyle}
                                 className='section-boxes'
                             >
-                                <AccordionSummary >
-                                    <h2>
-                                        Section: {section.section_name}
-                                        {/* todo: add accordion condtion of only one open at once */}
-                                    </h2>
-                                </AccordionSummary>
-                                <AccordionDetails>
+                                <div >
+                                    <div className='flexClass'>
+                                        <h2>
+                                            Section: {section.section_name}
+                                            {/* todo: add accordion condtion of only one open at once */}
+                                        </h2>
+                                        <div className='addSign'>
+                                            <MyDialogBox
+
+                                                buttonChild=
+                                                {
+                                                    <ControlPointIcon />
+                                                }
+                                                dataChild=
+                                                {
+                                                    <AddQuestionForm sectionID={section.id}
+                                                    />
+                                                }
+                                                title="Add Questions"
+                                            />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div>
                                     <>
+
                                         {
                                             questions.map(question =>
                                             (
@@ -141,20 +173,31 @@ const TestOfRound = () =>
                                                             </div>
                                                         </AccordionSummary>
                                                         <AccordionDetails>
-
                                                             <>
-                                                                {question.assignee_id.map
-                                                                    ((assignee) =>
-                                                                    (
-                                                                        <div style={quesData} >
-                                                                            <div key={assignee.id}>
-                                                                                {assignee.name}
+                                                                {
+                                                                    question.assignee_id.map
+                                                                        ((assignee) =>
+                                                                        (
+                                                                            <div
+                                                                                style={quesData}
+                                                                                key={assignee.id}>
+                                                                                <div>
+                                                                                    {assignee.name}
+                                                                                </div>
+                                                                                <MyDialogBox
+
+                                                                                    buttonChild=
+                                                                                    {
+                                                                                        <ModeEditIcon />
+                                                                                    }
+                                                                                    dataChild=
+                                                                                    {
+                                                                                        <EditFunction model="questions" section_id={question.id} />
+                                                                                    }
+                                                                                    title="Edit Question"
+                                                                                />
                                                                             </div>
-                                                                            <div onClick={<EditFunction model='questions' id={question.id} />}>
-                                                                                <ModeEditIcon />
-                                                                            </div>
-                                                                        </div>
-                                                                    ))
+                                                                        ))
                                                                 }
                                                             </>
 
@@ -163,40 +206,15 @@ const TestOfRound = () =>
                                             ))
 
                                         }
-                                        <div className='addSign'>
-                                            <MyDialogBox
 
-                                                buttonChild=
-                                                {
-                                                    "Add Questions"
-                                                }
-                                                dataChild=
-                                                {
-                                                    <AddQuestionForm sectionID={section.id} />
-                                                }
-                                                title="Add Questions"
-                                            />
-                                        </div>
                                     </>
-                                </AccordionDetails>
-                            </Accordion>
+                                </div>
+                            </div>
 
                         ))
                     }
                 </div>
-                <div className='addSection'>
-                    <MyDialogBox
-                        buttonChild=
-                        {
-                            "Add Sections"
-                        }
-                        dataChild=
-                        {
-                            <AddTestForm />
-                        }
-                        title="Add Sections"
-                    />
-                </div>
+
 
             </Box>
         </ >
