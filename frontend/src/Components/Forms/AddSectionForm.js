@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import * as Links from '../../Links';
 import axios from 'axios';
-import { Grid, Paper, Button } from '@mui/material';
+import { Grid, Paper, Button, MenuItem, Select, OutlinedInput, InputLabel, FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-const AddSectionForm = () =>
+const AddQuestionForm = (props) =>
 {
     const paperStyle =
     {
         padding: '10px 20px',
-        width: '20vw'
+        width: '30vw'
     }
-    const initial = { year: "", seasonName: "", description: "" };
+    const initial = {
+        section_name: "",
+        weightage: "",
+        round_id: []
+    };
+
     const [formValues, setFormValues] = useState(initial);
     const [formErrors, setFormErrors] = useState([]);
     const [added, setAdded] = useState(false);
@@ -33,39 +38,34 @@ const AddSectionForm = () =>
     const validate = (values) =>
     {
         const errors = {};
-        const yearRegex = /^[0-9]{4}$/;
 
-        if (!values.year)
+        if (!values.section_name)
         {
-            errors.year = "Season Year is required";
+            errors.section_name = "Section name is required.";
         }
-        else if (!yearRegex.test(values.year))
+        if (!values.round_id)
         {
-            errors.year = "Enter a valid year.";
-        }
-        if (!values.seasonName)
-        {
-            errors.seasonName = "Season name is required";
+            errors.round_id = "Round is required";
         }
         return errors;
     }
 
     const saveToData = (formValues) =>
     {
-        const url = Links.seasons_api;
+        const url = Links.sections_api;
         axios
             .post
             (
                 url,
                 {
-                    year: formValues.year,
-                    season_name: formValues.seasonName,
-                    description: formValues.description
+                    section_name: formValues.section_name,
+                    weightage: formValues.weightage,
+                    round_id: formValues.round_id
                 })
             .then
             ((response) =>
             {
-                if (response.data['msg'] === "Season Added")
+                if (response.status == 200 || response.status == 201)
                 {
                     setAdded(true);
                 }
@@ -81,13 +81,35 @@ const AddSectionForm = () =>
         if (Object.keys(formErrors).length === 0 && isSubmitClicked)
         {
             saveToData(formValues);
-            setFormValues({ year: "", seasonName: "", description: "" });
+            setFormValues(initial);
             setTimeout(() =>
             {
                 setAdded(false);
             }, (4000));
         }
     }, [formErrors])
+
+    useEffect(() =>
+    {
+        const url = Links.rounds_api;
+        axios
+            .get
+            (
+                url
+            )
+            .then
+            ((response) =>
+            {
+                if (response.status == 200 || response.status == 201)
+                {
+                    setMembers(response.data)
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <Grid textAlign={'center'}>
@@ -96,7 +118,9 @@ const AddSectionForm = () =>
                 {added ?
                     (
                         <Button variant="text" type='submitClicked' sx={{ marginBottom: "30px" }} transition="all .2s"
-                        >Season successfully added</Button>
+                        >
+                            Section successfully added
+                        </Button>
                     )
                     :
                     <div></div>}
@@ -105,42 +129,88 @@ const AddSectionForm = () =>
                     <form onSubmit={handleSubmit} alignitem={'center'}>
                         <TextField
                             id="outlined-basic"
-                            label="Season Year"
-                            placeholder='Enter Season Year'
+                            label="Section Name"
+                            placeholder='Enter Section Name'
                             variant="outlined"
                             fullWidth
                             onChange={handleChange}
-                            name="year"
-                            value={formValues.year}
-                            error={Boolean(formErrors.year)}
+                            name="section_name"
+                            value={formValues.section_name}
+                            error={Boolean(formErrors.section_name)}
                             sx={{ marginBottom: '20px' }}
-                            helperText={formErrors.year}
+                            helperText={formErrors.section_name}
                         />
                         <TextField
                             id="outlined-basic"
-                            label="Season Name"
-                            placeholder='Enter Season Name'
+                            type="number"
+                            label="Section Weightage"
+                            placeholder='Enter Section Weightage'
                             variant="outlined"
                             fullWidth
                             onChange={handleChange}
-                            name="seasonName"
-                            value={formValues.seasonName}
-                            error={Boolean(formErrors.seasonName)}
+                            name="weightage"
+                            value={formValues.weightage}
+                            error={Boolean(formErrors.weightage)}
                             sx={{ marginBottom: '20px' }}
-                            helperText={formErrors.seasonName}
+                            helperText={formErrors.weightage}
                         />
+
+                        {/* <TextField
+                            id="outlined-basic"
+                            label="Assign to"
+                            select
+                            placeholder='Choose Member'
+                            variant="outlined"
+                            fullWidth
+                            multiline
+                            onChange={handleChange}
+                            name="assignee_id"
+                            value={formValues.assignee_id}
+                            rows={4}
+                            error={Boolean(formErrors.assignee_id)}
+                            sx={{ marginBottom: '20px' }}
+                            helperText={formErrors.assignee_id}
+                        > */}
+                        <FormControl
+                            fullWidth>
+                            <InputLabel id="assign_to">Round</InputLabel>
+                            <Select
+                                id="outlined-basic"
+                                labelId="assign_to"
+                                // variant="outlined"
+                                label="Assign to"
+                                fullWidth
+                                multiple
+                                onChange={handleChange}
+                                name="assignee_id"
+                                value={formValues.assignee_id}
+                                error={Boolean(formErrors.assignee_id)}
+                                sx={{ marginBottom: '20px' }}
+                                helpertext={formErrors.assignee_id}
+                            >
+                                {
+                                    members.map(member =>
+                                    (
+                                        <MenuItem value={member.name} key={member.id}
+                                            name={member.id}>
+                                            {member.name}
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
                         <TextField
                             id="outlined-basic"
-                            label="Season Description"
-                            placeholder='Enter Season Description'
+                            label="Solution"
+                            placeholder='Enter Solution'
                             variant="outlined"
                             fullWidth
                             onChange={handleChange}
-                            name="description"
-                            value={formValues.description}
-                            error={Boolean(formErrors.description)}
+                            name="ans"
+                            value={formValues.ans}
+                            error={Boolean(formErrors.ans)}
                             sx={{ marginBottom: '20px' }}
-                            helperText={formErrors.description}
+                            helperText={formErrors.ans}
                         />
                         <Button variant="contained" type='submitClicked' onClick={handleSubmit} sx={{ marginTop: '30px' }}>Add</Button>
 
@@ -151,4 +221,4 @@ const AddSectionForm = () =>
     );
 };
 
-export default AddSectionForm;
+export default AddQuestionForm;

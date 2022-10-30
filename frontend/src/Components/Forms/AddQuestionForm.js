@@ -29,6 +29,7 @@ const AddQuestionForm = (props) =>
     const handleChange = (e) =>
     {
         const { name, value } = e.target;
+        console.log(value)
         setFormValues({ ...formValues, [name]: value });
     }
 
@@ -37,6 +38,7 @@ const AddQuestionForm = (props) =>
         setIsSubmitClicked(true);
         e.preventDefault();
         setFormErrors(validate(formValues));
+        console.log(formValues.assignee_id)
 
     }
 
@@ -52,30 +54,33 @@ const AddQuestionForm = (props) =>
         {
             errors.question_text = "Question Text is required";
         }
-        // if (!values.assignee_id)
-        // {
-        //     errors.assignee_id = "Assignees can't  is required";
-        // }
+
         console.log(errors)
         return errors;
     }
 
     const saveToData = (formValues) =>
     {
+        const data =
+        {
+            assignee_id: formValues.assignee_id,
+            question_text: formValues.question_text,
+            total_marks: formValues.totalMarks,
+            section_id: formValues.section_id,
+            ans: formValues.ans,
+            assignee_id: formValues.assignee_id,
+
+        }
         console.log("save")
+        console.log(data)
+        console.log(formValues)
         const url = Links.questions_api;
         axios
             .post
             (
-                url,
-                {
-                    question_text: formValues.question_text,
-                    total_marks: formValues.totalMarks,
-                    section_id: formValues.section_id,
-                    ans: formValues.ans,
-                    assignee_id: formValues.assignee_id
-
-                })
+                url, data,
+                { headers: { 'Content-Type': 'application/json' } }
+            )
             .then
             ((response) =>
             {
@@ -187,7 +192,7 @@ const AddQuestionForm = (props) =>
                         > */}
                         <FormControl
                             fullWidth>
-                            <InputLabel id="assign_to">Name</InputLabel>
+                            <InputLabel id="assign_to">Assign to</InputLabel>
                             <Select
                                 id="outlined-basic"
                                 labelId="assign_to"
@@ -205,7 +210,7 @@ const AddQuestionForm = (props) =>
                                 {
                                     members.map(member =>
                                     (
-                                        <MenuItem value={member.name} key={member.id}
+                                        <MenuItem value={member.id} key={member.id}
                                             name={member.id}>
                                             {member.name}
                                         </MenuItem>

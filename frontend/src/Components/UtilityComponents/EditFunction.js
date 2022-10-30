@@ -1,8 +1,8 @@
 import React from 'react';
 
-const EditFunction = () =>
+const EditFunction = (props) =>
 {
-
+    url
     return (
         <div>
 

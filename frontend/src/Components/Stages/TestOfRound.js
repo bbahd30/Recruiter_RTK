@@ -10,6 +10,7 @@ import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import AddIcon from '@mui/icons-material/Add';
 import AddQuestionForm from '../Forms/AddQuestionForm';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import EditFunction from '../UtilityComponents/EditFunction';
 
 
 const TestOfRound = () =>
@@ -71,10 +72,6 @@ const TestOfRound = () =>
         ))
     }
 
-    const editBtn = () =>
-    {
-
-    }
     useEffect(() =>
     {
         fetchTest();
@@ -153,7 +150,7 @@ const TestOfRound = () =>
                                                                             <div key={assignee.id}>
                                                                                 {assignee.name}
                                                                             </div>
-                                                                            <div onClick={editBtn}>
+                                                                            <div onClick={<EditFunction model='questions' id={question.id} />}>
                                                                                 <ModeEditIcon />
                                                                             </div>
                                                                         </div>

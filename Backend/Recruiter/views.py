@@ -29,6 +29,11 @@ class RoundViewset(viewsets.ModelViewSet):
     serializer_class = RoundSerializer
     # permission_classes = [delPermission]
 
+    # def get_queryset(self):
+    #     print("hellllllllllllllllllllllllllllllllllllo")
+    #     print(self.request.user)
+    #     return Round.objects.all()
+
 class SectionViewset(viewsets.ModelViewSet):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
@@ -36,6 +41,17 @@ class SectionViewset(viewsets.ModelViewSet):
 class QuestionViewset(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+
+    def create(self, request, **kwargs):
+        question = Question.objects.create(
+            question_text = request.data.get('question_text'),
+            ans = request.data.get('ans'),
+            total_marks = int(request.data.get('total_marks')),
+            section_id = Section.objects.get(id=int(request.data.get('section_id')))
+        )
+        question.assignee_id.set(request.data.get('assignee_id'))
+        question.save()
+        return Response("post")
 
 class ApplicantViewsetImpData(viewsets.ModelViewSet):
     '''
