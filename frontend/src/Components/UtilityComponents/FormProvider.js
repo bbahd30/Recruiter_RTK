@@ -10,12 +10,14 @@ const FormProvider = (initial_data, model) =>
     {
         'questions': Links.questions_api,
         'seasons': Links.seasons_api,
+        'sections': Links.sections_api,
         // 'rounds'
     }
     const keyword =
     {
         'questions': 'Question',
-        'seasons': 'Season'
+        'seasons': 'Season',
+        'sections': 'Sections',
         // 'rounds'
     }
     const fields =
@@ -25,7 +27,10 @@ const FormProvider = (initial_data, model) =>
         'total_marks': 'Total Marks',
         'year': 'Season Year',
         'description': 'Season Description',
-        'season_name': 'Season Name'
+        'season_name': 'Season Name',
+        'section_name': 'Section Name',
+        'weightage': 'Section Weightage',
+        'round_id': 'Round',
     }
     const url = links_matcher[model]
     const paperStyle =
@@ -90,6 +95,17 @@ const FormProvider = (initial_data, model) =>
             if (!values.season_name)
             {
                 errors.season_name = "Season name is required";
+            }
+        }
+        else if (model === 'sections')
+        {
+            if (!values.section_name)
+            {
+                errors.section_name = "Section name is required.";
+            }
+            if (!values.round_id)
+            {
+                errors.round_id = "Round is required";
             }
         }
         return errors;
@@ -176,7 +192,7 @@ const FormProvider = (initial_data, model) =>
                     helpertext={formErrors[props.field]}
                 >
                     {
-                        props.members_data.map(member =>
+                        props.data.map(member =>
                         (
                             <MenuItem value={member.id} key={member.id}
                                 name={member.id}>

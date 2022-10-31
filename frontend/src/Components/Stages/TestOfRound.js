@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SideBar from '../DashboardComponents/SideBar';
 import { useLocation } from 'react-router-dom';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Typography } from '@mui/material';
-import AddTestForm from '../Forms/AddTestForm';
+import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material';
+import AddSectionForm from '../Forms/AddSectionForm';
 import axios from 'axios';
 import * as Links from '../../Links';
 import MyDialogBox from '../UtilityComponents/MyDialogBox';
-import AddIcon from '@mui/icons-material/Add';
 import AddQuestionForm from '../Forms/AddQuestionForm';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import EditFunction from '../UtilityComponents/EditFunction';
@@ -18,7 +17,6 @@ const TestOfRound = () =>
     const location = useLocation();
     // todo: on using history if just typed then will not get the seasonID as no history and direct landed
     const seasonID = location.state.sId;
-
     const [sections, setSections] = useState([]);
     const roundId = useParams();
     const [questions, setQuestions] = useState([]);
@@ -109,7 +107,8 @@ const TestOfRound = () =>
                         }
                         dataChild=
                         {
-                            <AddTestForm />
+                            <AddSectionForm round_id={roundId} />
+                            // AddSectionForm({ round_id: roundId })
                         }
                         title="Add Sections"
                     />
