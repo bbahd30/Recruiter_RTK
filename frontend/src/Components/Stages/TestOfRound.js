@@ -14,6 +14,10 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 const TestOfRound = () =>
 {
+    const [dataToEdit, setDataToEdit] = useState([]);
+    const model = 'questions';
+
+
     const location = useLocation();
     // todo: on using history if just typed then will not get the seasonID as no history and direct landed
     const seasonID = location.state.sId;
@@ -58,6 +62,7 @@ const TestOfRound = () =>
                         if (!questions.some((question) => (question.id === response.data[i].id)))
                         {
                             setQuestions(questions => questions.concat(response.data[i]))
+
                             // todo:
                             console.log("added " + response.data[i].question_text)
                         }
@@ -69,6 +74,29 @@ const TestOfRound = () =>
                 })
         ))
     }
+
+    const fetchPrevData = (question_id) =>
+    {
+        const url = `${Links.questions_api}/${question_id}/`;
+        axios
+            .get(url)
+            .then((response) =>
+            {
+                setDataToEdit(response.data)
+                console.log(dataToEdit)
+
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+            })
+    }
+
+    // const { MyForm, MyTextField, MySelectField } = EditFunction(dataToEdit, model)
+    useEffect(() =>
+    {
+        fetchPrevData();
+    }, []);
 
     useEffect(() =>
     {
@@ -191,7 +219,17 @@ const TestOfRound = () =>
                                                                                     }
                                                                                     dataChild=
                                                                                     {
-                                                                                        <EditFunction model="questions" section_id={question.id} />
+                                                                                        // <EditFunction model="questions" section_id={question.id} />
+                                                                                        <>
+                                                                                            {/* <MyForm>
+                                                                                                <MyTextField field="question_text" />
+                                                                                                <MyTextField field="total_marks" />
+                                                                                                <MySelectField field='assignee_id' data={members} />
+                                                                                                <MyTextField field="ans" />
+
+                                                                                            </MyForm> */}
+
+                                                                                        </>
                                                                                     }
                                                                                     title="Edit Question"
                                                                                 />

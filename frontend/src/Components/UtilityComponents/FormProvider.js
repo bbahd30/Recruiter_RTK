@@ -11,14 +11,14 @@ const FormProvider = (initial_data, model) =>
         'questions': Links.questions_api,
         'seasons': Links.seasons_api,
         'sections': Links.sections_api,
-        // 'rounds'
+        'rounds': Links.rounds_api,
     }
     const keyword =
     {
         'questions': 'Question',
         'seasons': 'Season',
         'sections': 'Sections',
-        // 'rounds'
+        'rounds': 'Rounds'
     }
     const fields =
     {
@@ -31,6 +31,8 @@ const FormProvider = (initial_data, model) =>
         'section_name': 'Section Name',
         'weightage': 'Section Weightage',
         'round_id': 'Round',
+        'round_name': 'Round Name',
+        'round_type': 'Round Type'
     }
     const url = links_matcher[model]
     const paperStyle =
@@ -71,6 +73,7 @@ const FormProvider = (initial_data, model) =>
         const errors = {};
         if (model === 'questions')
         {
+            const markRegex = /^[0-9]+$/;
 
             if (!values.total_marks)
             {
@@ -106,6 +109,17 @@ const FormProvider = (initial_data, model) =>
             if (!values.round_id)
             {
                 errors.round_id = "Round is required";
+            }
+        }
+        else if (model === 'rounds')
+        {
+            if (!values.round_name)
+            {
+                errors.round_name = "Round name is required";
+            }
+            if (!values.round_type)
+            {
+                errors.round_type = "Round type is required";
             }
         }
         return errors;
@@ -171,6 +185,28 @@ const FormProvider = (initial_data, model) =>
         );
     }
 
+    const MyTextFieldNumber = (props) =>
+    {
+        // give field name in backend
+        return (
+            <TextField
+                id="outlined-basic"
+                // label="Question Text"
+                // placeholder='Enter Question Text'
+                label={fields[props.field]}
+                variant="outlined"
+                fullWidth
+                type='number'
+                onChange={handleChange}
+                name={props.field}
+                value={formValues[props.field]}
+                error={Boolean(formErrors[props.field])}
+                sx={{ marginBottom: '20px' }}
+                helperText={formErrors[props.field]}
+            />
+        );
+    }
+
     const MySelectField = (props) =>
     {
         return (
@@ -205,6 +241,31 @@ const FormProvider = (initial_data, model) =>
         );
     }
 
+    const MySelectFieldUsingTextField = (props) =>
+    {
+        return (
+            <TextField
+                id="outlined-basic"
+                label={fields[props.field]}
+                select
+                variant="outlined"
+                fullWidth
+                onChange={handleChange}
+                name="round_type"
+                value={formValues[props.field] || ""}
+                error={Boolean(formErrors.round_type)}
+                sx={{ marginBottom: '20px' }}
+                helperText={formErrors[props.field]}
+            >
+                <MenuItem value='int'>
+                    Interview
+                </MenuItem>
+                <MenuItem value='t'>
+                    Test
+                </MenuItem>
+            </TextField>
+        )
+    }
     const MyForm = (props) =>
     (
         <Grid textAlign={'center'}>
@@ -234,7 +295,7 @@ const FormProvider = (initial_data, model) =>
         </Grid >
     )
     return {
-        MyForm, MyTextField, MySelectField
+        MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField
     }
 };
 

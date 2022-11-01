@@ -16,7 +16,7 @@ const AddQuestionForm = (props) =>
 
     const model = 'questions';
 
-    const { MyForm, MyTextField, MySelectField } = FormProvider(initial, model);
+    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model);
 
     const [members, setMembers] = useState([]);
     useEffect(() =>
@@ -44,7 +44,7 @@ const AddQuestionForm = (props) =>
     return (
         <MyForm>
             <MyTextField field="question_text" />
-            <MyTextField field="total_marks" />
+            <MyTextFieldNumber field="total_marks" />
             <MySelectField field='assignee_id' data={members} />
             <MyTextField field="ans" />
 

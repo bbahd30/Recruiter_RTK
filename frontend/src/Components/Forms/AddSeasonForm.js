@@ -14,7 +14,7 @@ const AddSeason = () =>
 
     const model = 'seasons';
 
-    const { MyForm, MyTextField, MySelectField } = FormProvider(initial, model);
+    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model);
 
     return (
         <MyForm>
