@@ -3,10 +3,10 @@ import * as Links from '../../Links';
 import axios from 'axios';
 import { Grid, Paper, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { convertLength } from '@mui/material/styles/cssUtils';
 
 const FormProvider = (initial_data, model, edit_id, type) =>
 {
+
     const [formErrors, setFormErrors] = useState([]);
     const [added, setAdded] = useState(false);
     const [isSubmitClicked, setIsSubmitClicked] = useState(false);
@@ -15,7 +15,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
 
     const links_matcher =
     {
-        'questions': Links.questions_api,
+        'questions': Links.questions_member_api,
         'seasons': Links.seasons_api,
         'sections': Links.sections_api,
         'rounds': Links.rounds_api,
@@ -41,28 +41,13 @@ const FormProvider = (initial_data, model, edit_id, type) =>
         'round_name': 'Round Name',
         'round_type': 'Round Type'
     }
-    const url = links_matcher[model]
     const paperStyle =
     {
         padding: '10px 20px',
         width: '25vw'
     }
 
-    let initial = [];
-    // if (type === 'add')
-    // {
-    //     initial = initial_data;
-    // }
-    initial = initial_data;
-
-    useEffect(() =>
-    {
-        if (type != 'add')
-        {
-            // initial = dataToEdit;
-            setFormValues(initial);
-        }
-    }, [dataToEdit]);
+    const url = links_matcher[model];
 
     useEffect(() =>
     {
@@ -71,6 +56,22 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             getEditData(edit_id);
         }
     }, []);
+
+    let initial = [];
+
+    initial = initial_data;
+
+    useEffect(() =>
+    {
+        if (type != 'add')
+        {
+            initial = dataToEdit;
+            setFormValues(initial);
+            console.log(dataToEdit)
+
+        }
+    }, [dataToEdit]);
+
 
     const [formValues, setFormValues] = useState(initial_data);
 
@@ -175,12 +176,11 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             .delete
             (
                 url,
-                // { headers: { 'X-CSRFToken': csrftoken } }
             )
             .then
             ((response) =>
             {
-                if (response.data === "Not found.")
+                if (response.status === 204)
                 {
                     setAdded(true);
                     setDeleteData(true)
@@ -204,7 +204,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             {
                 if (response.status === 200 || response.status === 201)
                 {
-                    setDataToEdit(...dataToEdit, response.data)
+                    setDataToEdit(response.data)
                 }
             })
             .catch((error) =>
@@ -270,6 +270,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
                 variant="outlined"
                 fullWidth
                 onChange={handleChange}
+
                 name={props.field}
                 value={formValues[props.field]}
                 error={Boolean(formErrors[props.field])}
@@ -303,6 +304,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
 
     const MySelectField = (props) =>
     {
+
         return (
             <FormControl
                 fullWidth>
@@ -314,8 +316,10 @@ const FormProvider = (initial_data, model, edit_id, type) =>
                     label="Assign to"
                     fullWidth
                     multiple
-                    onChange={handleChange}
                     name={props.field}
+                    // onChange={type === 'add' ? handleChange : handleChangeSelect}
+                    // value={type === 'add' ? formValues[props.field] : prevData}
+                    onChange={handleChange}
                     value={formValues[props.field]}
                     error={Boolean(formErrors[props.field])}
                     sx={{ marginBottom: '20px' }}

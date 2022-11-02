@@ -17,6 +17,7 @@ router.register(r'questions', QuestionViewset, basename='questions')
 router.register(r'interviewPanels', InterviewPanelViewset, basename='interviewPanels')
 router.register(r'interview', InterviewViewset, basename='interview')
 router.register(r'scores', ScoreViewset, basename='scores')
+router.register(r'questionswithmembers', QuestionViewsetNoMemberData, basename='questionswithmembers')
 
 urlpatterns = [
     path('', include(router.urls)),

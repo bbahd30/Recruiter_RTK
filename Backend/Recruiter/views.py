@@ -60,6 +60,10 @@ class QuestionViewset(viewsets.ModelViewSet):
         question.save()
         return Response("post")
 
+class QuestionViewsetNoMemberData(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializerWithoutMemberData
+
 class ApplicantViewsetImpData(viewsets.ModelViewSet):
     '''
         ApplicantViewset for Imp data, only accessible to the 3rd or 4th yearites, so applying the permission class, so made a different viewset, so that the access to others is not given by the has_permission method. 

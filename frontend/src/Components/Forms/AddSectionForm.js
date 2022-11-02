@@ -3,18 +3,19 @@ import * as Links from '../../Links';
 import axios from 'axios';
 import FormProvider from '../UtilityComponents/FormProvider';
 
-const AddQuestionForm = (props) =>
+const AddSectionForm = (props) =>
 {
     const initial =
     {
         section_name: "",
         weightage: "",
-        round_id: props.round_id
+        round_id: props.round_id.id
     };
 
+    const section_id = props.section_id || "";
     const model = 'sections';
 
-    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model);
+    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, section_id, props.type);
 
     const [rounds, setRounds] = useState([]);
     useEffect(() =>
@@ -47,14 +48,14 @@ const AddQuestionForm = (props) =>
     );
 };
 
-export default AddQuestionForm;
+export default AddSectionForm;
 // import React, { useEffect, useState } from 'react';
 // import * as Links from '../../Links';
 // import axios from 'axios';
 // import { Grid, Paper, Button, MenuItem, Select, OutlinedInput, InputLabel, FormControl } from '@mui/material';
 // import TextField from '@mui/material/TextField';
 
-// const AddQuestionForm = (props) =>
+// const AddSectionForm = (props) =>
 // {
 //     const paperStyle =
 //     {
@@ -271,4 +272,4 @@ export default AddQuestionForm;
 //     );
 // };
 
-// export default AddQuestionForm;
+// export default AddSectionForm;

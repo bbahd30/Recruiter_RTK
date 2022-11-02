@@ -135,7 +135,8 @@ const TestOfRound = () =>
                         }
                         dataChild=
                         {
-                            <AddSectionForm round_id={roundId} />
+                            // todo: for edit
+                            <AddSectionForm round_id={roundId} type='add' section_id="" />
                             // AddSectionForm({ round_id: roundId })
                         }
                         title="Add Sections"

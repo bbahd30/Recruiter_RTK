@@ -7,4 +7,4 @@ export const seasons_api = `${localhost}seasons/`
 export const rounds_api = `${localhost}rounds/`
 export const sections_api = `${localhost}sections/`
 export const questions_api = `${localhost}questions/`
-
+export const questions_member_api = `${localhost}questionswithmembers/`

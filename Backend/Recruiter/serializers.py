@@ -33,6 +33,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # depth = 1
 
+class QuestionSerializerWithoutMemberData(serializers.ModelSerializer):
+    # assignee_id = MemberSerializer(many = True, read_only = True)
+
+    class Meta:
+        model = Question
+        fields = '__all__'
+
 class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:
         model = Applicant

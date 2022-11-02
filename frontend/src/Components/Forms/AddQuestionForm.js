@@ -5,8 +5,7 @@ import FormProvider from '../UtilityComponents/FormProvider';
 
 const AddQuestionForm = (props) =>
 {
-
-    const [questions, setQuestions] = useState([]);
+    // const [questions, setQuestions] = useState([]);
     let initial = {};
     const question_id = props.question_id || "";
     initial =
@@ -22,10 +21,10 @@ const AddQuestionForm = (props) =>
         getMembers();
     }, []);
 
-    useEffect(() =>
-    {
-        initial = questions;
-    }, [questions]);
+    // useEffect(() =>
+    // {
+    //     initial = questions;
+    // }, [questions]);
 
     const model = 'questions';
 
