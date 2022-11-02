@@ -24,8 +24,8 @@ const FormProvider = (initial_data, model, edit_id, type) =>
     {
         'questions': 'Question',
         'seasons': 'Season',
-        'sections': 'Sections',
-        'rounds': 'Rounds'
+        'sections': 'Section',
+        'rounds': 'Round'
     }
     const fields =
     {
