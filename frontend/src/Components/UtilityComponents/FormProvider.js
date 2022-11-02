@@ -4,8 +4,14 @@ import axios from 'axios';
 import { Grid, Paper, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-const FormProvider = (initial_data, model) =>
+const FormProvider = (initial_data, model, edit_id, type) =>
 {
+    const [formErrors, setFormErrors] = useState([]);
+    const [added, setAdded] = useState(false);
+    const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+    const [dataToEdit, setDataToEdit] = useState([]);
+    const [deleteData, setDeleteData] = useState(false);
+
     const links_matcher =
     {
         'questions': Links.questions_api,
@@ -40,20 +46,32 @@ const FormProvider = (initial_data, model) =>
         padding: '10px 20px',
         width: '25vw'
     }
-    // const initial =
-    // {
-    //     question_text: "",
-    //     ans: "",
-    //     total_marks: "",
-    //     section_id: props.sectionID,
-    //     props.field: [] // multiple
-    // };
-    const initial = initial_data;
-    const [formValues, setFormValues] = useState(initial);
-    const [formErrors, setFormErrors] = useState([]);
-    const [added, setAdded] = useState(false);
-    const [isSubmitClicked, setIsSubmitClicked] = useState(false);
-    const [members, setMembers] = useState([]);
+
+    let initial = {};
+    if (type === 'add')
+    {
+        initial = initial_data;
+    }
+    else
+    {
+        initial = dataToEdit;
+    }
+
+    useEffect(() =>
+    {
+        if (type === 'edit')
+        {
+            getEditData(edit_id);
+        }
+    }, []);
+
+    useEffect(() =>
+    {
+        initial = dataToEdit;
+        setFormValues(initial);
+    }, [dataToEdit]);
+
+    const [formValues, setFormValues] = useState(initial_data);
 
     const handleChange = (e) =>
     {
@@ -148,19 +166,94 @@ const FormProvider = (initial_data, model) =>
             });
     }
 
+    const deleteFunction = () =>
+    {
+        const url = `${links_matcher[model]}${edit_id}/`;
+        console.log(edit_id)
+        axios
+            .delete
+            (
+                url,
+                // { headers: { 'X-CSRFToken': csrftoken } }
+            )
+            .then
+            ((response) =>
+            {
+                if (response.data === "Not found.")
+                {
+                    setAdded(true);
+                    setDeleteData(true)
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+            });
+    }
+    const getEditData = (edit_id) =>
+    {
+        const url = `${links_matcher[model]}${edit_id}/`;
+        axios
+            .get
+            (
+                url
+            )
+            .then
+            ((response) =>
+            {
+                if (response.status === 200 || response.status === 201)
+                {
+                    setDataToEdit(response.data)
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+            });
+    }
+
+    const editFunction = (edit_id) =>
+    {
+        const data = formValues;
+        const url = `${links_matcher[model]}${edit_id}/`;
+        axios
+            .put
+            (
+                url, data
+            )
+            .then
+            ((response) =>
+            {
+                if (response.status === 200 || response.status === 201)
+                {
+                    setAdded(true);
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+            });
+    }
+
     useEffect(() =>
     {
         if (Object.keys(formErrors).length === 0 && isSubmitClicked)
         {
-            saveToData(formValues);
-            setFormValues(initial);
+            if (type === 'add')
+            {
+                saveToData(formValues);
+            }
+            else if (type === 'edit')
+            {
+                editFunction(edit_id);
+            }
+            setFormValues("");
             setTimeout(() =>
             {
                 setAdded(false);
             }, (4000));
         }
     }, [formErrors])
-
 
     const MyTextField = (props) =>
     {
@@ -206,6 +299,12 @@ const FormProvider = (initial_data, model) =>
             />
         );
     }
+
+    useEffect(() =>
+    {
+        console.log(formValues)
+
+    }, [formValues])
 
     const MySelectField = (props) =>
     {
@@ -266,6 +365,7 @@ const FormProvider = (initial_data, model) =>
             </TextField>
         )
     }
+
     const MyForm = (props) =>
     (
         <Grid textAlign={'center'}>
@@ -273,9 +373,10 @@ const FormProvider = (initial_data, model) =>
                 {
                     added ?
                         (
-                            <Button variant="text" type='submitClicked' sx={{ marginBottom: "30px" }} transition="all .2s"
+                            <Button variant="text" sx={{ marginBottom: "30px" }} transition="all .2s"
                             >
-                                {keyword[model]} successfully added
+                                {keyword[model]} successfully {deleteData ? "deleted" : type === 'edit' ? "edited" : "added"}
+                                {console.log(deleteData)}
                             </Button>
                         )
                         :
@@ -285,17 +386,28 @@ const FormProvider = (initial_data, model) =>
                     <form onSubmit={handleSubmit} alignitem={'center'}>
 
                         {props.children}
-                        <Button variant="contained" type='submitClicked' onClick={handleSubmit} sx={{ marginTop: '30px' }}>
-                            Add
+                        <Button variant="contained" type='submitClick' onClick={handleSubmit} sx={{ marginRight: '20px' }}>
+                            {type === 'edit' ? "Edit" : "Add"}
                         </Button>
+                        {
+                            type === 'edit' ?
+                                <Button variant="contained" type='submitClick' onClick={deleteFunction} transition="all .2s"
+                                >
+                                    Delete
+                                </Button>
+                                : ""
+                        }
 
                     </form>
                 </Grid>
             </Paper>
         </Grid >
     )
+
     return {
         MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField
+        // MyForm, MyTextField, MyTextFieldNumber, MySelectFieldUsingTextField
+
     }
 };
 

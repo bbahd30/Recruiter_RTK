@@ -5,21 +5,46 @@ import FormProvider from '../UtilityComponents/FormProvider';
 
 const AddQuestionForm = (props) =>
 {
-    const initial =
+
+    const [questions, setQuestions] = useState([]);
+    let initial = {};
+    const question_id = props.question_id || "";
+    if (props.type == 'add')
     {
-        question_text: "",
-        ans: "",
-        total_marks: "",
-        section_id: props.sectionID,
-        assignee_id: [] // multiple
-    };
+        initial =
+        {
+            question_text: "",
+            ans: "",
+            total_marks: "",
+            section_id: props.sectionID,
+            assignee_id: [] // multiple
+        };
+    }
+    else
+    {
+        initial = questions;
+    }
+    useEffect(() =>
+    {
+        getMembers();
+        getQuestions();
+    }, []);
+
+    useEffect(() =>
+    {
+        initial = questions;
+    }, [questions]);
 
     const model = 'questions';
 
-    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model);
+    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, question_id, props.type);
+
+    // const { MyForm, MyTextField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, question_id, props.type);
+
 
     const [members, setMembers] = useState([]);
-    useEffect(() =>
+
+    const getMembers = () =>
     {
         const url = Links.members_api;
         axios
@@ -39,7 +64,30 @@ const AddQuestionForm = (props) =>
             {
                 console.log(error);
             });
-    }, []);
+    }
+
+    const getQuestions = (question_id) =>
+    {
+        const url = Links.questions_api;
+        axios
+            .get
+            (
+                url
+            )
+            .then
+            ((response) =>
+            {
+                if (response.status === 200 || response.status === 201)
+                {
+                    setQuestions(response.data)
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+            });
+    }
+
 
     return (
         <MyForm>

@@ -166,6 +166,7 @@ const TestOfRound = () =>
                                                 dataChild=
                                                 {
                                                     <AddQuestionForm sectionID={section.id}
+                                                        type='add'
                                                     />
                                                 }
                                                 title="Add Questions"
@@ -182,46 +183,19 @@ const TestOfRound = () =>
                                             (
                                                 // (question.section_id.indexOf(section.id) != -1) ?
                                                 (question.section_id == section.id) ?
-                                                    <Accordion key={question.id}
-                                                        style={innerDivStyle}
-                                                        className='section-boxes'
-                                                    >
-                                                        <AccordionSummary>
-                                                            <div className='questionAcc'>
-                                                                <div>
-                                                                    {question.question_text}
-                                                                </div>
-                                                                <div id='questionMarks'>
-                                                                    <div>
-                                                                        {question.total_marks}
-                                                                    </div>
+                                                    <div key={question.id}>
+                                                        <MyDialogBox
 
-                                                                </div>
-                                                            </div>
-                                                        </AccordionSummary>
-                                                        <AccordionDetails>
-                                                            <>
-                                                                {
-                                                                    question.assignee_id.map
-                                                                        ((assignee) =>
-                                                                        (
-                                                                            <div
-                                                                                style={quesData}
-                                                                                key={assignee.id}>
-                                                                                <div>
-                                                                                    {assignee.name}
-                                                                                </div>
-                                                                                <MyDialogBox
-
-                                                                                    buttonChild=
-                                                                                    {
-                                                                                        <ModeEditIcon />
-                                                                                    }
-                                                                                    dataChild=
-                                                                                    {
-                                                                                        // <EditFunction model="questions" section_id={question.id} />
-                                                                                        <>
-                                                                                            {/* <MyForm>
+                                                            buttonChild=
+                                                            {
+                                                                <ModeEditIcon />
+                                                            }
+                                                            dataChild=
+                                                            {
+                                                                // <EditFunction model="questions" section_id={question.id} />
+                                                                <>
+                                                                    <AddQuestionForm type='edit' question_id={question.id} />
+                                                                    {/* <MyForm>
                                                                                                 <MyTextField field="question_text" />
                                                                                                 <MyTextField field="total_marks" />
                                                                                                 <MySelectField field='assignee_id' data={members} />
@@ -229,17 +203,48 @@ const TestOfRound = () =>
 
                                                                                             </MyForm> */}
 
-                                                                                        </>
-                                                                                    }
-                                                                                    title="Edit Question"
-                                                                                />
-                                                                            </div>
-                                                                        ))
-                                                                }
-                                                            </>
+                                                                </>
+                                                            }
+                                                            title="Edit Question"
+                                                        />
+                                                        <Accordion
+                                                            style={innerDivStyle}
+                                                            className='section-boxes'
+                                                        >
+                                                            <AccordionSummary>
+                                                                <div className='questionAcc'>
+                                                                    <div>
+                                                                        {question.question_text}
+                                                                    </div>
+                                                                    <div id='questionMarks'>
+                                                                        <div>
+                                                                            {question.total_marks}
+                                                                        </div>
 
-                                                        </AccordionDetails>
-                                                    </Accordion> : ("")
+                                                                    </div>
+                                                                </div>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails>
+                                                                <>
+                                                                    {
+                                                                        question.assignee_id.map
+                                                                            ((assignee) =>
+                                                                            (
+                                                                                <div
+                                                                                    style={quesData}
+                                                                                    key={assignee.id}>
+                                                                                    <div>
+                                                                                        {assignee.name}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            ))
+                                                                    }
+                                                                </>
+
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    </div> : ("")
                                             ))
 
                                         }

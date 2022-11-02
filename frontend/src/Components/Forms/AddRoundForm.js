@@ -18,7 +18,6 @@ const AddRoundForm = () =>
             <MyTextField field="round_name" />
             <MySelectFieldUsingTextField field="round_type" />
         </MyForm>
-
     );
 };
 
@@ -40,81 +39,81 @@ export default AddRoundForm;
 //         width: '20vw'
 //     }
 
-//     const params = useParams();
-//     const initial = { round_name: "", round_type: "" };
-//     const [formValues, setFormValues] = useState(initial);
-//     const [formErrors, setFormErrors] = useState([]);
-//     const [added, setAdded] = useState(false);
-//     const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+    // const params = useParams();
+    // const initial = { round_name: "", round_type: "" };
+    // const [formValues, setFormValues] = useState(initial);
+    // const [formErrors, setFormErrors] = useState([]);
+    // const [added, setAdded] = useState(false);
+    // const [isSubmitClicked, setIsSubmitClicked] = useState(false);
 
-//     const handleChange = (e) =>
-//     {
-//         const { name, value } = e.target;
-//         setFormValues({ ...formValues, [name]: value });
-//     }
+    // const handleChange = (e) =>
+    // {
+    //     const { name, value } = e.target;
+    //     setFormValues({ ...formValues, [name]: value });
+    // }
 
-//     const handleSubmit = (e) =>
-//     {
-//         setIsSubmitClicked(true);
-//         e.preventDefault();
-//         setFormErrors(validate(formValues));
-//     }
+    // const handleSubmit = (e) =>
+    // {
+    //     setIsSubmitClicked(true);
+    //     e.preventDefault();
+    //     setFormErrors(validate(formValues));
+    // }
 
-//     const validate = (values) =>
-//     {
-//         const errors = {};
+    // const validate = (values) =>
+    // {
+    //     const errors = {};
 
-//         if (!values.round_name)
-//         {
-//             errors.round_name = "Round name is required";
-//         }
-//         if (!values.round_type)
-//         {
-//             errors.round_type = "Round type is required";
-//         }
+    //     if (!values.round_name)
+    //     {
+    //         errors.round_name = "Round name is required";
+    //     }
+    //     if (!values.round_type)
+    //     {
+    //         errors.round_type = "Round type is required";
+    //     }
 
-//         return errors;
-//     }
+    //     return errors;
+    // }
 
-//     const saveToData = (formValues) =>
-//     {
-//         const url = Links.rounds_api;
-//         axios
-//             .post
-//             (
-//                 url,
-//                 {
-//                     round_name: formValues.round_name,
-//                     round_type: formValues.round_type,
-//                     season_id: params.id
-//                 })
-//             .then
-//             ((response) =>
-//             {
-//                 // todo:
-//                 if (response.data['msg'] === "Round Added")
-//                 {
-//                     setAdded(true);
-//                 }
-//             })
-//             .catch((error) =>
-//             {
-//                 console.log(error);
-//             });
-//     }
+    // const saveToData = (formValues) =>
+    // {
+    //     const url = Links.rounds_api;
+    //     axios
+    //         .post
+    //         (
+    //             url,
+    //             {
+    //                 round_name: formValues.round_name,
+    //                 round_type: formValues.round_type,
+    //                 season_id: params.id
+    //             })
+    //         .then
+    //         ((response) =>
+    //         {
+    //             // todo:
+    //             if (response.data['msg'] === "Round Added")
+    //             {
+    //                 setAdded(true);
+    //             }
+    //         })
+    //         .catch((error) =>
+    //         {
+    //             console.log(error);
+    //         });
+    // }
 
-//     useEffect(() =>
-//     {
-//         if (Object.keys(formErrors).length === 0 && isSubmitClicked)
-//         {
-//             saveToData(formValues);
-//             setFormValues({ round_name: "", round_type: "" });
-//             setTimeout(() =>
-//             {
-//                 setAdded(false);
-//             }, (4000));
-//         }
-//     }, [formErrors])
+    // useEffect(() =>
+    // {
+    //     if (Object.keys(formErrors).length === 0 && isSubmitClicked)
+    //     {
+    //         saveToData(formValues);
+    //         setFormValues({ round_name: "", round_type: "" });
+    //         setTimeout(() =>
+    //         {
+    //             setAdded(false);
+    //         }, (4000));
+    //     }
+    // }, [formErrors])
 
 //     return (
 //         <Grid textAlign={'center'}>
