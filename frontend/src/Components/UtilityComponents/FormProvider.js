@@ -3,13 +3,14 @@ import * as Links from '../../Links';
 import axios from 'axios';
 import { Grid, Paper, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import { convertLength } from '@mui/material/styles/cssUtils';
 
 const FormProvider = (initial_data, model, edit_id, type) =>
 {
     const [formErrors, setFormErrors] = useState([]);
     const [added, setAdded] = useState(false);
     const [isSubmitClicked, setIsSubmitClicked] = useState(false);
-    const [dataToEdit, setDataToEdit] = useState([]);
+    const [dataToEdit, setDataToEdit] = useState(initial_data);
     const [deleteData, setDeleteData] = useState(false);
 
     const links_matcher =
@@ -47,15 +48,21 @@ const FormProvider = (initial_data, model, edit_id, type) =>
         width: '25vw'
     }
 
-    let initial = {};
-    if (type === 'add')
+    let initial = [];
+    // if (type === 'add')
+    // {
+    //     initial = initial_data;
+    // }
+    initial = initial_data;
+
+    useEffect(() =>
     {
-        initial = initial_data;
-    }
-    else
-    {
-        initial = dataToEdit;
-    }
+        if (type != 'add')
+        {
+            // initial = dataToEdit;
+            setFormValues(initial);
+        }
+    }, [dataToEdit]);
 
     useEffect(() =>
     {
@@ -64,12 +71,6 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             getEditData(edit_id);
         }
     }, []);
-
-    useEffect(() =>
-    {
-        initial = dataToEdit;
-        setFormValues(initial);
-    }, [dataToEdit]);
 
     const [formValues, setFormValues] = useState(initial_data);
 
@@ -203,7 +204,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             {
                 if (response.status === 200 || response.status === 201)
                 {
-                    setDataToEdit(response.data)
+                    setDataToEdit(...dataToEdit, response.data)
                 }
             })
             .catch((error) =>
@@ -247,7 +248,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             {
                 editFunction(edit_id);
             }
-            setFormValues("");
+            setFormValues(initial_data);
             setTimeout(() =>
             {
                 setAdded(false);
@@ -299,12 +300,6 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             />
         );
     }
-
-    useEffect(() =>
-    {
-        console.log(formValues)
-
-    }, [formValues])
 
     const MySelectField = (props) =>
     {
