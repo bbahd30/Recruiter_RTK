@@ -4,11 +4,21 @@ import Icon from '@mui/material/Icon';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 // import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar = (props) =>
 {
+    const navigate = useNavigate();
+
     const toggleDrawer = props.toggleFunction;
     const logoStyle = { marginRight: "20px", marginTop: '9%' }
+
+    const handleClick = () =>
+    {
+        navigate("/seasons");
+    }
+
     return (
         <>
             <AppBar position='static' sx={{ background: '#21b6ae' }}>
@@ -20,7 +30,7 @@ const Navbar = (props) =>
                                 <></>
                         }
                         <WorkHistoryIcon style={logoStyle} />
-                        <Typography variant="h5" sx={{ display: { sm: "block" } }}>
+                        <Typography variant="h5" sx={{ display: { sm: "block" } }} onClick={handleClick}>
                             <span className='logoSpan'>R</span>ECRUITER
                         </Typography>
 

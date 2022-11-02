@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 
 const FormProvider = (initial_data, model, edit_id, type) =>
 {
-
     const [formErrors, setFormErrors] = useState([]);
     const [added, setAdded] = useState(false);
     const [isSubmitClicked, setIsSubmitClicked] = useState(false);
@@ -225,7 +224,8 @@ const FormProvider = (initial_data, model, edit_id, type) =>
             .then
             ((response) =>
             {
-                if (response.status === 200 || response.status === 201)
+                console.log(response.status)
+                if (response.status === 204 || response.status === 201 || response.status === 200)
                 {
                     setAdded(true);
                 }
@@ -375,7 +375,6 @@ const FormProvider = (initial_data, model, edit_id, type) =>
                             <Button variant="text" sx={{ marginBottom: "30px" }} transition="all .2s"
                             >
                                 {keyword[model]} successfully {deleteData ? "deleted" : type === 'edit' ? "edited" : "added"}
-                                {console.log(deleteData)}
                             </Button>
                         )
                         :
@@ -405,7 +404,6 @@ const FormProvider = (initial_data, model, edit_id, type) =>
 
     return {
         MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField
-        // MyForm, MyTextField, MyTextFieldNumber, MySelectFieldUsingTextField
 
     }
 };

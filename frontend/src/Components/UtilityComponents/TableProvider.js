@@ -123,8 +123,8 @@ const TableProvider = (cells, data) =>
     // for showing only the number of rows as mentioned
     const recordsAfterPagingAndSorting = () =>
     {
-        // return stableSort(data, getComparator(order, orderBy)).slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-        return data.slice(page * rowsPerPage, (page + 1) * rowsPerPage).sort(getComparator(order, orderBy))
+        return stableSort(data, getComparator(order, orderBy)).slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+        // return data.slice(page * rowsPerPage, (page + 1) * rowsPerPage).sort(getComparator(order, orderBy))
     }
 
     return {

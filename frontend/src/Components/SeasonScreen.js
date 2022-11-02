@@ -7,6 +7,9 @@ import axios from 'axios';
 import * as Links from '../Links';
 import AddSeasonForm from './Forms/AddSeasonForm';
 import CarouselProvider from './UtilityComponents/CarouselProvider';
+import MyDialogBox from './UtilityComponents/MyDialogBox';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
 
 const SeasonScreen = () =>
 {
@@ -52,24 +55,39 @@ const SeasonScreen = () =>
             <LoginStatus />
             <Navbar />
             <div className='carouselCont'>
-                <CarouselSlider formComponent={<AddSeasonForm />} title="Add Season">
+                <CarouselSlider formComponent={<AddSeasonForm type='add' season_id="" />} title="Add Season">
                     {
                         seasons.map(season =>
                         (
-                            <div className='carouselCard' key={season.id} id={"season" + season.id} onClick={() => { navigateToSeason(season.id) }}>
-                                <div className='season-year'>{season.year}</div>
-                                <div className='season-name'>
-                                    {season.season_name}
-                                </div>
-                                <div className='carouselIndividualImg'>
-                                    <img
-                                        src={require('../Images/2019.png')}
-                                        width={"80px"} height={"70px"} />
-                                </div>
-                                <div className='carouselData'>
-                                    {season.description}
-                                </div>
+                            <div key={season.id}>
+                                <MyDialogBox
 
+                                    buttonChild=
+                                    {
+                                        <ModeEditIcon />
+                                    }
+                                    dataChild=
+                                    {
+                                        <AddSeasonForm type='edit' season_id={season.id}
+                                        />
+                                    }
+                                    title="Add Questions"
+                                />
+                                <div className='carouselCard' id={"season" + season.id} onClick={() => { navigateToSeason(season.id) }}>
+                                    <div className='season-year'>{season.year}</div>
+                                    <div className='season-name'>
+                                        {season.season_name}
+                                    </div>
+                                    <div className='carouselIndividualImg'>
+                                        <img
+                                            src={require('../Images/2019.png')}
+                                            width={"80px"} height={"70px"} />
+                                    </div>
+                                    <div className='carouselData'>
+                                        {season.description}
+                                    </div>
+
+                                </div>
                             </div>
                         ))
                     }

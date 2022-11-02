@@ -7,6 +7,7 @@ import SeasonScreen from './Components/SeasonScreen';
 import Dashboard from './Components/DashboardComponents/Dashboard';
 import RTStage from './Components/Stages/RTStage';
 import TestOfRound from './Components/Stages/TestOfRound';
+import InterviewStage from './Components/Stages/InterviewStage';
 
 function App()
 {
@@ -25,6 +26,7 @@ function App()
             <Route index element={<Dashboard />} />
             <Route path='rtstage' element={<RTStage />} />
             <Route path='rounds/:id' element={<TestOfRound />} />
+            <Route path='interviewstage' element={<InterviewStage />} />
           </Route>
 
 

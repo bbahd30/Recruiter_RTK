@@ -18,9 +18,9 @@ class MemberViewset(viewsets.ModelViewSet):
 
 # note: NOT BEING USED ANYMORE AS THE SEASON DATA IS BEING GOVERNED BY SeasonWiseViewset
 
-# class SeasonViewset(viewsets.ModelViewSet):
-#     queryset = Season.objects.all()
-#     serializer_class = SeasonSerializer
+class SeasonViewset(viewsets.ModelViewSet):
+    queryset = Season.objects.all()
+    serializer_class = SeasonSerializer
 
 class RoundViewset(viewsets.ModelViewSet):
     queryset = Round.objects.all()

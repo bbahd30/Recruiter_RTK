@@ -8,11 +8,11 @@ const AddRoundForm = (props) =>
         round_name: "",
         round_type: ""
     };
-    const section_id = props.section_id || "";
+    const round_id = props.round_id;
 
     const model = 'rounds';
 
-    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, section_id, props.type);
+    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, round_id, props.type);
 
     return (
         <MyForm>

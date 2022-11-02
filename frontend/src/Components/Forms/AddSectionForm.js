@@ -9,36 +9,13 @@ const AddSectionForm = (props) =>
     {
         section_name: "",
         weightage: "",
-        round_id: props.round_id.id
+        round_id: props.type === 'add' ? props.round_id.id : ""
     };
 
-    const section_id = props.section_id || "";
+    const section_id = props.section_id;
     const model = 'sections';
 
     const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, section_id, props.type);
-
-    const [rounds, setRounds] = useState([]);
-    useEffect(() =>
-    {
-        const url = Links.rounds_api;
-        axios
-            .get
-            (
-                url
-            )
-            .then
-            ((response) =>
-            {
-                if (response.status === 200 || response.status === 201)
-                {
-                    setRounds(response.data)
-                }
-            })
-            .catch((error) =>
-            {
-                console.log(error);
-            });
-    }, []);
 
     return (
         <MyForm>

@@ -6,10 +6,9 @@ import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/materia
 import AddSectionForm from '../Forms/AddSectionForm';
 import axios from 'axios';
 import * as Links from '../../Links';
-import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import AddQuestionForm from '../Forms/AddQuestionForm';
+import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import EditFunction from '../UtilityComponents/EditFunction';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 const TestOfRound = () =>
@@ -18,8 +17,8 @@ const TestOfRound = () =>
     const model = 'questions';
 
 
-    const location = useLocation();
     // todo: on using history if just typed then will not get the seasonID as no history and direct landed
+    const location = useLocation();
     const seasonID = location.state.sId;
     const [sections, setSections] = useState([]);
     const roundId = useParams();
@@ -122,12 +121,18 @@ const TestOfRound = () =>
         justifyContent: 'space-between',
         width: '100%'
     }
+
+    const sectionBox =
+    {
+        marginTop: '20px',
+        color: 'var(--green)'
+    }
     return (
         <>
             <SideBar id={seasonID} />
             <Box>
                 <h1 className='addSection'>Sections</h1>
-                <div className='addSection'>
+                <div className='addSection' >
                     <MyDialogBox
                         buttonChild=
                         {
@@ -142,61 +147,82 @@ const TestOfRound = () =>
                         title="Add Sections"
                     />
                 </div>
-                <div>
+
+                <div >
                     {
                         sections.map(section =>
                         (
-                            <div
-                                key={section.id}
-                                style={divStyle}
-                                className='section-boxes'
-                            >
-                                <div >
-                                    <div className='flexClass'>
-                                        <h2>
-                                            Section: {section.section_name}
-                                            {/* todo: add accordion condtion of only one open at once */}
-                                        </h2>
-                                        <div className='addSign'>
-                                            <MyDialogBox
+                            <div key={section.id} style={sectionBox}>
+                                <Box
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <MyDialogBox
 
-                                                buttonChild=
-                                                {
-                                                    <ControlPointIcon />
-                                                }
-                                                dataChild=
-                                                {
-                                                    <AddQuestionForm sectionID={section.id}
-                                                        type='add'
-                                                    />
-                                                }
-                                                title="Add Questions"
-                                            />
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div>
-                                    <>
-
+                                        buttonChild=
                                         {
-                                            questions.map(question =>
-                                            (
-                                                // (question.section_id.indexOf(section.id) != -1) ?
-                                                (question.section_id == section.id) ?
-                                                    <div key={question.id}>
-                                                        <MyDialogBox
+                                            <ModeEditIcon />
+                                        }
+                                        dataChild=
+                                        {
+                                            <AddSectionForm type='edit' section_id={section.id}
+                                            />
+                                        }
+                                        title="Add Questions"
+                                    />
+                                </Box>
+                                <div
+                                    key={section.id}
+                                    style={divStyle}
+                                    className='section-boxes'
+                                >
+                                    <div >
+                                        <div className='flexClass'>
+                                            <h2>
+                                                Section: {section.section_name}
+                                                {/* todo: add accordion condtion of only one open at once */}
+                                            </h2>
+                                            <div className='addSign'>
+                                                <MyDialogBox
 
-                                                            buttonChild=
-                                                            {
-                                                                <ModeEditIcon />
-                                                            }
-                                                            dataChild=
-                                                            {
-                                                                // <EditFunction model="questions" section_id={question.id} />
-                                                                <>
-                                                                    <AddQuestionForm type='edit' question_id={question.id} />
-                                                                    {/* <MyForm>
+                                                    buttonChild=
+                                                    {
+                                                        <ControlPointIcon />
+                                                    }
+                                                    dataChild=
+                                                    {
+                                                        <AddQuestionForm sectionID={section.id}
+                                                            type='add'
+                                                        />
+                                                    }
+                                                    title="Add Questions"
+                                                />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <>
+
+                                            {
+                                                questions.map(question =>
+                                                (
+                                                    // (question.section_id.indexOf(section.id) != -1) ?
+                                                    (question.section_id == section.id) ?
+                                                        <div key={question.id}>
+                                                            <MyDialogBox
+
+                                                                buttonChild=
+                                                                {
+                                                                    <ModeEditIcon />
+                                                                }
+                                                                dataChild=
+                                                                {
+                                                                    // <EditFunction model="questions" section_id={question.id} />
+                                                                    <>
+                                                                        <AddQuestionForm type='edit' question_id={question.id} />
+                                                                        {/* <MyForm>
                                                                                                 <MyTextField field="question_text" />
                                                                                                 <MyTextField field="total_marks" />
                                                                                                 <MySelectField field='assignee_id' data={members} />
@@ -204,56 +230,56 @@ const TestOfRound = () =>
 
                                                                                             </MyForm> */}
 
-                                                                </>
-                                                            }
-                                                            title="Edit Question"
-                                                        />
-                                                        <Accordion
-                                                            style={innerDivStyle}
-                                                            className='section-boxes'
-                                                        >
-                                                            <AccordionSummary>
-                                                                <div className='questionAcc'>
-                                                                    <div>
-                                                                        {question.question_text}
-                                                                    </div>
-                                                                    <div id='questionMarks'>
+                                                                    </>
+                                                                }
+                                                                title="Edit Question"
+                                                            />
+                                                            <Accordion
+                                                                style={innerDivStyle}
+                                                                className='section-boxes'
+                                                            >
+                                                                <AccordionSummary>
+                                                                    <div className='questionAcc'>
                                                                         <div>
-                                                                            {question.total_marks}
+                                                                            {question.question_text}
                                                                         </div>
+                                                                        <div id='questionMarks'>
+                                                                            <div>
+                                                                                {question.total_marks}
+                                                                            </div>
 
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </AccordionSummary>
-                                                            <AccordionDetails>
-                                                                <>
-                                                                    {
-                                                                        question.assignee_id.map
-                                                                            ((assignee) =>
-                                                                            (
-                                                                                <div
-                                                                                    style={quesData}
-                                                                                    key={assignee.id}>
-                                                                                    <div>
-                                                                                        {assignee.name}
+                                                                </AccordionSummary>
+                                                                <AccordionDetails>
+                                                                    <>
+                                                                        {
+                                                                            question.assignee_id.map
+                                                                                ((assignee) =>
+                                                                                (
+                                                                                    <div
+                                                                                        style={quesData}
+                                                                                        key={assignee.id}>
+                                                                                        <div>
+                                                                                            {assignee.name}
+                                                                                        </div>
+
                                                                                     </div>
+                                                                                ))
+                                                                        }
+                                                                    </>
 
-                                                                                </div>
-                                                                            ))
-                                                                    }
-                                                                </>
+                                                                </AccordionDetails>
+                                                            </Accordion>
+                                                        </div> : ("")
+                                                ))
 
-                                                            </AccordionDetails>
-                                                        </Accordion>
-                                                    </div> : ("")
-                                            ))
+                                            }
 
-                                        }
-
-                                    </>
+                                        </>
+                                    </div>
                                 </div>
                             </div>
-
                         ))
                     }
                 </div>
