@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.db.models import CASCADE
 from django.contrib.auth.models import AbstractUser    
@@ -38,7 +39,7 @@ class Round(models.Model):
     round_name = models.CharField(max_length=100)
     round_type = models.CharField(max_length=20, choices=round_choices, default="int")
     # can this be a foreign key?
-    season_id = models.ManyToManyField(Season)
+    season_id = models.ForeignKey(Season, on_delete = CASCADE, default= 1)
 
     def __str__(self):
         return self.round_name 
@@ -59,7 +60,7 @@ class Question(models.Model):
         Created for questions to be added during the test or interview
     '''
 
-    section_id = models.ManyToManyField(Section)
+    section_id = models.ForeignKey(Section, on_delete = CASCADE, default = 1)
     question_text = models.CharField(max_length=500)
     ans = models.CharField(max_length=500)
     total_marks = models.FloatField()

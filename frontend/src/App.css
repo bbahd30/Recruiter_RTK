@@ -1,0 +1,186 @@
+body
+{
+    font-family: 'Poppins', sans-serif;
+    /* overflow-x: hidden; */
+}
+
+:root
+{
+  --pink: #CE5983;
+  --yellow: #FFDF52;
+  --green: #30A2A9;
+  --purple: #5b004c;
+}
+.navSection
+{
+  display: flex;
+}
+.logoSpan
+{
+  font-size: 50px;
+  font-weight: 900;
+}
+/* .App {
+  text-align: center;
+} */
+.loginButton
+{
+  text-align: center;
+}
+/* 
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+} */
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+/* .App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+} */
+
+/* .App-link {
+  color: #61dafb;
+} */
+
+
+/* note: for season screen */
+.carouselCont
+{
+  width: 90%;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 20vh;
+  padding: 50px 35px;
+}
+.carouselCard
+{
+  padding: 10px;
+  border: transparent;
+  border-radius: 8px;
+  border: 1px solid var(--purple);
+  height: fit-content;
+}
+
+.season-name
+{
+  font-size:1.5rem;
+  font-weight: bolder;
+  padding: 20px 5px;
+}
+.carouselIndividualImg img
+{
+  margin: auto;
+}
+.slick-slide > div
+{
+  margin: 0 1.5rem;
+}
+
+.slick-list
+{
+  margin: 0 -10px;
+}
+.carouselData
+{
+  margin: 30px 20px;
+}
+.slider
+{
+  margin-bottom: 50px;
+}
+
+
+
+/* ApplicantData */
+.table
+{
+  border: 2px solid var(--purple);
+  border-radius: 18px;
+  margin: 40px;
+}
+
+
+
+/* TEST SCREEN */
+.testScreen
+{
+  margin: 50px 20%;
+  border: 2px solid blueviolet;
+  padding: 20px;
+}
+
+.parentBtn
+{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.btn
+{
+  display: inline-block;
+  margin-top: 20px;
+}
+
+
+
+
+/* sections */
+.section-boxes
+{
+  border: 1px solid var(--green);
+  border-left: 7px solid var(--pink);
+}
+.addSign
+{
+  /* margin-top: 20px; */
+  margin: auto 0;
+  /* text-align: center; */
+}
+.questionAcc
+{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 900;
+}
+#questionMarks
+{
+  /* font-size: 28px; */
+  color: var(--green);
+
+}
+.addSection
+{
+  text-align: center;
+}
+
+
+.flexClass
+{
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 

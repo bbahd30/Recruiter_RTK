@@ -1,120 +1,22 @@
-from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseRedirect
 from .links import client_data
 from Recruiter.models import Member
-import requests
+from rest_framework import status
 from .serializers import *
 from rest_framework import viewsets
+from django.http import HttpResponse
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import *
 from rest_framework.decorators import api_view, permission_classes, action
 from django.contrib.auth import login, logout
 from django.forms.models import model_to_dict
-
-
-def authenticate(request, member_json_info):
-    try:
-        member_login = Member.objects.get(enroll_no = member_json_info.get('student').get('enrolmentNumber'))
-    except Member.DoesNotExist:
-        member_login = Member(
-                            username = member_json_info.get ('username'),
-                            name = member_json_info.get('person').get('fullName'),
-                            profile_pic = member_json_info.get('person').get('displayPicture'),
-                            academic_year = member_json_info.get('student').get('currentYear'),
-                            enroll_no = member_json_info.get('student').get('enrolmentNumber'),
-                            college_joining_year = member_json_info.get('student').get('startDate')[:4]
-                        )
-        member_login.save()
-
-    return member_login
-
-def auto_login(request, member_json_info, from_para):
-    if from_para == "new":
-        member_login = authenticate(request, member_json_info)
-        login(request, member_login)
-
-    if from_para == "old":
-        print("old")
-        print(member_json_info)
-        member_login = member_json_info
-        
-def enter(request):
-    client_id = client_data['client_id']
-    client_secret_key = client_data['client_secret_key']
-    redirect_uri = 'http://127.0.0.1:8000/enter/'
-    
-    if str(request.GET['state']) == "member_allowed_sharing_info":
-        code = request.GET['code']
-
-    data = {
-        'client_id': client_id,
-        'client_secret': client_secret_key,
-        'grant_type': 'authorization_code',
-        'redirect_uri': redirect_uri,
-        'code': code
-    }
-
-    url = 'https://channeli.in/open_auth/token/'
-    access_data = requests.post(url,data)
-
-    if access_data.status_code == 200:
-        access_data_json = access_data.json()
-        access_token = access_data_json['access_token']
-        auth_header = {
-            'Authorization': "Bearer " + access_token
-        }
-
-        url = "https://channeli.in/open_auth/get_user_data/"
-        member_info = requests.get(url,headers = auth_header)
-        member_json_info = member_info.json()
-        if member_info.status_code == 200:
-            member = False
-            for role in member_json_info.get('person').get('roles'):
-                    if role['role'] == "Maintainer":
-                        member = True
-            
-            if member:
-                print("called")
-                auto_login(request, member_json_info, "new")
-            else:
-                return redirect("google.com")
-        else:
-            return HttpResponse("Failed to get member data")
-    else:
-        return HttpResponse("Failed to get data")
-
-    return redirect('dashboard')
-           
-def loginpage(request):
-    if request.user.is_authenticated:
-        print("true hai")
-        member_json_info = model_to_dict(Member.objects.get(username = request.user.username)) 
-        auto_login(request, member_json_info, "old")
-        return redirect('http://127.0.0.1:8000/dashboard/')
-
-    url = "<a href = 'http://127.0.0.1:8000/authorize'>Auth</a>"
-    return HttpResponse("This is the link to go for "+ url)
-
-def authorize(request):
-    url = "https://channeli.in/oauth/authorise/?client_id=" + client_data['client_id'] + "&redirect_uri=http://127.0.0.1:8000/enter/&state=member_allowed_sharing_info"
-    return HttpResponseRedirect(url)
-
-@api_view(['GET'])
-def logout_member(request):
-    if request.user.is_authenticated:
-        logout(request)
-        return HttpResponse("Logged Out")
-    return HttpResponse("Failed to log out")
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def dashboard(request):
-    return HttpResponse("This is dashboard")
+from django.shortcuts import render
 
 class MemberViewset(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
+
+# note: NOT BEING USED ANYMORE AS THE SEASON DATA IS BEING GOVERNED BY SeasonWiseViewset
 
 class SeasonViewset(viewsets.ModelViewSet):
     queryset = Season.objects.all()
@@ -125,32 +27,50 @@ class RoundViewset(viewsets.ModelViewSet):
     serializer_class = RoundSerializer
     # permission_classes = [delPermission]
 
+    # def get_queryset(self):
+    #     print("hellllllllllllllllllllllllllllllllllllo")
+    #     print(self.request.user)
+    #     return Round.objects.all()
+
 class SectionViewset(viewsets.ModelViewSet):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
+     
+    def create(self, request, **kwargs):
+       section = Section.objects.create(
+           section_name = request.data.get('section_name'),
+           weightage = request.data.get('weightage')
+       )
+       section.round_id.set(request.data.get('round_id'))
+       section.save()
+       return Response("post")
 
 class QuestionViewset(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+    def create(self, request, **kwargs):
+        question = Question.objects.create(
+            question_text = request.data.get('question_text'),
+            ans = request.data.get('ans'),
+            total_marks = int(request.data.get('total_marks')),
+            section_id = Section.objects.get(id=int(request.data.get('section_id')))
+        )
+        question.assignee_id.set(request.data.get('assignee_id'))
+        question.save()
+        return Response("post")
+
+class QuestionViewsetNoMemberData(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializerWithoutMemberData
+
 class ApplicantViewsetImpData(viewsets.ModelViewSet):
+    '''
+        ApplicantViewset for Imp data, only accessible to the 3rd or 4th yearites, so applying the permission class, so made a different viewset, so that the access to others is not given by the has_permission method. 
+    '''
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializerImpData
-
-    @action(methods=['GET'], detail = False, url_name='applicants', url_path='applicants')
-    def get_applicant_imp(self,request):
-        print("jslfj")
-        print(request)
-        
-# class ApplicantViewset(viewsets.ModelViewSet):
-#     queryset = Applicant.objects.all()
-#     serializer_class = ApplicantSerializerImpData
-#     # permission_classes = [UnableToSeePreviousSeason,IsAbleToSeePersonalInfo,]
-    
-
-#     # def get_applicant(request, year, id):
-#     #     print("hey oc")
-
+    # permission_classes = [ImpDataPermission]
 
 class InterviewPanelViewset(viewsets.ModelViewSet):
     queryset = InterviewPanel.objects.all()
@@ -159,9 +79,162 @@ class InterviewPanelViewset(viewsets.ModelViewSet):
 class InterviewViewset(viewsets.ModelViewSet):
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer
-    permission_classes = [IsAbleToSeePersonalInfo,UnableToSeePreviousSeason]
+    permission_classes = [IsAbleToSeePersonalInfo]
 
 class ScoreViewset(viewsets.ModelViewSet):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
-    permission_classes = [IsAbleToSeePersonalInfo, UnableToSeePreviousSeason]
+    permission_classes = [IsAbleToSeePersonalInfo]
+
+# note: CUSTOMIZED VIEWSETS
+class SectionWiseQuestionViewset(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+
+    @action(detail=False, methods=['get'])
+    def get_data(self, request, **kwargs):
+        if not kwargs:
+            return HttpResponse("Using questions api")
+        else:
+            r_id = kwargs.get('section_id')
+            model = kwargs.get('model')
+            if model == 'questions':
+                model_data = QuestionSerializer(Question.objects.filter(section_id = r_id), many = True)
+                if len(kwargs) == 2:
+                    return Response(model_data.data)
+                model_id = kwargs.get('model_id')
+                model_data = QuestionSerializer(Question.objects.filter(section_id = r_id).filter(id = model_id), many = True)
+                return Response(model_data.data)
+            return HttpResponse("check SectionWiseQuestionViewset") 
+
+class RoundWiseSectionViewset(viewsets.ModelViewSet):
+    queryset = Round.objects.all()
+
+    @action(detail=False, methods=['get'])
+    def get_data(self, request, **kwargs):
+        if not kwargs:
+            return HttpResponse("Using rounds api")
+        else:
+            r_id = kwargs.get('round_id')
+            model = kwargs.get('model')
+            if model == 'sections':
+                model_data = SectionSerializer(Section.objects.filter(round_id = r_id), many = True)
+                if len(kwargs) == 2:
+                    return Response(model_data.data)
+                model_id = kwargs.get('model_id')
+                model_data = SectionSerializer(Section.objects.filter(round_id = r_id).filter(id = model_id), many = True)
+                return Response(model_data.data)
+            return HttpResponse("check roundwiseviewset")        
+
+class SeasonWiseViewset(viewsets.ModelViewSet):
+    queryset = Season.objects.all()
+    serializer_class = SeasonSerializer
+    # permission_classes = [ImpDataPermission]
+
+    @action(detail=False, methods=['get'])
+    def get_data(self, request, **kwargs):
+        if not kwargs:
+            season_data = SeasonSerializer(Season.objects.all(), many = True)
+            return Response(season_data.data)
+        else:
+            s_id = kwargs.get('season_id')
+            if len(kwargs) == 1:
+                season_data = SeasonSerializer(Season.objects.get(id = s_id))                    
+                return Response(season_data.data)
+            else:
+                model = kwargs.get('model')
+                if model == 'applicants':
+                    model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id), many = True)
+                    if len(kwargs) == 2:
+                        return Response(model_data.data)
+                    else:
+                        print(model_data)
+                        model_id = kwargs.get('model_id')
+                        model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id).filter(id = model_id), many = True)
+                        return Response(model_data.data)
+
+                elif model == 'rounds':
+                    model_data = RoundSerializer(Round.objects.filter(season_id = s_id), many = True)
+                    if len(kwargs) == 2:
+                        return Response(model_data.data)
+                    else:
+                        model_id = kwargs.get('model_id')
+                        model_data = RoundSerializer(Round.objects.filter(season_id = s_id).filter(id = model_id), many = True)
+                        return Response(model_data.data)
+
+    @action(detail=False, methods=['post'])
+    def post(self, request, **kwargs):
+        if self.request.method == 'POST':
+            if not kwargs:
+                print(request.data)
+                new_season = Season(
+                    year = request.data.get('year'),
+                    season_name = request.data.get('season_name'),
+                    description = request.data.get('description')
+                )
+                new_season.save();
+                return Response(
+                    {
+                        'msg' : "Season Added"
+                    },
+                    status= status.HTTP_201_CREATED
+                )
+            else:
+                s_id = kwargs.get('season_id')
+                if len(kwargs) == 1:
+                    # todo: will do nothing as asked a specific season
+                    return Response(
+                        {
+                            'msg': "Invalid Post Request"
+                        }, 
+                        status= status.HTTP_400_BAD_REQUEST
+                    )
+                else:
+                    model = kwargs.get('model')
+                    if model == 'applicants':
+                        if len(kwargs) == 2:
+                            new_applicant = Applicant(
+                                
+                            )
+                            new_applicant.save();
+                            return Response("Added applicant")
+        return Response("Invalid Request")
+
+
+# todo: generalising parent child       
+# model_dict = {
+#     'rounds': Round,
+#     'sections': Section
+# }
+
+# serializer_dict = {
+#     'rounds': RoundSerializer,
+#     'sections': SectionSerializer
+# }
+
+# class ParentWiseChildViewset(viewsets.ModelViewSet):
+#     queryset = model_dict.get('rounds').objects.all()
+#     parent_id_attribute = ""
+#     @action(detail=False, methods=['get'])
+#     def get_data(self, request, **kwargs):
+#         if not kwargs:
+#             return HttpResponse("Using parent api")
+#         else:
+#             model = kwargs.get('model')
+#             p_id = kwargs.get('p_id')
+#             parent_model = model_dict.get(kwargs.get('p_model'))
+#             child_model = model_dict.get(model)
+#             p_serializer = serializer_dict.get(kwargs.get('p_model'))
+#             child_serializer = serializer_dict.get(model)
+            
+#             # if model == 'sections':
+#             parent_id_attribute = kwargs.get('p_model')[:-1] + "_id"
+#             child_id_attribute = model[:-1] + "_id"
+
+
+#             model_data = p_serializer(parent_model.objects.filter(parent_id_attribute = p_id), many = True)
+#             if len(kwargs) == 2:
+#                 return Response(model_data.data)
+#             model_id = kwargs.get('model_id')
+#             model_data = p_serializer(parent_model.objects.filter( = p_id).filter(child_id_attribute = model_id), many = True)
+#             return Response(model_data.data)
+#             return HttpResponse("check roundwiseviewset")   

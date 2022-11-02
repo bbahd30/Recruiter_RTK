@@ -1,4 +1,3 @@
-from dataclasses import field, fields
 from rest_framework import serializers
 from Recruiter.models import *
 
@@ -14,6 +13,9 @@ class SeasonSerializer(serializers.ModelSerializer):
         depth = 1
 
 class RoundSerializer(serializers.ModelSerializer):
+    # slug
+    # todo:
+    # season_id = serializers.PrimaryKeyRelatedField(source = '')
     class Meta:
         model = Round
         fields = '__all__'
@@ -29,7 +31,14 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = '__all__'
-        depth = 1
+        # depth = 1
+
+class QuestionSerializerWithoutMemberData(serializers.ModelSerializer):
+    # assignee_id = MemberSerializer(many = True, read_only = True)
+
+    class Meta:
+        model = Question
+        fields = '__all__'
 
 class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:
