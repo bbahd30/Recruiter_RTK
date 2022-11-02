@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import FormProvider from '../UtilityComponents/FormProvider';
 
-const AddRoundForm = () =>
+const AddRoundForm = (props) =>
 {
     const initial =
     {
         round_name: "",
         round_type: ""
     };
+    const section_id = props.section_id || "";
 
     const model = 'rounds';
 
-    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model);
+    const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, section_id, props.type);
 
     return (
         <MyForm>

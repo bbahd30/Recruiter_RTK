@@ -9,25 +9,17 @@ const AddQuestionForm = (props) =>
     const [questions, setQuestions] = useState([]);
     let initial = {};
     const question_id = props.question_id || "";
-    if (props.type == 'add')
+    initial =
     {
-        initial =
-        {
-            question_text: "",
-            ans: "",
-            total_marks: "",
-            section_id: props.sectionID,
-            assignee_id: [] // multiple
-        };
-    }
-    else
-    {
-        initial = questions;
-    }
+        question_text: "",
+        ans: "",
+        total_marks: "",
+        section_id: props.sectionID,
+        assignee_id: [] // multiple
+    };
     useEffect(() =>
     {
         getMembers();
-        getQuestions();
     }, []);
 
     useEffect(() =>
@@ -66,34 +58,11 @@ const AddQuestionForm = (props) =>
             });
     }
 
-    const getQuestions = (question_id) =>
-    {
-        const url = Links.questions_api;
-        axios
-            .get
-            (
-                url
-            )
-            .then
-            ((response) =>
-            {
-                if (response.status === 200 || response.status === 201)
-                {
-                    setQuestions(response.data)
-                }
-            })
-            .catch((error) =>
-            {
-                console.log(error);
-            });
-    }
-
-
     return (
         <MyForm>
             <MyTextField field="question_text" />
             <MyTextFieldNumber field="total_marks" />
-            <MySelectField field='assignee_id' data={members} />
+            <MySelectField field='assignee_id' data={members} status='closed' />
             <MyTextField field="ans" />
 
         </MyForm>

@@ -44,7 +44,8 @@ const RTStage = () =>
         <>
             <SideBar id={id} />
             <div className='carouselCont'>
-                <CarouselSlider formComponent={<AddRoundForm />} title="Add Round">
+                {/* todo: section id for edit icon */}
+                <CarouselSlider formComponent={<AddRoundForm type='add' section_id="" />} title="Add Round">
                     {
                         rounds.map(round =>
                         ( //note: imp as not { it is (
