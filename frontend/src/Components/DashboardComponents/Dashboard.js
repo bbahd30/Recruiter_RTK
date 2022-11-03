@@ -148,7 +148,7 @@ function Dashboard(props)
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell>{item.enroll_no}</TableCell>
                                             <TableCell>{item.role}</TableCell>
-                                            <TableCell>{item.phone_number}</TableCell>
+                                            <TableCell>{item.phone_no}</TableCell>
                                             <TableCell>{item.status}</TableCell>
                                         </TableRow>
                                     ))

@@ -74,7 +74,7 @@ class Applicant(models.Model):
     '''
     name = models.CharField(max_length=20)
     academic_year = models.PositiveSmallIntegerField(blank=True)
-    enroll_no = models.BigIntegerField(blank= True)
+    enroll_no = models.BigIntegerField(blank= True, unique = True)
     role_choices = (
         ("dev", "Developer"),
         ("design", "Designer")
