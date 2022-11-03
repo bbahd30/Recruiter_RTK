@@ -74,10 +74,13 @@ const FormProvider = (initial_data, model, edit_id, type) =>
 
     const [formValues, setFormValues] = useState(initial_data);
 
+    const [testing, settesting] = useState("")
     const handleChange = (e) =>
     {
-        const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value });
+        e.preventDefault();
+        // const { name, value } = e.target;
+        // setFormValues({ ...formValues, [name]: value });
+        settesting(e.target.value);
     }
 
     const handleSubmit = (e) =>
@@ -272,7 +275,8 @@ const FormProvider = (initial_data, model, edit_id, type) =>
                 onChange={handleChange}
 
                 name={props.field}
-                value={formValues[props.field]}
+                // value={formValues[props.field]}
+                value={testing}
                 error={Boolean(formErrors[props.field])}
                 sx={{ marginBottom: '20px' }}
                 helperText={formErrors[props.field]}
@@ -368,6 +372,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
     const MyForm = (props) =>
     (
         <Grid textAlign={'center'}>
+            {console.log()}
             <Paper elevation={0} style={paperStyle}>
                 {
                     added ?

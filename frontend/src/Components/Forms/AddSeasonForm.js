@@ -16,11 +16,15 @@ const AddSeason = (props) =>
 
     const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, season_id, props.type);
     return (
-        <MyForm>
-            <MyTextField field="year" />
-            <MyTextField field="season_name" />
-            <MyTextField field="description" />
-        </MyForm>
+
+        <>
+            {console.log(MyForm, 'hii', initial)}
+            <MyForm>
+                <MyTextField field="year" />
+                <MyTextField field="season_name" />
+                <MyTextField field="description" />
+            </MyForm>
+        </>
     );
 };
 

@@ -23,11 +23,13 @@ const Login = () =>
                 })
             .then((res) =>
             {
+                console.log(res)
                 if (res.status === 201 || res.status === 202)
                 {
                     if (res.data.status === "loggedInNow")
                     {
                         setStatus({ "status": "loggedIn" })
+                        localStorage.setItem("auth_token", res.data.token)
                         navigate(`/seasons`);
                         console.log("towards seasons")
                     }

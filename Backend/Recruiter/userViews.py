@@ -13,7 +13,7 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import login, logout
 from django.forms.models import model_to_dict
-
+from rest_framework.authtoken.models import Token
 # note: 
 '''
     Backend Views
@@ -174,11 +174,13 @@ def enter(request):
             
             if member:
                 member_login = authenticate(request, member_json_info)
+                print(member_login)
                 print(request.user)
                 print(request.user.is_authenticated)
                 # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                 # checkStatus(request)
                 login(request, member_login)
+                auth_token = Token.objects.get(user_id=member_login.id).key
                 # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                 # checkStatus(HttpRequest)
                 print(request.user)
@@ -186,6 +188,7 @@ def enter(request):
                 return Response(
                     {
                         'status': 'loggedInNow',
+                        'token': auth_token,
                     },
                     status = status.HTTP_202_ACCEPTED
                 )
@@ -213,11 +216,12 @@ def authenticate(request, member_json_info):
     '''
         This function looks for the member if already logged in gives the instance else creates the user of the member and then returns the instance
     '''
+    print("hello")
     
     try:
         member_login = Member.objects.get(enroll_no = member_json_info.get('student').get('enrolmentNumber'))
     except Member.DoesNotExist:
-        member_login = Member(
+        member_login = Member.objects.create(
                             username = member_json_info.get ('username'),
                             name = member_json_info.get('person').get('fullName'),
                             profile_pic = member_json_info.get('person').get('displayPicture'),
@@ -225,7 +229,7 @@ def authenticate(request, member_json_info):
                             enroll_no = member_json_info.get('student').get('enrolmentNumber'),
                             college_joining_year = member_json_info.get('student').get('startDate')[:4]
                         )
-        member_login.save()
+        # member_login.save()
 
     return member_login
 
@@ -250,6 +254,7 @@ def auto_login(request, member_json_info, from_para):
 @permission_classes([AllowAny])
 def checkStatus(request):
     print(request.user.is_authenticated)
+    print(request)
     if request.user.is_authenticated:
         # member_json_info = model_to_dict(Member.objects.get(username = request.user.username)) 
         # # auto_login(request, member_json_info, "old")

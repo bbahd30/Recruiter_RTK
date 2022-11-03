@@ -30,6 +30,7 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
     path('logout/', logout_member, name = 'logout_member'),
      path('upload/', UploadCSV.as_view(), name='upload_csv'),
+     path('checkStatus/', checkStatus, name= "checkStatus"),
 
     # note:
     # '''

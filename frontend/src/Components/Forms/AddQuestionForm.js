@@ -58,13 +58,16 @@ const AddQuestionForm = (props) =>
     }
 
     return (
-        <MyForm>
-            <MyTextField field="question_text" />
-            <MyTextFieldNumber field="total_marks" />
-            <MySelectField field='assignee_id' data={members} status='closed' />
-            <MyTextField field="ans" />
+        <>
+            {console.log(MyForm, 'hii')}
+            <MyForm>
+                <MyTextField field="question_text" />
+                <MyTextFieldNumber field="total_marks" />
+                <MySelectField field='assignee_id' data={members} status='closed' />
+                <MyTextField field="ans" />
 
-        </MyForm>
+            </MyForm>
+        </>
     )
 };
 

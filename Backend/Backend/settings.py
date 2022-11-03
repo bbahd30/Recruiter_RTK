@@ -24,6 +24,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://10.26.2.242:3000'
 ]
 
+CSRF_TRUSTED_ORIGINS = 'http://localhost:3000',
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
 ]
@@ -40,12 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Recruiter',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'], 
-    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'], 
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
+    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']
 
      
 }
@@ -125,6 +128,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

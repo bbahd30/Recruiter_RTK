@@ -9,31 +9,29 @@ const cookies = new Cookies();
 const LoginStatus = () =>
 {
     const [member, setStatus] = useState({ 'status': 'loggedOut' })
-    
-    useEffect(() => {
+
+    useEffect(() =>
+    {
         console.log("called status checking");
         axios
             .get(Links.check_status,
                 {
-                    params: {
-                        withCredentials: true,
-                    },
                     headers:
                     {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": cookies.get("csrftoken"),
+                        'Authorization': localStorage.getItem('auth_token'),
                     }
-                    
+
                 })
-            .then((response) => {
+            .then((response) =>
+            {
                 if (response.data.status === "loggedIn")
                 {
                     console.log(response.data)
                     setStatus
-                    ({
-                        status: 'loggedIn',
-                        // can be used to get further data from the members api from response.data
-                    })
+                        ({
+                            status: 'loggedIn',
+                            // can be used to get further data from the members api from response.data
+                        })
                     console.log(response.data)
                 }
             })
@@ -42,10 +40,10 @@ const LoginStatus = () =>
                 console.log(error)
             })
     }, []);
-    
+
     return (
         <div>
-                {member.status}
+            {member.status}
         </div>
     );
 };
