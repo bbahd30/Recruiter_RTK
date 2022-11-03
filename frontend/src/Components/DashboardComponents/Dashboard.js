@@ -9,7 +9,8 @@ import axios from 'axios';
 import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import TableProvider from '../UtilityComponents/TableProvider';
-
+import MyDialogBox from '../UtilityComponents/MyDialogBox';
+import CSVForm from '../Forms/CSVForm';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -70,6 +71,12 @@ function Dashboard(props)
             label: 'Enrollment Number',
         },
         {
+            id: 'Academic Year',
+            numeric: true,
+            disablePadding: false,
+            label: 'Academic Year',
+        },
+        {
             id: 'Role',
             numeric: true,
             disablePadding: false,
@@ -114,7 +121,21 @@ function Dashboard(props)
                     <Typography variant='h5' color='white'>{season.year}</Typography>
                     <Typography variant='h3' color='white'>{season.season_name}</Typography>
                     <Typography variant='h6' color='white'>{season.description}</Typography>
-                    <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
+
+
+                    <MyDialogBox
+
+                        buttonChild=
+                        {
+                            // <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
+                            "Upload CSV"
+                        }
+                        dataChild=
+                        {
+                            <CSVForm season_id={id} />
+                        }
+                        title="Upload CSV File"
+                    />
                 </div>
                 <div>
                     <img src={require('../../Images/welcome.svg').default} width="800px"></img>
@@ -132,9 +153,11 @@ function Dashboard(props)
                                         <TableRow key={item.id}>
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell>{item.enroll_no}</TableCell>
+                                            <TableCell>{item.academic_year}</TableCell>
                                             <TableCell>{item.role}</TableCell>
-                                            <TableCell>{item.phone_number}</TableCell>
+                                            <TableCell>{item.phone_no}</TableCell>
                                             <TableCell>{item.status}</TableCell>
+
                                         </TableRow>
                                     ))
                                 }
