@@ -71,6 +71,12 @@ function Dashboard(props)
             label: 'Enrollment Number',
         },
         {
+            id: 'Academic Year',
+            numeric: true,
+            disablePadding: false,
+            label: 'Academic Year',
+        },
+        {
             id: 'Role',
             numeric: true,
             disablePadding: false,
@@ -147,9 +153,11 @@ function Dashboard(props)
                                         <TableRow key={item.id}>
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell>{item.enroll_no}</TableCell>
+                                            <TableCell>{item.academic_year}</TableCell>
                                             <TableCell>{item.role}</TableCell>
                                             <TableCell>{item.phone_no}</TableCell>
                                             <TableCell>{item.status}</TableCell>
+
                                         </TableRow>
                                     ))
                                 }

@@ -43,12 +43,12 @@ class QuestionSerializerWithoutMemberData(serializers.ModelSerializer):
 class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'project_link','cg', 'status','phone_no']
+        fields = '__all__'
 
 class ApplicantSerializerNormalData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'project_link', 'status', 'phone_no']
+        exclude = ['cg']
 
 class InterviewPanelSerializer(serializers.ModelSerializer):
     members = MemberSerializer(many = True, read_only = True)

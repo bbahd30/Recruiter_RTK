@@ -9,6 +9,7 @@ from django.conf.urls.static import static
 from . import settings
 
 router = DefaultRouter()
+router.register(r'applicants', ApplicantViewsetData, basename='applicants')
 router.register(r'seasons', SeasonViewset, basename='seasons')
 router.register(r'members', MemberViewset, basename='members')
 router.register(r'rounds', RoundViewset, basename='rounds')
