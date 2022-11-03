@@ -28,6 +28,8 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('auth/', include('rest_framework.urls')),
     path('logout/', logout_member, name = 'logout_member'),
+     path('upload/', UploadCSV.as_view(), name='upload_csv'),
+
     # note:
     # '''
     #     This one captures the applicant keyword after the season_id hence telling whether to show applicants of that season or not or only that season data

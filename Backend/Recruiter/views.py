@@ -11,6 +11,7 @@ from rest_framework.decorators import api_view, permission_classes, action
 from django.contrib.auth import login, logout
 from django.forms.models import model_to_dict
 from django.shortcuts import render
+from .csv_view import *
 
 class MemberViewset(viewsets.ModelViewSet):
     queryset = Member.objects.all()

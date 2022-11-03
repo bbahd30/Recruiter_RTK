@@ -43,12 +43,12 @@ class QuestionSerializerWithoutMemberData(serializers.ModelSerializer):
 class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'projectLink','cg', 'status']
+        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'project_link','cg', 'status']
 
 class ApplicantSerializerNormalData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'projectLink', 'status']
+        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'project_link', 'status']
 
 class InterviewPanelSerializer(serializers.ModelSerializer):
     members = MemberSerializer(many = True, read_only = True)
@@ -84,3 +84,15 @@ class ScoreSerializerNormal(serializers.ModelSerializer):
         model = Score
         fields = ['id', 'remarks', 'status', 'question_id', 'student_id']       
         depth = 1
+
+class CSVUploadSerializer(serializers.Serializer):
+    csv_file = serializers.FileField()
+
+    class Meta:
+        fields = ('csv_file',)
+        
+class SaveCSVSerializer(serializers.Serializer):
+    
+    class Meta:
+        model = Applicant
+        fields = "__all__"

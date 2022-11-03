@@ -268,3 +268,5 @@ def logout_member(request):
 @permission_classes([IsAuthenticated])
 def dashboard(request):
     return HttpResponse("This is dashboard")
+
+
