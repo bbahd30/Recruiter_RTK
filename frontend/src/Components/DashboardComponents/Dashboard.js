@@ -9,6 +9,9 @@ import axios from 'axios';
 import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import TableProvider from '../UtilityComponents/TableProvider';
+import Toolbar from '@mui/material/Toolbar';
+import { TextField } from '@mui/material/';
+import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import CSVForm from '../Forms/CSVForm';
 
@@ -36,7 +39,9 @@ function Dashboard(props)
     const [season, setSeason] = useState([]);
     const [applicants, setApplicants] = useState([]);
     const { id } = useParams();
-
+    // object fn in the filter function filterfn which has a function
+    const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
+    const [pageSize, setPageSize] = React.useState(5);
     const getSeasonData = () =>
     {
         axios
@@ -53,71 +58,75 @@ function Dashboard(props)
             .get(Links.seasons_api + `${id}/applicants/`)
             .then((response) =>
             {
+                console.log(response.data)
                 setApplicants(response.data);
             });
     }
 
-    const tableCells = [
+    const arr = ['Test', 'Dev Round 1'];
+    const columns = [
         {
-            id: 'Name',
-            numeric: false,
-            disablePadding: true,
-            label: 'Name',
+            field: 'name',
+            headerName: 'Name',
+            flex: 1,
         },
         {
-            id: 'Enrollment Number',
-            numeric: true,
-            disablePadding: false,
-            label: 'Enrollment Number',
+            field: 'enroll_no',
+            headerName: 'Enrollment Number',
+            flex: 1,
         },
         {
-            id: 'Academic Year',
-            numeric: true,
-            disablePadding: false,
-            label: 'Academic Year',
+            field: 'role',
+            headerName: 'Role',
+            flex: 1,
         },
         {
-            id: 'Role',
-            numeric: true,
-            disablePadding: false,
-            label: 'Role',
+            field: 'project',
+            headerName: 'Project',
+            flex: 1,
         },
         {
-            id: 'Phone Number',
-            numeric: true,
-            disablePadding: false,
-            label: 'Phone Number',
+            field: 'project_link',
+            headerName: 'Project Link',
+            flex: 1,
         },
         {
-            id: 'Status',
-            numeric: true,
-            disablePadding: false,
-            label: 'Status',
+            field: 'phone_no',
+            headerName: 'Phone Number',
+            flex: 1,
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            flex: 1,
+            type: 'singleSelect',
+            valueOptions: arr,
+            editable: 'true'
         },
     ];
 
-    const
-        {
-            MyTableHead,
-            MyTablePagination,
-            recordsAfterPagingAndSorting
-        } = TableProvider(tableCells, applicants)
-
     useEffect(() =>
     {
-        // defining the season_id for backend data
         getSeasonData();
         getApplicantsData();
     }, []);
 
-
-
     return (
         <div>
-            <LoginStatus />
+            {/* <LoginStatus /> */}
             <SideBar id={id} />
             <Box sx={{ backgroundColor: '#5b004c', padding: '50px 0 50px 20%', display: 'flex', justifyContent: 'space-around' }}>
                 <div>
+                    <Typography variant='h5' color='white'>
+                        {season.year}
+                    </Typography>
+                    <Typography variant='h3' color='white'>
+                        {season.season_name}
+                    </Typography>
+                    <Typography variant='h6' color='white'>
+                        {season.description}
+                    </Typography>
+                    <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
                     <Typography variant='h5' color='white'>{season.year}</Typography>
                     <Typography variant='h3' color='white'>{season.season_name}</Typography>
                     <Typography variant='h6' color='white'>{season.description}</Typography>
@@ -144,26 +153,20 @@ function Dashboard(props)
             <Box>
                 {
                     <div className='table'>
-                        <Table>
-                            <MyTableHead />
-                            <TableBody>
-                                {
-                                    recordsAfterPagingAndSorting().map((item) =>
-                                    (
-                                        <TableRow key={item.id}>
-                                            <TableCell>{item.name}</TableCell>
-                                            <TableCell>{item.enroll_no}</TableCell>
-                                            <TableCell>{item.academic_year}</TableCell>
-                                            <TableCell>{item.role}</TableCell>
-                                            <TableCell>{item.phone_no}</TableCell>
-                                            <TableCell>{item.status}</TableCell>
+                        <div style={{ height: 400, width: '100%' }}>
+                            <DataGrid
+                                sx={{ m: 5 }}
+                                rows={applicants}
+                                columns={columns}
+                                pagination
+                                pageSize={pageSize}
+                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
 
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                        <MyTablePagination />
+                                rowsPerPageOptions={[5, 10, 15]}
+                                autoHeight
+                            />
+                        </div>
+
                     </div>
                 }
             </Box>

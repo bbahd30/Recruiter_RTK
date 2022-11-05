@@ -73,16 +73,17 @@ class InterviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'round_id', 'interview_panel_id']
 
 class ScoreSerializer(serializers.ModelSerializer):
-    student_id = ApplicantSerializerImpData(many = True, read_only = True)
+    # student_id = ApplicantSerializerImpData(many = True, read_only = True)
     class Meta:
         model = Score
         fields = '__all__'
-        fields = ['marks_awarded', 'remarks', 'status', 'question_id', 'student_id']       
+        fields = ['marks_awarded', 'remarks', 'status', 'question_id', 'student_id']
 
 class ScoreSerializerNormal(serializers.ModelSerializer):
     class Meta:
         model = Score
         fields = ['id', 'remarks', 'status', 'question_id', 'student_id']       
+
         depth = 1
 
 class CSVUploadSerializer(serializers.Serializer):

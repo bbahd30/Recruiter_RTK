@@ -15,7 +15,7 @@ const LoginButton = () =>
     return (
 
         <div>
-            <LoginStatus />
+            {/* <LoginStatus /> */}
             <Grid className='loginButton'>
                 <Paper elevation={3} style={BoxStyle}>
                     <Grid style={{ position: 'relative', top: '110px' }}>

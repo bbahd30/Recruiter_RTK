@@ -50,6 +50,19 @@ class QuestionViewset(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+
+    def create_score(s_id):
+        score = Score.objects.create(
+            question_id = Question.objects.last(),
+            student_id = s_id,
+            marks_awarded = 0,
+            remarks = "",
+            status = 0
+        )
+        score.save()
+        print("saved")
+
+
     def create(self, request, **kwargs):
         question = Question.objects.create(
             question_text = request.data.get('question_text'),
@@ -57,8 +70,20 @@ class QuestionViewset(viewsets.ModelViewSet):
             total_marks = int(request.data.get('total_marks')),
             section_id = Section.objects.get(id=int(request.data.get('section_id')))
         )
+        print("*************************************")
         question.assignee_id.set(request.data.get('assignee_id'))
         question.save()
+        print('question saved')
+        ques = Question.objects.last().section_id
+        section = Section.objects.get(id = ques.id)
+        season_id = Season.objects.get(id = section.round_id.season_id.id)
+        applicants = Applicant.objects.filter(season_id = season_id)
+        print("separated")
+        for applicant in applicants:
+            print('calling applicants')
+            QuestionViewset.create_score(applicant)
+
+
         return Response("post")
 
 class QuestionViewsetNoMemberData(viewsets.ModelViewSet):
@@ -84,12 +109,12 @@ class InterviewPanelViewset(viewsets.ModelViewSet):
 class InterviewViewset(viewsets.ModelViewSet):
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer
-    permission_classes = [IsAbleToSeePersonalInfo]
+    # permission_classes = [IsAbleToSeePersonalInfo]
 
 class ScoreViewset(viewsets.ModelViewSet):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
-    permission_classes = [IsAbleToSeePersonalInfo]
+    # permission_classes = [IsAbleToSeePersonalInfo]
 
 # note: CUSTOMIZED VIEWSETS
 class SectionWiseQuestionViewset(viewsets.ModelViewSet):
@@ -148,13 +173,13 @@ class SeasonWiseViewset(viewsets.ModelViewSet):
             else:
                 model = kwargs.get('model')
                 if model == 'applicants':
-                    model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id), many = True)
+                    model_data = ApplicantSerializerNormalData(Applicant.objects.filter(season_id = s_id), many = True)
                     if len(kwargs) == 2:
                         return Response(model_data.data)
                     else:
                         print(model_data)
                         model_id = kwargs.get('model_id')
-                        model_data = ApplicantSerializerImpData(Applicant.objects.filter(season_id = s_id).filter(id = model_id), many = True)
+                        model_data = ApplicantSerializerNormalData(Applicant.objects.filter(season_id = s_id).filter(id = model_id), many = True)
                         return Response(model_data.data)
 
                 elif model == 'rounds':

@@ -49,7 +49,7 @@ class Section(models.Model):
         Manages the sections of the test and interview
     '''
     section_name = models.CharField(max_length=100)
-    round_id = models.ManyToManyField(Round)
+    round_id = models.ForeignKey(Round, on_delete = CASCADE, default = 1)
     weightage = models.FloatField()
 
     def __str__(self):
@@ -127,9 +127,12 @@ class Score(models.Model):
     '''
         Stores the score and remarks
     '''
-    question_id = models.ManyToManyField(Question)
+    # question_id = models.ManyToManyField(Question)
     # Converting many to many field to foreign key for student id so that the student id can provide access
-    student_id = models.ManyToManyField(Applicant)
+    # student_id = models.ManyToManyField(Applicant)
+
+    question_id = models.ForeignKey(Question, on_delete = CASCADE)
+    student_id = models.ForeignKey(Applicant, on_delete = CASCADE)
     marks_awarded = models.FloatField()
     remarks = models.CharField(max_length=50)
     status_choices = (
