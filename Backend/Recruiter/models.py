@@ -74,7 +74,7 @@ class Applicant(models.Model):
     '''
     name = models.CharField(max_length=20)
     academic_year = models.PositiveSmallIntegerField(blank=True)
-    enroll_no = models.IntegerField(blank= True)
+    enroll_no = models.BigIntegerField(blank= True, unique = True)
     role_choices = (
         ("dev", "Developer"),
         ("design", "Designer")
@@ -84,8 +84,7 @@ class Applicant(models.Model):
     project_link = models.CharField(max_length=500, null=True, blank=True)
     cg = models.IntegerField(blank=True, null=True)
     status = models.ForeignKey(Round, on_delete=CASCADE)        # at which round the student has reached
-    
-    # phone_no = models.IntegerField(blank= True, null = True, unique = True)
+    phone_no = models.BigIntegerField(blank= True, null = True, unique = True)
     # converted season_id to foreign key
     season_id = models.ForeignKey(Season, on_delete = CASCADE)
 
@@ -144,4 +143,4 @@ class Score(models.Model):
     
     # def __str__(self):
     #     return self.objects.select_related(Question).filter(id = self.question_id)
- 
+    

@@ -44,7 +44,7 @@ class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
         fields = '__all__'
-        
+
 class ApplicantSerializerNormalData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
@@ -83,4 +83,17 @@ class ScoreSerializerNormal(serializers.ModelSerializer):
     class Meta:
         model = Score
         fields = ['id', 'remarks', 'status', 'question_id', 'student_id']       
-        # depth = 1
+
+        depth = 1
+
+class CSVUploadSerializer(serializers.Serializer):
+    csv_file = serializers.FileField()
+
+    class Meta:
+        fields = ('csv_file',)
+        
+class SaveCSVSerializer(serializers.Serializer):
+    
+    class Meta:
+        model = Applicant
+        fields = "__all__"

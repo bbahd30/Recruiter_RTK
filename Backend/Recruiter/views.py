@@ -11,6 +11,7 @@ from rest_framework.decorators import api_view, permission_classes, action
 from django.contrib.auth import login, logout
 from django.forms.models import model_to_dict
 from django.shortcuts import render
+from .csv_view import *
 
 class MemberViewset(viewsets.ModelViewSet):
     queryset = Member.objects.all()
@@ -88,6 +89,10 @@ class QuestionViewset(viewsets.ModelViewSet):
 class QuestionViewsetNoMemberData(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializerWithoutMemberData
+
+class ApplicantViewsetData(viewsets.ModelViewSet):
+    queryset = Applicant.objects.all()
+    serializer_class = ApplicantSerializerNormalData
 
 class ApplicantViewsetImpData(viewsets.ModelViewSet):
     '''

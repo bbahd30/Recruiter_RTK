@@ -12,6 +12,8 @@ import TableProvider from '../UtilityComponents/TableProvider';
 import Toolbar from '@mui/material/Toolbar';
 import { TextField } from '@mui/material/';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import MyDialogBox from '../UtilityComponents/MyDialogBox';
+import CSVForm from '../Forms/CSVForm';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -125,6 +127,24 @@ function Dashboard(props)
                         {season.description}
                     </Typography>
                     <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
+                    <Typography variant='h5' color='white'>{season.year}</Typography>
+                    <Typography variant='h3' color='white'>{season.season_name}</Typography>
+                    <Typography variant='h6' color='white'>{season.description}</Typography>
+
+
+                    <MyDialogBox
+
+                        buttonChild=
+                        {
+                            // <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
+                            "Upload CSV"
+                        }
+                        dataChild=
+                        {
+                            <CSVForm season_id={id} />
+                        }
+                        title="Upload CSV File"
+                    />
                 </div>
                 <div>
                     <img src={require('../../Images/welcome.svg').default} width="800px"></img>
@@ -133,7 +153,6 @@ function Dashboard(props)
             <Box>
                 {
                     <div className='table'>
-
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid
                                 sx={{ m: 5 }}
@@ -147,6 +166,7 @@ function Dashboard(props)
                                 autoHeight
                             />
                         </div>
+
                     </div>
                 }
             </Box>
