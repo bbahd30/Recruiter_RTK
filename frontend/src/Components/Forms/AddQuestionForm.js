@@ -21,16 +21,9 @@ const AddQuestionForm = (props) =>
         getMembers();
     }, []);
 
-    // useEffect(() =>
-    // {
-    //     initial = questions;
-    // }, [questions]);
-
     const model = 'questions';
 
     const { MyForm, MyTextField, MySelectField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, question_id, props.type);
-
-    // const { MyForm, MyTextField, MyTextFieldNumber, MySelectFieldUsingTextField } = FormProvider(initial, model, question_id, props.type);
 
 
     const [members, setMembers] = useState([]);

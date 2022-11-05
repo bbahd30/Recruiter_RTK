@@ -15,6 +15,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
     const links_matcher =
     {
         'questions': Links.questions_member_api,
+        // 'questions': Links.questions_api,
         'seasons': Links.seasons_api,
         'sections': Links.sections_api,
         'rounds': Links.rounds_api,
@@ -46,7 +47,7 @@ const FormProvider = (initial_data, model, edit_id, type) =>
         width: '25vw'
     }
 
-    const url = links_matcher[model];
+    let url = links_matcher[model];
 
     useEffect(() =>
     {
@@ -148,6 +149,10 @@ const FormProvider = (initial_data, model, edit_id, type) =>
     {
         // set using the ...initial and formvalues
         const data = formValues
+        if (model === 'questions')
+        {
+            url = Links.questions_api;
+        }
         axios
             .post
             (

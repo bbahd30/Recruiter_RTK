@@ -43,12 +43,12 @@ class QuestionSerializerWithoutMemberData(serializers.ModelSerializer):
 class ApplicantSerializerImpData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'projectLink','cg', 'status']
-
+        fields = '__all__'
+        
 class ApplicantSerializerNormalData(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['id', 'name', 'enroll_no', 'role', 'project', 'projectLink', 'status']
+        exclude = ['cg']
 
 class InterviewPanelSerializer(serializers.ModelSerializer):
     members = MemberSerializer(many = True, read_only = True)
@@ -73,14 +73,14 @@ class InterviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'round_id', 'interview_panel_id']
 
 class ScoreSerializer(serializers.ModelSerializer):
-    student_id = ApplicantSerializerImpData(many = True, read_only = True)
+    # student_id = ApplicantSerializerImpData(many = True, read_only = True)
     class Meta:
         model = Score
         fields = '__all__'
-        fields = ['marks_awarded', 'remarks', 'status', 'question_id', 'student_id']       
+        fields = ['marks_awarded', 'remarks', 'status', 'question_id', 'student_id']
 
 class ScoreSerializerNormal(serializers.ModelSerializer):
     class Meta:
         model = Score
         fields = ['id', 'remarks', 'status', 'question_id', 'student_id']       
-        depth = 1
+        # depth = 1
