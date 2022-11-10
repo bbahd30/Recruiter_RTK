@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Paper, Button } from '@mui/material';
 import * as Links from "../../Links";
 import LoginStatus from './LoginStatus';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const LoginButton = () =>
 {
+
+    const navigate = useNavigate();
 
     const BoxStyle = {
         height: '45vh',
@@ -12,6 +16,31 @@ const LoginButton = () =>
         padding: 20,
         margin: '20vh auto',
     }
+
+    useEffect(() =>
+    {
+        axios
+            .create({
+                withCredentials: true,
+            })
+            .get(Links.loginUser)
+            .then(res =>
+            {
+                if (res.data.status === 'alreadyLoggedIn')
+                {
+                    console.log("han")
+                    navigate("/seasons/");
+
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error)
+            })
+
+    }, []);
+
+
     return (
 
         <div>

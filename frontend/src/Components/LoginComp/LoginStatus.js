@@ -1,70 +1,59 @@
-import BackendClient from "../../BackendClient";
-import * as Links from '../../Links';
+import axios from 'axios';
+import * as Links from '../../Links'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
-export default function CheckLogin()
+
+
+const LoginStatus = () =>
 {
-    BackendClient.get(Links.check_status).then
-    ((res) =>
+    const [member, setStatus] = useState({ 'status': 'loggedOut' })
+    const navigate = useNavigate();
+
+    useEffect(() =>
     {
-        console.log(res.data);
-        // if (!res.data.Logged_In)
-        // {
-        //     window.location.href = "http://localhost:3000/login";
-        // }
-    });
-}
+        console.log("called status checking");
+        axios
+            .create({
+                withCredentials: true
+            })
+            .get(Links.check_status)
+            // {
+            //     params: {
+            //         withCredentials: true,
+            //     },
+            // headers:
+            // {
+            //     "Content-Type": "application/json",
+            //     "X-CSRFToken": cookies.get("csrftoken"),
+            // }
 
+            // })
+            .then((response) =>
+            {
+                if (response.data.status === "loggedIn")
+                {
+                    setStatus
+                        ({
+                            status: 'loggedIn',
+                            // can be used to get further data from the members api from response.data
+                        })
+                }
+                else
+                {
+                    navigate("/")
+                }
+            })
+            .catch((error) =>
+            {
+                console.log(error)
+            })
+    }, []);
 
-// import axios from 'axios';
-// import * as Links from '../../Links'
-// import React, { useEffect, useState } from 'react';
-// import Cookies from "universal-cookie";
+    return (
+        <>
+        </>
+    );
+};
 
-// const cookies = new Cookies();
-
-
-// const LoginStatus = () =>
-// {
-//     const [member, setStatus] = useState({ 'status': 'loggedOut' })
-    
-//     useEffect(() => {
-//         console.log("called status checking");
-//         axios
-//             .get(Links.check_status,
-//                 {
-//                     params: {
-//                         withCredentials: true,
-//                     },
-//                     headers:
-//                     {
-//                         "Content-Type": "application/json",
-//                         "X-CSRFToken": cookies.get("csrftoken"),
-//                     }
-                    
-//                 })
-//             .then((response) => {
-//                 if (response.data.status === "loggedIn")
-//                 {
-//                     console.log(response.data)
-//                     setStatus
-//                     ({
-//                         status: 'loggedIn',
-//                         // can be used to get further data from the members api from response.data
-//                     })
-//                     console.log(response.data)
-//                 }
-//             })
-//             .catch((error) =>
-//             {
-//                 console.log(error)
-//             })
-//     }, []);
-    
-//     return (
-//         <div>
-//                 {member.status}
-//         </div>
-//     );
-// };
-
-// export default LoginStatus;
+export default LoginStatus;
