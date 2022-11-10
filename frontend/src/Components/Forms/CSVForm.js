@@ -52,7 +52,7 @@ const CSVForm = (props) =>
         <Box>
             <div>
                 <input
-                    style={{ opacity: '06', margin: '20px', cursor: 'pointer' }}
+                    style={{ opacity: '0', margin: '20px', cursor: 'pointer' }}
                     type="file"
                     onChange={handleChange}
                 />

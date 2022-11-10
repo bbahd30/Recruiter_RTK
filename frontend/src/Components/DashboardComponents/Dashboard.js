@@ -63,6 +63,17 @@ function Dashboard(props)
             });
     }
 
+    // const getRoundsData = () =>
+    // {
+    //     axios
+    //         .get(Links.rou + `${id}/applicants/`)
+    //         .then((response) =>
+    //         {
+    //             console.log(response.data)
+    //             setApplicants(response.data);
+    //         });
+    // }
+
     const arr = ['Test', 'Dev Round 1'];
     const columns = [
         {
@@ -113,20 +124,10 @@ function Dashboard(props)
 
     return (
         <div>
-            {/* <LoginStatus /> */}
+            <LoginStatus />
             <SideBar id={id} />
             <Box sx={{ backgroundColor: '#5b004c', padding: '50px 0 50px 20%', display: 'flex', justifyContent: 'space-around' }}>
                 <div>
-                    <Typography variant='h5' color='white'>
-                        {season.year}
-                    </Typography>
-                    <Typography variant='h3' color='white'>
-                        {season.season_name}
-                    </Typography>
-                    <Typography variant='h6' color='white'>
-                        {season.description}
-                    </Typography>
-                    <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
                     <Typography variant='h5' color='white'>{season.year}</Typography>
                     <Typography variant='h3' color='white'>{season.season_name}</Typography>
                     <Typography variant='h6' color='white'>{season.description}</Typography>

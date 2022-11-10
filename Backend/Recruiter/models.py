@@ -84,7 +84,7 @@ class Applicant(models.Model):
     project_link = models.CharField(max_length=500, null=True, blank=True)
     cg = models.IntegerField(blank=True, null=True)
     status = models.ForeignKey(Round, on_delete=CASCADE)        # at which round the student has reached
-    phone_no = models.BigIntegerField(blank= True, null = True, unique = True)
+    phone_no = models.BigIntegerField(blank= True, null = True)
     # converted season_id to foreign key
     season_id = models.ForeignKey(Season, on_delete = CASCADE)
 

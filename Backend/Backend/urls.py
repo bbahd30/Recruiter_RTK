@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('enter/', enter, name='enter'),
-    # path('login/', enter, name='loginpage'),
+    path('checkStatus/', checkStatus, name= "checkStatus"),
     path('authorize/', authorize, name='authorize'),
     path('dashboard/', dashboard, name='dashboard'),
     path('auth/', include('rest_framework.urls')),

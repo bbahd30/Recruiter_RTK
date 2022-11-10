@@ -16,19 +16,31 @@ SECRET_KEY = 'django-insecure-t@1&^^2b)fva+02q^*7$yf^zj74q38*rx^2@a@qyfn9*h-#h-o
 DEBUG = True
 
 # note:
-ALLOWED_HOSTS = [
-]
+ALLOWED_HOSTS = []
+
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://10.26.2.242:3000'
+    'http://10.26.2.242:3000',
+    'http://127.0.0.1:3000',
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
 ]
+
+CORS_ALLOW_METHODS = [
+    'PUT', 'GET', 'HEAD', 'POST', 'DELETE', 'OPTIONS', 'PATCH',
+]
+
 AUTH_USER_MODEL = 'Recruiter.Member'
 # Application definition
+
+CSRF_TRUSTED_ORIGINS = 'http://localhost:3000',
 
 INSTALLED_APPS = [
     'corsheaders',
@@ -44,14 +56,13 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'], 
-    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']
 
      
 }
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,6 +70,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
+    # "django.middleware.common.CommonMiddleware",
+    # 'django.middleware.security.SecurityMiddleware',
+    # 'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'Backend.urls'
@@ -141,10 +161,10 @@ os.path.join(BASE_DIR, 'static'),
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_COOKIE_SAMESITE = 'Strict'
-SESSION_COOKIE_SAMESITE = 'Strict'
-CSRF_COOKIE_HTTPONLY = False  # False since we will grab it via universal-cookies
-SESSION_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_SAMESITE = 'Strict'
+# SESSION_COOKIE_SAMESITE = 'Strict'
+# CSRF_COOKIE_HTTPONLY = False  # False since we will grab it via universal-cookies
+# SESSION_COOKIE_HTTPONLY = True
 
 # PROD ONLY
 # CSRF_COOKIE_SECURE = True
