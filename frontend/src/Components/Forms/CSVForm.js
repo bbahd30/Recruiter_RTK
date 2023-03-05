@@ -5,7 +5,7 @@ import { Box } from '@mui/system';
 import { Button } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadCSV } from '../../Slices/csvSlice';
+import { uploadCSV } from '../../Slices/csvSlice.js';
 
 const CSVForm = (props) =>
 {
@@ -20,39 +20,6 @@ const CSVForm = (props) =>
         cursor: 'pointer',
         // zIndex: '1'
     }
-
-    // const [file, setFile] = useState([]);
-    // const handleChange = (e) =>
-    // {
-    //     setFile(e.target.files[0]);
-    //     // console.log(file)
-    // };
-
-    // const handleSubmit = (e) =>
-    // {
-    //     const url = `${Links.localhost}upload/`
-    //     e.preventDefault();
-    //     if (file)
-    //     {
-    //         let formdata = new FormData();
-    //         formdata.append('csv_file', file);
-    //         formdata.append('season_id', props.season_id)
-
-    //         return axios
-    //             .post(url,
-    //                 formdata,
-    //                 {
-    //                     headers:
-    //                     {
-    //                         'Content-Type': 'multipart/form-data',
-    //                     },
-    //                 })
-    //             .then((response) =>
-    //             {
-    //                 return response.data
-    //             })
-    //     }
-    // };
 
     const handleSubmit = (e) =>
     {
