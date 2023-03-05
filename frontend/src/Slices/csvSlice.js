@@ -19,7 +19,6 @@ export const uploadCSV = createAsyncThunk('csv/uploadCSV', (csvFile) =>
             })
         .then((response) =>
         {
-            console.log(response.data)
             return response.data
         })
 })
@@ -29,10 +28,9 @@ const csvSlice = createSlice
         name: 'csvSlice',
         initialState: {
             loading: false,
-            isError: '',
+            error: '',
             csvUploaded: false,
             csvFetched: false,
-            list: [],
         },
         reducers: {
             fetchCSV: (state) =>
@@ -50,15 +48,13 @@ const csvSlice = createSlice
                 .addCase(uploadCSV.fulfilled, (state, action) =>
                 {
                     state.loading = false
-                    state.isError = ''
-                    state.list = action.payload['data']
+                    state.error = ''
                     state.csvUploaded = true
                 })
                 .addCase(uploadCSV.rejected, (state, action) =>
                 {
                     state.loading = false
-                    state.isError = action.error.message
-                    state.list = []
+                    state.error = action.error.message
                     state.csvUploaded = false
                     alert("CSV upload unsuccessful!")
                 })

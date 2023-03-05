@@ -16,7 +16,8 @@ import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import CSVForm from '../Forms/CSVForm';
 import { setDataChild, setOpen } from '../../Slices/dialogBoxSlice';
 import { csvUpload } from '../../Slices/csvSlice'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSeasonData } from '../../Slices/seasonSlice';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -40,26 +41,28 @@ function withRouter(Component)
 function Dashboard(props)
 {
     const dispatch = useDispatch();
-    const [season, setSeason] = useState([]);
+    const seasonState = useSelector((state) => state.season);
+    console.log(seasonState.id)
+    // const [season, setSeason] = useState([]);
     const [applicants, setApplicants] = useState([]);
-    const { id } = useParams();
+    const seasonId = useParams()['id'];
     // object fn in the filter function filterfn which has a function
     const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
     const [pageSize, setPageSize] = React.useState(5);
-    const getSeasonData = () =>
-    {
-        axios
-            .get(Links.seasons_api + `${id}/`)
-            .then((response) =>
-            {
-                setSeason(response.data);
-            });
-    }
+    // const getSeasonData = () =>
+    // {
+    //     axios
+    //         .get(Links.seasons_api + `${id}/`)
+    //         .then((response) =>
+    //         {
+    //             setSeason(response.data);
+    //         });
+    // }
 
     const getApplicantsData = () =>
     {
         axios
-            .get(Links.seasons_api + `${id}/applicants/`)
+            .get(Links.seasons_api + `${seasonId}/applicants/`)
             .then((response) =>
             {
                 setApplicants(response.data);
@@ -127,19 +130,22 @@ function Dashboard(props)
 
     useEffect(() =>
     {
-        getSeasonData();
+        // getSeasonData();
+        dispatch(getSeasonData(seasonId));
+        console.log(seasonState)
+
         getApplicantsData();
     }, []);
 
     return (
         <div>
             {/* <LoginStatus /> */}
-            <SideBar id={id} />
+            <SideBar id={seasonId} />
             <Box sx={{ backgroundColor: '#5b004c', padding: '50px 0 50px 20%', display: 'flex', justifyContent: 'space-around' }}>
                 <div>
-                    <Typography variant='h5' color='white'>{season.year}</Typography>
-                    <Typography variant='h3' color='white'>{season.season_name}</Typography>
-                    <Typography variant='h6' color='white'>{season.description}</Typography>
+                    <Typography variant='h5' color='white'>{seasonState.year}</Typography>
+                    <Typography variant='h3' color='white'>{seasonState.season_name}</Typography>
+                    <Typography variant='h6' color='white'>{seasonState.description}</Typography>
 
 
                     <MyDialogBox
