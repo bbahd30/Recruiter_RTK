@@ -15,9 +15,10 @@ import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import CSVForm from '../Forms/CSVForm';
 import { setDataChild, setOpen } from '../../Slices/dialogBoxSlice';
-import { csvUpload } from '../../Slices/csvSlice'
+
 import { useDispatch, useSelector } from 'react-redux';
 import { getSeasonData } from '../../Slices/seasonSlice';
+import { showApplicants } from '../../Slices/applicantSlice';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -42,43 +43,12 @@ function Dashboard(props)
 {
     const dispatch = useDispatch();
     const seasonState = useSelector((state) => state.season);
-    console.log(seasonState.id)
-    // const [season, setSeason] = useState([]);
-    const [applicants, setApplicants] = useState([]);
+    const applicantState = useSelector((state) => state.applicant);
     const seasonId = useParams()['id'];
+
     // object fn in the filter function filterfn which has a function
     const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
     const [pageSize, setPageSize] = React.useState(5);
-    // const getSeasonData = () =>
-    // {
-    //     axios
-    //         .get(Links.seasons_api + `${id}/`)
-    //         .then((response) =>
-    //         {
-    //             setSeason(response.data);
-    //         });
-    // }
-
-    const getApplicantsData = () =>
-    {
-        axios
-            .get(Links.seasons_api + `${seasonId}/applicants/`)
-            .then((response) =>
-            {
-                setApplicants(response.data);
-            });
-    }
-
-    // const getRoundsData = () =>
-    // {
-    //     axios
-    //         .get(Links.rou + `${id}/applicants/`)
-    //         .then((response) =>
-    //         {
-    //             console.log(response.data)
-    //             setApplicants(response.data);
-    //         });
-    // }
 
     const arr = ['Test', 'Dev Round 1'];
     const columns = [
@@ -130,11 +100,9 @@ function Dashboard(props)
 
     useEffect(() =>
     {
-        // getSeasonData();
         dispatch(getSeasonData(seasonId));
-        console.log(seasonState)
-
-        getApplicantsData();
+        dispatch(showApplicants(seasonId));
+        // getApplicantsData();
     }, []);
 
     return (
@@ -146,7 +114,6 @@ function Dashboard(props)
                     <Typography variant='h5' color='white'>{seasonState.year}</Typography>
                     <Typography variant='h3' color='white'>{seasonState.season_name}</Typography>
                     <Typography variant='h6' color='white'>{seasonState.description}</Typography>
-
 
                     <MyDialogBox
                         icon="Import CSV"
@@ -168,7 +135,7 @@ function Dashboard(props)
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid
                                 sx={{ m: 5 }}
-                                rows={applicants}
+                                rows={applicantState.applicantList}
                                 columns={columns}
                                 pagination
                                 pageSize={pageSize}
