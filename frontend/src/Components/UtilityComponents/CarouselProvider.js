@@ -1,7 +1,5 @@
 import React from 'react';
 import Slider from 'react-slick';
-import MyDialogBox from './MyDialogBox';
-import AddIcon from '@mui/icons-material/Add';
 
 const CarouselProvider = () =>
 {
@@ -54,17 +52,6 @@ const CarouselProvider = () =>
                 <Slider {...settings} className="slider">
                     {props.children}
                 </Slider>
-                <MyDialogBox
-                    buttonChild=
-                    {
-                        <AddIcon sx={{ fontSize: "40px" }} />
-                    }
-                    dataChild=
-                    {
-                        props.formComponent
-                    }
-                    title={props.title}
-                />
             </>
         )
     }
