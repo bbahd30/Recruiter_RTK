@@ -5,16 +5,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Links from '../Links';
-import AddSeasonForm from '../Components/Forms/AddSeasonForm';
+import SeasonForm from '../Components/Forms/SeasonForm';
 import CarouselProvider from '../Components/UtilityComponents/CarouselProvider';
 import MyDialogBox from '../Components/UtilityComponents/MyDialogBox';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import AddIcon from '@mui/icons-material/Add';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { showSeasons, editSeason, navigateToSeason} from '../Slices/seasonSlice';
+import { showSeasons, navigateToSeason} from '../Slices/seasonSlice';
 import { setOpen, setTitle, setDataChild, setButtonChild } from '../Slices/dialogBoxSlice';
-
+import { setEditMode, setForm, setAddMode } from '../Slices/formSlice';
 
 const SeasonScreen = () =>
 {
@@ -33,7 +33,7 @@ const SeasonScreen = () =>
     useEffect(() =>
     {
         dispatch(setButtonChild(<AddIcon />));
-    })
+    }, [])
     const navigateTo = (id) =>
     {
         const url = `/seasons/${id}`
@@ -44,14 +44,16 @@ const SeasonScreen = () =>
     {
         dispatch(setOpen(true));
         dispatch(setTitle("Add Season"));
-        dispatch(setDataChild(<AddSeasonForm />));
+        dispatch(setAddMode());
+        dispatch(setDataChild(<SeasonForm />));
     }
 
-    const EditSeason = () =>
+    const EditSeason = (id) =>
     {
         dispatch(setOpen(true));
         dispatch(setTitle("Edit Season"));
-        dispatch(setDataChild(<AddSeasonForm />));
+        dispatch(setDataChild(<SeasonForm/>));
+        dispatch(setEditMode(id));
     }
     // todo: TO ADD THE PERMISSION CLASS ON CLICKING THE CARD OF THE SEASON
 
@@ -67,7 +69,7 @@ const SeasonScreen = () =>
                             <div key={season.id}>
                                 <MyDialogBox
                                     icon={<ModeEditIcon />}
-                                    onClick = {EditSeason}
+                                    onClick = {() => EditSeason(season.id)}
                                 />
                                 <div
                                     className='carouselCard' id={"season" + season.id}

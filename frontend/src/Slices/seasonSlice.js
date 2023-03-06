@@ -46,11 +46,7 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
         (
             `${seasons_api}`,
             {
-                // name: seasonData['year'],
-                // end: null,
-                // description: seasonData['desc'],
-                // type: seasonData['type'],
-                // image: null
+                // todo:image
                 year: seasonData['year'],
                 season_name: seasonData['season_name'],
                 description: seasonData['description']
@@ -75,18 +71,23 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
 
 export const editSeason = createAsyncThunk('season/edotSeason', async (seasonData) =>
 {
-    const response = await axios
+    return axios
         .patch(
             `${seasons_api}${seasonData['seasonId']}/`,
             {
-                name: seasonData['year'],
+                year: seasonData['year'],
                 season_name: seasonData['season_name'],
                 description: seasonData['description']
             },
             {
                 withCredentials: true
             })
-    return response.data
+        .then((response) =>
+        {
+            return response.data
+        })
+        .catch((error) =>
+            alert(error))
 })
 
 //TODO:

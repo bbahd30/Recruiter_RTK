@@ -1,24 +1,24 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import LoginStatus from '../LoginComp/LoginStatus';
-import SideBar from './SideBar';
+import LoginStatus from '../Components/LoginComp/LoginStatus';
+import SideBar from '../Components/DashboardComponents/SideBar';
 import { Box } from '@mui/system';
 import { Button, Typography } from '@mui/material';
-import * as Links from '../../Links';
+import * as Links from '../Links';
 import axios from 'axios';
 import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
-import TableProvider from '../UtilityComponents/TableProvider';
+import TableProvider from '../Components/UtilityComponents/TableProvider';
 import Toolbar from '@mui/material/Toolbar';
 import { TextField } from '@mui/material/';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import MyDialogBox from '../UtilityComponents/MyDialogBox';
-import CSVForm from '../Forms/CSVForm';
-import { setDataChild, setOpen } from '../../Slices/dialogBoxSlice';
+import MyDialogBox from '../Components/UtilityComponents/MyDialogBox';
+import CSVForm from '../Components/Forms/CSVForm';
+import { setDataChild, setOpen } from '../Slices/dialogBoxSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getSeasonData } from '../../Slices/seasonSlice';
-import { showApplicants } from '../../Slices/applicantSlice';
+import { getSeasonData } from '../Slices/seasonSlice';
+import { showApplicants } from '../Slices/applicantSlice';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -102,7 +102,6 @@ function Dashboard(props)
     {
         dispatch(getSeasonData(seasonId));
         dispatch(showApplicants(seasonId));
-        // getApplicantsData();
     }, []);
 
     return (
@@ -126,7 +125,7 @@ function Dashboard(props)
                     />
                 </div>
                 <div>
-                    <img src={require('../../Images/welcome.svg').default} width="800px"></img>
+                    <img src={require('../Images/welcome.svg').default} width="800px"></img>
                 </div>
             </Box>
             <Box>

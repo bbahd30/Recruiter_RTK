@@ -1,23 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Grid, Paper, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { addSeason, closeaddSeasonDialog } from '../../Slices/seasonSlice';
+import { addSeason, closeaddSeasonDialog, getSeasonData, editSeason } from '../../Slices/seasonSlice';
 
 const paperStyle =
 {
     padding: '10px 20px',
     width: '25vw'
 }
-
-const AddSeason = () =>
+const findObjectById = (array, id) =>
 {
-    const dispatch = useDispatch()
+    for (let i = 0; i < array.length; i++)
+    {
+        if (array[i].id === id)
+        {
+            return array[i];
+        }
+    }
+    return null;
+}
 
+const SeasonForm = () =>
+{
+    const formState = useSelector((state) => state.form)
+    const seasonState = useSelector((state) => state.season)
+
+    const type = formState.mode
+    const dispatch = useDispatch()
     const [seasonYear, setSeasonYear] = useState()
     const [seasonName, setSeasonName] = useState('')
     const [seasonDesc, setSeasonDesc] = useState('')
+
+    const toBeEditSeasonData = findObjectById(seasonState['seasons'], formState.formId)
+
+    useEffect(() =>
+    {
+        if (type === 'edit')
+        {
+            setSeasonDesc(toBeEditSeasonData['description'])
+            setSeasonName(toBeEditSeasonData['season_name'])
+            setSeasonYear(toBeEditSeasonData['year'])
+        }
+    }, [toBeEditSeasonData])
 
     const yearChangeHandler = (e) =>
     {
@@ -34,18 +60,34 @@ const AddSeason = () =>
         setSeasonDesc(e.target.value)
     }
 
-    const addNewSeason = (e) =>
+    const handleSubmit = useCallback((e) =>
     {
+        console.log("********")
+        console.log(type)
         e.preventDefault();
-        dispatch(
-            addSeason
-                ({
+        if (type === 'add')
+        {
+            dispatch(
+                addSeason({
                     year: seasonYear,
                     season_name: seasonName,
                     description: seasonDesc
                 })
-        )
-    }
+            )
+        } else
+        {
+            console.log(formState.formId)
+            dispatch(
+                editSeason({
+                    seasonId: formState.formId,
+                    year: seasonYear,
+                    season_name: seasonName,
+                    description: seasonDesc
+                })
+            )
+        }
+    }, [dispatch, seasonYear, seasonName, seasonDesc, type])
+
     return (
         <Grid textAlign={'center'}>
             <Paper elevation={0} style={paperStyle}>
@@ -107,20 +149,21 @@ const AddSeason = () =>
                     </div>
                 }
                 <Grid>
-                    <form onSubmit={addNewSeason} alignitem={'center'}>
+                    <form alignitem={'center'}>
 
                         {/* {props.children} */}
-                        <Button variant="contained" onClick={addNewSeason} sx={{ marginRight: '20px' }}>
-                            {/* {type === 'edit' ? "Edit" : "Add"} */}
-                            Add
+                        <Button
+                            onClick={handleSubmit}
+                            variant="contained" sx={{ marginRight: '20px' }}>
+                            {type === 'edit' ? "Edit" : "Add"}
                         </Button>
                         {
-                            // type === 'edit' ?
-                            // <Button variant="contained" type='submitClick' onClick={editSeason} transition="all .2s"
-                            // >
-                            //     Delete
-                            // </Button>
-                            // : ""
+                            type === 'edit' ?
+                                <Button variant="contained" type='submitClick' /* onClick={editSeason} */ transition="all .2s"
+                                >
+                                    Delete
+                                </Button>
+                                : ""
                         }
 
                     </form>
@@ -131,4 +174,4 @@ const AddSeason = () =>
     )
 };
 
-export default AddSeason;
+export default SeasonForm;
