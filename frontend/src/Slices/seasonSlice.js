@@ -36,6 +36,7 @@ export const showSeasons = createAsyncThunk('season/showSeasons', () =>
                 // type: season_name,
                 data: response.data
             }
+            console.log(payload)
             return payload
         })
 })
@@ -52,9 +53,6 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
                 description: seasonData['description']
             },
             {
-                // headers: {
-                //     "X-CSRFToken": Cookies.get('ferret_csrftoken'),
-                // },
                 withCredentials: true
             }
         )
@@ -69,7 +67,7 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
         })
 })
 
-export const editSeason = createAsyncThunk('season/edotSeason', async (seasonData) =>
+export const editSeason = createAsyncThunk('season/editSeason', (seasonData) =>
 {
     return axios
         .patch(
@@ -89,6 +87,26 @@ export const editSeason = createAsyncThunk('season/edotSeason', async (seasonDat
         .catch((error) =>
             alert(error))
 })
+
+export const deleteSeason = createAsyncThunk('season/deleteSeason', (id) =>
+{
+    const url = `${seasons_api}${id}`
+    return axios
+        .delete((url),
+            {
+                withCredentials: true
+            })
+        .then((response) =>
+        {
+            if (response.status === 204)
+                return response.data
+            // alert("Deleted Successfully")
+        })
+        .catch((error) => 
+        {
+            console.log(error)
+        })
+});
 
 //TODO:
 const seasonSlice = createSlice
@@ -117,6 +135,10 @@ const seasonSlice = createSlice
             navigateToSeason: (state, action) =>
             {
                 state.id = action.payload;
+            },
+            dummyAddSeason: (state, action) =>
+            {
+                state.seasons.push(action.payload)
             }
         },
         extraReducers: (builder) =>
@@ -205,4 +227,4 @@ const seasonSlice = createSlice
     })
 
 export default seasonSlice.reducer
-export const { openEditSeasonConfirmationDialog, navigateToSeason } = seasonSlice.actions
+export const { openEditSeasonConfirmationDialog, navigateToSeason, dummyAddSeason } = seasonSlice.actions

@@ -3,13 +3,15 @@ import { Grid, Paper, Button, MenuItem, Select, InputLabel, FormControl } from '
 import TextField from '@mui/material/TextField';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { addSeason, closeaddSeasonDialog, getSeasonData, editSeason } from '../../Slices/seasonSlice';
+import { addSeason, closeaddSeasonDialog, getSeasonData, editSeason, showSeasons, deleteSeason, dummyAddSeason } from '../../Slices/seasonSlice';
+import { setOpen } from '../../Slices/dialogBoxSlice';
 
 const paperStyle =
 {
     padding: '10px 20px',
     width: '25vw'
 }
+
 const findObjectById = (array, id) =>
 {
     for (let i = 0; i < array.length; i++)
@@ -35,6 +37,17 @@ const SeasonForm = () =>
 
     const toBeEditSeasonData = findObjectById(seasonState['seasons'], formState.formId)
 
+    // function forceUpdate()
+    // {
+    //     dispatch({ type: 'DUMMY_ACTION' });
+    // }
+
+    const deleteSeasonHandler = (id) =>
+    {
+        dispatch(deleteSeason(id));
+        dispatch(setOpen(false));
+        // forceUpdate()
+    }
     useEffect(() =>
     {
         if (type === 'edit')
@@ -62,8 +75,6 @@ const SeasonForm = () =>
 
     const handleSubmit = useCallback((e) =>
     {
-        console.log("********")
-        console.log(type)
         e.preventDefault();
         if (type === 'add')
         {
@@ -74,9 +85,12 @@ const SeasonForm = () =>
                     description: seasonDesc
                 })
             )
+            dispatch(setOpen(false))
+            console.log("*******")
+            // dispatch(dummyAddSeason())
+            console.log("*******")
         } else
         {
-            console.log(formState.formId)
             dispatch(
                 editSeason({
                     seasonId: formState.formId,
@@ -85,6 +99,7 @@ const SeasonForm = () =>
                     description: seasonDesc
                 })
             )
+            dispatch(setOpen(false))
         }
     }, [dispatch, seasonYear, seasonName, seasonDesc, type])
 
@@ -159,7 +174,14 @@ const SeasonForm = () =>
                         </Button>
                         {
                             type === 'edit' ?
-                                <Button variant="contained" type='submitClick' /* onClick={editSeason} */ transition="all .2s"
+                                <Button
+                                    variant="contained"
+                                    // type='submitClick'
+                                    onClick={() =>
+                                    {
+                                        deleteSeasonHandler(formState.formId)
+                                    }}
+                                    transition="all .2s"
                                 >
                                     Delete
                                 </Button>
