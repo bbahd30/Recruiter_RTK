@@ -2,16 +2,20 @@ import { Box } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import SideBar from '../DashboardComponents/SideBar';
-import * as Links from '../../Links';
-import CarouselProvider from '../UtilityComponents/CarouselProvider';
-import AddRoundForm from '../Forms/AddRoundForm';
+import SideBar from '../Components/DashboardComponents/SideBar';
+import * as Links from '../Links';
+import CarouselProvider from '../Components/UtilityComponents/CarouselProvider';
+import AddRoundForm from '../Components/Forms/AddRoundForm';
 import { useNavigate } from 'react-router-dom';
-import MyDialogBox from '../UtilityComponents/MyDialogBox';
+import MyDialogBox from '../Components/UtilityComponents/MyDialogBox';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
+import { useDispatch } from 'react-redux';
 
 const RTStage = () =>
 {
+    const dispatch = useDispatch();
+    
     const { id } = useParams();
     const [rounds, setRounds] = useState([]);
     const navigate = useNavigate();
@@ -41,7 +45,13 @@ const RTStage = () =>
     }
 
     const CarouselSlider = CarouselProvider();
-
+    const AddRound = () =>
+    {
+        dispatch(setOpen(true));
+        dispatch(setTitle("Add Round"));
+        dispatch(setDataChild(<AddRoundForm />));
+         // dataChild={<AddRoundForm type='edit' round_id={round.id}/>}
+    }
     return (
         <>
             <SideBar id={id} />
@@ -53,16 +63,8 @@ const RTStage = () =>
                         ( //note: imp as not { it is (
                             <div key={round.id}>
                                 <MyDialogBox
-
-                                    buttonChild=
-                                    {
-                                        <ModeEditIcon />
-                                    }
-                                    dataChild=
-                                    {
-                                        <AddRoundForm type='edit' round_id={round.id}
-                                        />
-                                    }
+                                    icon = {<ModeEditIcon />}
+                                    dataChild={<Add     RoundForm type='edit' round_id={round.id}/>}
                                     title="Add Questions"
                                 />
                                 <div

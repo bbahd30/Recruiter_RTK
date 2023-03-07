@@ -86,8 +86,8 @@ class Applicant(models.Model):
     status = models.ForeignKey(Round, on_delete=CASCADE)        # at which round the student has reached
     phone_no = models.BigIntegerField(blank= True, null = True)
     # converted season_id to foreign key
-    season_id = models.ForeignKey(Season, on_delete = CASCADE)
-
+    # season_id = models.ForeignKey(Season, on_delete = CASCADE)
+    season_id = models.ManyToManyField(Season, blank=True)
     def __str__(self):
         return self.name
 

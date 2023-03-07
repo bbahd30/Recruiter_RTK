@@ -71,6 +71,7 @@ class QuestionViewset(viewsets.ModelViewSet):
             section_id = Section.objects.get(id=int(request.data.get('section_id')))
         )
         print("*************************************")
+        print(request.data)
         question.assignee_id.set(request.data.get('assignee_id'))
         question.save()
         print('question saved')
@@ -229,7 +230,12 @@ class SeasonWiseViewset(viewsets.ModelViewSet):
                             return Response("Added applicant")
         return Response("Invalid Request")
 
-
+    def delete(self, request, **kwargs):
+        # season_id is the parameter fdefined in the urls, that's why the normal delete function not working
+        season = Season.objects.get(id= kwargs.get('season_id'))
+        season.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
 # todo: generalising parent child       
 # model_dict = {
 #     'rounds': Round,

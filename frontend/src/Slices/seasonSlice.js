@@ -2,6 +2,24 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { seasons_api } from '../Links'
 
+export const getSeasonData = createAsyncThunk('season/getSeasonData', (id) =>
+{
+    return axios
+        .get(
+            `${seasons_api}${id}`,
+            {
+                withCredentials: true,
+            }
+        )
+        .then((response) =>
+        {
+            const payload = {
+                data: response.data,
+            }
+            return response;
+        })
+});
+
 export const showSeasons = createAsyncThunk('season/showSeasons', () =>
 {
     return axios
@@ -18,6 +36,7 @@ export const showSeasons = createAsyncThunk('season/showSeasons', () =>
                 // type: season_name,
                 data: response.data
             }
+            console.log(payload)
             return payload
         })
 })
@@ -28,19 +47,12 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
         (
             `${seasons_api}`,
             {
-                // name: seasonData['year'],
-                // end: null,
-                // description: seasonData['desc'],
-                // type: seasonData['type'],
-                // image: null
+                // todo:image
                 year: seasonData['year'],
                 season_name: seasonData['season_name'],
                 description: seasonData['description']
             },
             {
-                // headers: {
-                //     "X-CSRFToken": Cookies.get('ferret_csrftoken'),
-                // },
                 withCredentials: true
             }
         )
@@ -48,28 +60,53 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
         {
             return response.data;
         })
-        .catch((isError) =>
+        .catch((error) =>
         {
-            console.log(isError)
-            return alert("Cannot create new season! \n" + isError.message)
+            console.log(error)
+            return alert("Cannot create new season! \n" + error.message)
         })
 })
 
-export const editSeason = createAsyncThunk('season/edotSeason', async (seasonData) =>
+export const editSeason = createAsyncThunk('season/editSeason', (seasonData) =>
 {
-    const response = await axios
+    return axios
         .patch(
             `${seasons_api}${seasonData['seasonId']}/`,
             {
-                name: seasonData['year'],
+                year: seasonData['year'],
                 season_name: seasonData['season_name'],
                 description: seasonData['description']
             },
             {
                 withCredentials: true
             })
-    return response.data
+        .then((response) =>
+        {
+            return response.data
+        })
+        .catch((error) =>
+            alert(error))
 })
+
+export const deleteSeason = createAsyncThunk('season/deleteSeason', (id) =>
+{
+    const url = `${seasons_api}${id}`
+    return axios
+        .delete((url),
+            {
+                withCredentials: true
+            })
+        .then((response) =>
+        {
+            if (response.status === 204)
+                return response.data
+            // alert("Deleted Successfully")
+        })
+        .catch((error) => 
+        {
+            console.log(error)
+        })
+});
 
 //TODO:
 const seasonSlice = createSlice
@@ -82,7 +119,7 @@ const seasonSlice = createSlice
             // openConfirmationDialog: false,
             // endSeasonId: 0
             seasons: [],
-            isError: '',
+            error: '',
             id: 1,
             year: "",
             season_name: "",
@@ -98,6 +135,10 @@ const seasonSlice = createSlice
             navigateToSeason: (state, action) =>
             {
                 state.id = action.payload;
+            },
+            dummyAddSeason: (state, action) =>
+            {
+                state.seasons.push(action.payload)
             }
         },
         extraReducers: (builder) =>
@@ -112,13 +153,13 @@ const seasonSlice = createSlice
                     state.loading = false
                     state.season_type = action.payload['type']
                     state.seasons = action.payload['data']
-                    state.isError = ''
+                    state.error = ''
                 })
                 .addCase(showSeasons.rejected, (state, action) =>
                 {
                     state.loading = false
                     state.seasons = []
-                    state.isError = action.isError.message
+                    state.error = action.error.message
                 })
                 .addCase(addSeason.pending, (state) =>
                 {
@@ -127,7 +168,7 @@ const seasonSlice = createSlice
                 .addCase(addSeason.fulfilled, (state) =>
                 {
                     state.loading = false
-                    state.isError = ''
+                    state.error = ''
                     state.year = 0
                     state.type = ''
                     state.season_name = ''
@@ -136,7 +177,7 @@ const seasonSlice = createSlice
                 .addCase(addSeason.rejected, (state, action) =>
                 {
                     state.loading = false
-                    state.isError = action.isError.message
+                    state.error = action.error.message
                 })
                 .addCase(editSeason.pending, (state) =>
                 {
@@ -145,7 +186,7 @@ const seasonSlice = createSlice
                 .addCase(editSeason.fulfilled, (state, action) =>
                 {
                     state.loading = false
-                    state.isError = ''
+                    state.error = ''
                     for (let i = 0; i < state.seasons.length; i++)
                     {
                         if (state.seasons[i]['id'] === action.payload['id'])
@@ -162,12 +203,28 @@ const seasonSlice = createSlice
                 .addCase(editSeason.rejected, (state, action) =>
                 {
                     state.loading = false
-                    state.isError = action.isError.message
+                    state.error = action.error.message
                     state.openConfirmationDialog = false
                     console.log("End season patch unsuccessful!")
+                })
+                .addCase(getSeasonData.pending, (state) =>
+                {
+                    state.loading = true;
+                })
+                .addCase(getSeasonData.fulfilled, (state, action) =>
+                {
+                    state.loading = false;
+                    state.season_name = action.payload['data']['season_name'];
+                    state.description = action.payload['data']['description'];
+                    state.year = action.payload['year']
+                })
+                .addCase(getSeasonData.rejected, (state, action) =>
+                {
+                    state.loading = false;
+                    state.error = action.error;
                 })
         }
     })
 
 export default seasonSlice.reducer
-export const { openEditSeasonConfirmationDialog, navigateToSeason } = seasonSlice.actions
+export const { openEditSeasonConfirmationDialog, navigateToSeason, dummyAddSeason } = seasonSlice.actions

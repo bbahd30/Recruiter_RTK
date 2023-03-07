@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginButton from './Components/LoginComp/LoginButton';
 import Login from './Components/LoginComp/Login'
 import SeasonScreen from './Pages/SeasonScreen';
-import Dashboard from './Components/DashboardComponents/Dashboard';
-import RTStage from './Components/Stages/RTStage';
+import Dashboard from './Pages/Dashboard';
+import RTStage from './Pages/RTStage';
 import TestOfRound from './Components/Stages/TestOfRound';
 import InterviewStage from './Components/Stages/InterviewStage';
 

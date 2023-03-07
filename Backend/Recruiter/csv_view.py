@@ -12,31 +12,34 @@ class UploadCSV(generics.CreateAPIView):
     serializer_class = CSVUploadSerializer
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception= True)
         file = serializer.validated_data['csv_file']
         reader = pd.read_csv(file)
         season_id = request.data.get('season_id')
+        print(season_id)
         print("***********")
         for _, row in reader.iterrows():
             try:
                 applicant = Applicant.objects.get(enroll_no = row['Enrollment Number'])
             except ObjectDoesNotExist:
-                new_applicant = Applicant(
-                               name = row['Name'],
-                               academic_year = row["Academic Year"],
-                               enroll_no = row['Enrollment Number'],
-                               role= row["Role"],
-                               project= row["Project"],
-                               cg = row['CG'],
-                               project_link= row["Project Link"],
-                               phone_no = row['Phone Number'],
-                               season_id = Season.objects.get(id=int(season_id)),
-                               status_id = 1
-                            )
-                new_applicant.save()
-
+                new_applicant = Applicant.objects.create(
+                                name = row['Name'],
+                                academic_year = row["Academic Year"],
+                                enroll_no = row['Enrollment Number'],
+                                role= row["Role"],
+                                project= row["Project"],
+                                cg = row['CG'],
+                                project_link= row["Project Link"],
+                                phone_no = row['Phone Number'],
+                                #     season_id = [Season.objects.get(id=int(season_id))],
+                                #     season_id = Season.objects.get(id=int(season_id)),
+                                status_id = 1
+                               )
+                new_applicant.season_id.add(Season.objects.get(id=int(season_id)))
             else:
+                print("NNECH")
                 applicant.name = row['Name']
                 applicant.academic_year = row['Academic Year']
                 applicant.role= row["Role"]
@@ -46,6 +49,8 @@ class UploadCSV(generics.CreateAPIView):
                 applicant.phone_no = row['Phone Number']
                 # todo: if csv is imported than we have students at the first stage
                 applicant.status_id = 1
+                applicant.save()
+                applicant.season_id.add(Season.objects.get(id=int(season_id)))
                 applicant.save()
 
         return Response(
