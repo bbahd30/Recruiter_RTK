@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginButton from './Components/LoginComp/LoginButton';
 import Login from './Components/LoginComp/Login'
-import SeasonScreen from './Components/SeasonScreen';
+import SeasonScreen from './Pages/SeasonScreen';
 import Dashboard from './Components/DashboardComponents/Dashboard';
 import RTStage from './Components/Stages/RTStage';
 import TestOfRound from './Components/Stages/TestOfRound';

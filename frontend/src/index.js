@@ -7,11 +7,18 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import reportWebVitals from './reportWebVitals';
 
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import store from '../src/Store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render
   (
-    <App />
+    <Provider store={store}>
+      {/* <BrowserRouter> */}
+      <App />
+      {/* </BrowserRouter> */}
+    </Provider>
   );
 
 

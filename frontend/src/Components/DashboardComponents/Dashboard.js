@@ -14,6 +14,9 @@ import { TextField } from '@mui/material/';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import MyDialogBox from '../UtilityComponents/MyDialogBox';
 import CSVForm from '../Forms/CSVForm';
+import { setDataChild, setOpen } from '../../Slices/dialogBoxSlice';
+import { csvUpload } from '../../Slices/csvSlice'
+import { useDispatch } from 'react-redux';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -36,6 +39,7 @@ function withRouter(Component)
 
 function Dashboard(props)
 {
+    const dispatch = useDispatch();
     const [season, setSeason] = useState([]);
     const [applicants, setApplicants] = useState([]);
     const { id } = useParams();
@@ -58,7 +62,6 @@ function Dashboard(props)
             .get(Links.seasons_api + `${id}/applicants/`)
             .then((response) =>
             {
-                console.log(response.data)
                 setApplicants(response.data);
             });
     }
@@ -116,6 +119,12 @@ function Dashboard(props)
         },
     ];
 
+    const ImportCSV = () =>
+    {
+        dispatch(setOpen(true));
+        dispatch(setDataChild(<CSVForm />));
+    }
+
     useEffect(() =>
     {
         getSeasonData();
@@ -124,7 +133,7 @@ function Dashboard(props)
 
     return (
         <div>
-            <LoginStatus />
+            {/* <LoginStatus /> */}
             <SideBar id={id} />
             <Box sx={{ backgroundColor: '#5b004c', padding: '50px 0 50px 20%', display: 'flex', justifyContent: 'space-around' }}>
                 <div>
@@ -134,17 +143,13 @@ function Dashboard(props)
 
 
                     <MyDialogBox
-
-                        buttonChild=
-                        {
-                            // <Button variant='contained' sx={{ marginTop: '30px' }}>Import CSV</Button>
-                            "Upload CSV"
-                        }
-                        dataChild=
-                        {
-                            <CSVForm season_id={id} />
-                        }
-                        title="Upload CSV File"
+                        icon="Import CSV"
+                        onClick={ImportCSV}
+                    // dataChild=
+                    // {
+                    //     <CSVForm season_id={id} />
+                    // }
+                    // title="Upload CSV File"
                     />
                 </div>
                 <div>

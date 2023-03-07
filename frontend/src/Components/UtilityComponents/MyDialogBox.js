@@ -8,6 +8,9 @@ import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setOpen, setTitle, setDataChild, setButtonChild } from '../../Slices/dialogBoxSlice';
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(2),
@@ -49,38 +52,31 @@ BootstrapDialogTitle.propTypes = {
 
 export default function MyDialogBox(props)
 {
-    const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch();
+    const dialogBoxState = useSelector((state) => state.dialogBox);
 
-    const handleClickOpen = () =>
-    {
-        setOpen(true);
-    };
     const handleClose = () =>
     {
-        setOpen(false);
+        dispatch(setOpen(false));
     };
 
     return (
         <>
-            <Button variant="contained" onClick={handleClickOpen} >
-                {props.buttonChild}
+            {/* // todo: still using props for passing the function to dispatch accordingly on the basis of the click made on which div*/}
+            <Button variant="contained" onClick={props.onClick} >
+                {props.icon}
             </Button>
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
-                open={open}
+                open={dialogBoxState.open}
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {props.title}
+                    {dialogBoxState.title}
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    {props.dataChild}
+                    {dialogBoxState.dataChild}
                 </DialogContent>
-                {/* <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-
-                    </Button>
-                </DialogActions> */}
             </BootstrapDialog>
         </>
     );
