@@ -41,7 +41,7 @@ export const showSeasons = createAsyncThunk('season/showSeasons', () =>
         })
 })
 
-export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
+export const addSeason = createAsyncThunk('season/addSeason', (seasonData, { dispatch }) =>
 {
     return axios.post
         (
@@ -58,6 +58,7 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
         )
         .then((response) =>
         {
+            dispatch(showSeasons())
             return response.data;
         })
         .catch((error) =>
@@ -67,7 +68,7 @@ export const addSeason = createAsyncThunk('season/addSeason', (seasonData) =>
         })
 })
 
-export const editSeason = createAsyncThunk('season/editSeason', (seasonData) =>
+export const editSeason = createAsyncThunk('season/editSeason', (seasonData, { dispatch }) =>
 {
     return axios
         .patch(
@@ -82,13 +83,14 @@ export const editSeason = createAsyncThunk('season/editSeason', (seasonData) =>
             })
         .then((response) =>
         {
+            dispatch(showSeasons())
             return response.data
         })
         .catch((error) =>
             alert(error))
 })
 
-export const deleteSeason = createAsyncThunk('season/deleteSeason', (id) =>
+export const deleteSeason = createAsyncThunk('season/deleteSeason', (id, { dispatch }) =>
 {
     const url = `${seasons_api}${id}`
     return axios
@@ -98,6 +100,7 @@ export const deleteSeason = createAsyncThunk('season/deleteSeason', (id) =>
             })
         .then((response) =>
         {
+            dispatch(showSeasons())
             if (response.status === 204)
                 return response.data
             // alert("Deleted Successfully")
