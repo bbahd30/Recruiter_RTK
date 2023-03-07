@@ -24,23 +24,20 @@ class UploadCSV(generics.CreateAPIView):
             try:
                 applicant = Applicant.objects.get(enroll_no = row['Enrollment Number'])
             except ObjectDoesNotExist:
-                new_applicant = Applicant(
-                               name = row['Name'],
-                               academic_year = row["Academic Year"],
-                               enroll_no = row['Enrollment Number'],
-                               role= row["Role"],
-                               project= row["Project"],
-                               cg = row['CG'],
-                               project_link= row["Project Link"],
-                               phone_no = row['Phone Number'],
-                            #    season_id = [Season.objects.get(id=int(season_id))],
-                            #    season_id = Season.objects.get(id=int(season_id)),
-                               status_id = 1
-                            )
-                print("UUUP")
-                new_applicant.save()
+                new_applicant = Applicant.objects.create(
+                                name = row['Name'],
+                                academic_year = row["Academic Year"],
+                                enroll_no = row['Enrollment Number'],
+                                role= row["Role"],
+                                project= row["Project"],
+                                cg = row['CG'],
+                                project_link= row["Project Link"],
+                                phone_no = row['Phone Number'],
+                                #     season_id = [Season.objects.get(id=int(season_id))],
+                                #     season_id = Season.objects.get(id=int(season_id)),
+                                status_id = 1
+                               )
                 new_applicant.season_id.add(Season.objects.get(id=int(season_id)))
-                # new_applicant.season_id.set(row['season_id'])
             else:
                 print("NNECH")
                 applicant.name = row['Name']
