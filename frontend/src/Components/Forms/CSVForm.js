@@ -6,12 +6,13 @@ import { Button } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadCSV } from '../../Slices/csvSlice.js';
+import { useParams } from 'react-router-dom';
 
 const CSVForm = (props) =>
 {
     const dispatch = useDispatch();
     const seasonState = useSelector((state) => state.season);
-
+    const id = useParams()['id']
     const uploadBtn =
     {
         position: 'absolute',
@@ -27,7 +28,7 @@ const CSVForm = (props) =>
         dispatch(uploadCSV(
             {
                 'file': e.target.files[0],
-                'season_id': seasonState.id
+                'season_id': id
             }
         ))
     }

@@ -71,6 +71,7 @@ class QuestionViewset(viewsets.ModelViewSet):
             section_id = Section.objects.get(id=int(request.data.get('section_id')))
         )
         print("*************************************")
+        print(request.data)
         question.assignee_id.set(request.data.get('assignee_id'))
         question.save()
         print('question saved')
