@@ -3,8 +3,9 @@ import { Grid, Paper, Button, MenuItem, Select, InputLabel, FormControl } from '
 import TextField from '@mui/material/TextField';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { addSeason, closeaddSeasonDialog, getSeasonData, editSeason, showSeasons, deleteSeason, dummyAddSeason } from '../../Slices/seasonSlice';
+import { addSeason, closeaddSeasonDialog, getSeasonData, editSeason, showSeasons, deleteSeason } from '../../Slices/seasonSlice';
 import { setOpen } from '../../Slices/dialogBoxSlice';
+import { setDeleteMode } from '../../Slices/formSlice';
 
 const paperStyle =
 {
@@ -37,16 +38,11 @@ const SeasonForm = () =>
 
     const toBeEditSeasonData = findObjectById(seasonState['seasons'], formState.formId)
 
-    // function forceUpdate()
-    // {
-    //     dispatch({ type: 'DUMMY_ACTION' });
-    // }
-
     const deleteSeasonHandler = (id) =>
     {
+        dispatch(setDeleteMode(id))
         dispatch(deleteSeason(id));
         dispatch(setOpen(false));
-        // forceUpdate()
     }
     useEffect(() =>
     {
@@ -86,9 +82,6 @@ const SeasonForm = () =>
                 })
             )
             dispatch(setOpen(false))
-            console.log("*******")
-            // dispatch(dummyAddSeason())
-            console.log("*******")
         } else
         {
             dispatch(
