@@ -6,8 +6,8 @@ import Login from './Components/LoginComp/Login'
 import SeasonScreen from './Pages/SeasonScreen';
 import Dashboard from './Pages/Dashboard';
 import RoundScreen from './Pages/RoundScreen';
-import TestOfRound from './Components/Stages/TestOfRound';
 import InterviewStage from './Components/Stages/InterviewStage';
+import SectionScreen from './Pages/SectionScreen';
 
 function App()
 {
@@ -22,10 +22,10 @@ function App()
           <Route path='/seasons/' element={<SeasonScreen />} />
 
 
-          <Route path='/seasons/:id'>
+          <Route path='/seasons/:id/'>
             <Route index element={<RoundScreen />} />
             <Route path='applicants' element={<Dashboard />} />
-            <Route path='rounds/:id' element={<TestOfRound />} />
+            <Route path='rounds/:roundId' element={<SectionScreen />} />
             <Route path='interviewstage' element={<InterviewStage />} />
           </Route>
 
