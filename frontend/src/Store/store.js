@@ -7,6 +7,7 @@ import applicantReducer from '../Slices/applicantSlice';
 import formReducer from '../Slices/formSlice';
 import roundReducer from '../Slices/roundSlice';
 import sectionReducer from '../Slices/sectionSlice';
+import memberReducer from '../Slices/memberSlice';
 
 const store = configureStore({
     reducer: {
@@ -16,8 +17,8 @@ const store = configureStore({
         applicant: applicantReducer,
         form: formReducer,
         round: roundReducer,
-        section: seasonReducer,
-
+        section: sectionReducer,
+        member: memberReducer,
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({
         serializableCheck: false,

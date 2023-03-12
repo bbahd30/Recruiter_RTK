@@ -208,11 +208,6 @@ const sectionSlice = createSlice
                     state.loading = false;
                     state.error = action.error;
                 })
-                .addCase(editSection.rejected, (state, action) =>
-                {
-                    state.loading = false
-                    state.error = action.error.message
-                })
                 .addCase(showSectionsWiseQuestions.pending, (state) =>
                 {
                     state.loading = true;
@@ -226,6 +221,7 @@ const sectionSlice = createSlice
                     let sectionId = 0
                     data.forEach((question) =>
                     {
+                        sectionId = question['section_id']
                         let questionData = {}
                         questionData['id'] = question['id']
                         questionData['question_text'] = question['question_text']

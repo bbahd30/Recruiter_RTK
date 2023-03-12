@@ -17,13 +17,14 @@ import { setOpen, setTitle, setDataChild, setButtonChild } from '../Slices/dialo
 import { setEditMode, setAddMode } from '../Slices/formSlice'
 import { showSections, showSectionsWiseQuestions } from '../Slices/sectionSlice'
 import { editQuestion, showQuestions } from '../Slices/questionSlice'
+import ModeEdit from '@mui/icons-material/ModeEdit'
 
 const SectionScreen = () =>
 {
     const divStyle =
     {
         padding: '10px 20px',
-        width: '50%',
+        width: '75%',
         borderRadius: '8px 2px 2px 8px',
         margin: '20px auto',
     }
@@ -36,7 +37,7 @@ const SectionScreen = () =>
     {
         display: 'flex',
         justifyContent: 'space-between',
-        width: '100%'
+        width: '100%',
     }
     const sectionBox =
     {
@@ -96,6 +97,7 @@ const SectionScreen = () =>
             sections.map((section, key) =>
                 dispatch(showSectionsWiseQuestions(section.id)))
         }
+        console.log(questions)
     }, [sections])
     
     return (
@@ -111,81 +113,69 @@ const SectionScreen = () =>
                 </div>
 
                 <div >
-                    {sections.map(section => 
-                    (
-                        <div key={section.id} style={sectionBox}>
-                                <Box
-                                    display="flex"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                >
-                                    <MyDialogBox
-                                        icon={"Edit Section"}
-                                        onClick={() => EditSection(section.id)}
-                                    />
-                                </Box>
-                                <div key={section.id} style={divStyle} className='section-boxes'>
-                                        <div className='flexClass'>
-                                            <h2>
-                                                Section: {section.section_name}
-                                                {/* todo: add accordion condtion of only one open at once */}
-                                            </h2>
-                                            <div className='addSign'>
-                                                <MyDialogBox
-                                                    icon={"Add Question"}
-                                                    onClick={() => {AddQuestion(section.id)}}
-                                                />
+                    {
+                        <div>
+                            {sections.map((section) => 
+                                {
+                                    const sectionQuestions = questions[section.id];
+                                     return (
+                                        <div key={section.id} style={divStyle} className='section-boxes'>
+                                            <div className='flexClass'>
+                                               <h2>
+                                                 Section: {section.section_name}
+                                               </h2>
+                                               <div className='addSign'>
+                                                 <MyDialogBox
+                                                   icon={"Add Question"}
+                                                   onClick={() => {
+                                                     AddQuestion(section.id);
+                                                   }}
+                                                 />
+                                               </div>
                                             </div>
-                                        </div>
-                                        <div>
-                                            {questions.map(question =>
-                                                (
-                                                    // (question.section_id.indexOf(section.id) != -1) ?
-                                                    (question.section_id == section.id) ?
-                                                        <div key={question.id}>
-                                                        <MyDialogBox icon={"Edit Question"}
-                                                            onClick={() => {EditQuestion(question.id, section.id)}}/>
-                                                            <Accordion
-                                                                style={innerDivStyle}
-                                                                className='section-boxes'
-                                                            >
-                                                                <AccordionSummary>
-                                                                    <div className='questionAcc'>
+                                            <div>
+                                               {sectionQuestions &&
+                                                 sectionQuestions.map((question) => (
+                                                    <div key={question.id}>
+                                                        <Accordion style={innerDivStyle} className='section-boxes'>
+                                                            <AccordionSummary>
+                                                                <div className='questionAcc' style={{marginRight: '10px'}}>
+                                                                    <div>
+                                                                        {question.question_text}
+                                                                    </div>
+                                                                    <div id='questionMarks'>
                                                                         <div>
-                                                                            {question.question_text}
-                                                                        </div>
-                                                                        <div id='questionMarks'>
-                                                                            <div>
-                                                                                {question.total_marks}
-                                                                            </div>
-
+                                                                            {question.total_marks}
                                                                         </div>
                                                                     </div>
-                                                                </AccordionSummary>
-                                                                <AccordionDetails>
-                                                                {
-                                                                            question.assignee_id.map
-                                                                                ((assignee) =>
-                                                                                (
-                                                                                    <div
-                                                                                        style={quesData}
-                                                                                        key={assignee.id}>
-                                                                                        <div>
-                                                                                            {assignee.name}
-                                                                                        </div>
-
-                                                                                    </div>
-                                                                                ))
-                                                                        }
-                                                                </AccordionDetails>
-                                                            </Accordion>
-                                                        </div> : ("")
-                                                ))
-                                            }
-                                    </div>
-                                </div>
-                            </div>
-                        ))
+                                                                </div>
+                                                                <MyDialogBox icon={<ModeEdit/>} onClick={() => {EditQuestion(question.id, section.id)}}/>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails>
+                                                                 <div>{question.ans}</div>
+                                                             </AccordionDetails>
+                                                            <AccordionDetails>
+                                                            {question.assignee_id.map
+                                                                    ((assignee) =>
+                                                                    (
+                                                                        <div
+                                                                            style={quesData}
+                                                                            key={assignee.id}>
+                                                                            <div>
+                                                                                {assignee.name}
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                               </div>
+                                                 ))}
+                                             </div>
+                                                   </div>           
+                                                 );
+                                                })          
+                            }
+                        </div>                
                     }
                 </div>
 
