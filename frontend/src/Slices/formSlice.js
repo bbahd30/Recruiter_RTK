@@ -26,10 +26,16 @@ const formSlice = createSlice(
             {
                 state.open = true;
                 state.form = action.payload;
+            },
+            setDeleteMode: (state, action) =>
+            {
+                state.open = true;
+                state.mode = 'delete';
+                state.formId = action.payload;
             }
         }
     }
 )
 
 export default formSlice.reducer
-export const { setEditMode, setForm, setAddMode } = formSlice.actions
+export const { setEditMode, setForm, setAddMode, setDeleteMode } = formSlice.actions

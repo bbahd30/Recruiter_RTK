@@ -117,10 +117,6 @@ const seasonSlice = createSlice
         name: 'season',
         initialState: {
             loading: false,
-            // season_type : '',
-            // open : false,
-            // openConfirmationDialog: false,
-            // endSeasonId: 0
             seasons: [],
             error: '',
             id: 1,
@@ -134,10 +130,6 @@ const seasonSlice = createSlice
             {
                 state.openConfirmationDialog = action.payload['open']
                 state.endSeasonId = action.payload['seasonId']
-            },
-            navigateToSeason: (state, action) =>
-            {
-                state.id = action.payload;
             },
             dummyAddSeason: (state, action) =>
             {

@@ -2,7 +2,7 @@ import React from 'react';
 import LoginStatus from '../Components/LoginComp/LoginStatus';
 import Navbar from '../Components/DashboardComponents/Navbar';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import * as Links from '../Links';
 import SeasonForm from '../Components/Forms/SeasonForm';
@@ -21,23 +21,21 @@ const SeasonScreen = () =>
     const dispatch = useDispatch();
     const seasonState = useSelector((state) => state.season);
     const seasons = seasonState.seasons;
+    console.log(seasons)
     const navigate = useNavigate();
 
     const CarouselSlider = CarouselProvider();
+    const seasonId = useParams()['id']
 
     useEffect(() =>
     {
         dispatch(showSeasons());
+        dispatch(setButtonChild(<AddIcon />));
     }, []);
 
-    useEffect(() =>
-    {
-        dispatch(setButtonChild(<AddIcon />));
-    }, [])
     const navigateTo = (id) =>
     {
         const url = `/seasons/${id}`
-        dispatch(navigateToSeason(id));
         navigate(url)
     }
     const AddForm = () =>
