@@ -37,15 +37,6 @@ class SectionViewset(viewsets.ModelViewSet):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
      
-    def create(self, request, **kwargs):
-       section = Section.objects.create(
-           section_name = request.data.get('section_name'),
-           weightage = request.data.get('weightage')
-       )
-       section.round_id.set(request.data.get('round_id'))
-       section.save()
-       return Response("post")
-
 class QuestionViewset(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
