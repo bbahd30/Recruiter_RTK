@@ -169,7 +169,6 @@ const SeasonForm = () =>
                             type === 'edit' ?
                                 <Button
                                     variant="contained"
-                                    // type='submitClick'
                                     onClick={() =>
                                     {
                                         deleteSeasonHandler(formState.formId)

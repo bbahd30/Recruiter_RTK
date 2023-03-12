@@ -5,6 +5,7 @@ import dialogBoxReducer from '../Slices/dialogBoxSlice';
 import csvReducer from '../Slices/csvSlice';
 import applicantReducer from '../Slices/applicantSlice';
 import formReducer from '../Slices/formSlice';
+import roundReducer from '../Slices/roundSlice';
 
 const store = configureStore({
     reducer: {
@@ -12,7 +13,9 @@ const store = configureStore({
         dialogBox: dialogBoxReducer,
         csv: csvReducer,
         applicant: applicantReducer,
-        form: formReducer
+        form: formReducer,
+        round: roundReducer,
+
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({
         serializableCheck: false,
