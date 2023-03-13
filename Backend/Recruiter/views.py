@@ -13,6 +13,72 @@ from django.forms.models import model_to_dict
 from django.shortcuts import render
 from .csv_view import *
 
+class ScoreFunctions:
+
+    def get_section_scores(section_data):
+        section_total_scores=[]
+        print(section_data)
+        for section_id in section_data['section_list']:
+            section_scores=0
+            print("``````````")
+            print(section_id)
+            questions = Question.objects.filter(section_id = section_id)
+            print(questions)
+            for question in questions:
+                section_scores += question.total_marks
+            # section_wise_marks_list[section_id] = section_scores
+            section_total_scores.append(section_scores)
+        return section_total_scores
+    
+    def get_applicant_total_marks(applicant_data):
+        applicant_id = applicant_data['applicant_id'] 
+        applicant_total_marks = {}
+
+        total_marks=0
+        sections = Section.objects.filter(round_id = applicant_data['round_id'])
+
+        for section in sections:
+            applicant_section_questions = Score.objects.filter(question_id__section_id=section.id, student_id=applicant_id)
+            # print(applicant_section_questions)
+            # print("*************\n\n")
+            for applicant_question in applicant_section_questions:
+                total_marks += (section.weightage) * (applicant_question.marks_awarded)
+                
+        applicant_total_marks[applicant_id] = total_marks
+        return applicant_total_marks
+    
+    def get_question_info(section_data):
+
+        section_marks = []
+        score_data = Score.objects.filter(student_id = section_data['applicant_id'], question_id__section_id = section_data['section_id'])
+
+        for score_instance in score_data:
+            id = score_instance.id
+            score = score_instance.score
+            remarks = score_instance.remarks
+            status = score_instance.status
+            question = Question.objects.get(id = score_instance.question_id.id)
+
+            question_data = QuestionSerializer(question)  
+            
+            assignees = []
+            for member in question.assignees:
+                member_data = MemberSerializer(member)
+                assignees.append(member_data.data)
+            print(assignees)
+
+            response = {
+                'id': id,
+                'question': question_data.data,
+                'score': score,
+                'remarks': remarks,
+                'status': status,
+                'assignee': assignees
+            }
+            section_marks.append(response)
+        return section_marks
+    
+
 class MemberViewset(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
@@ -47,7 +113,7 @@ class SectionViewset(viewsets.ModelViewSet):
             section_wise_marks_list[section_id] = section_scores
             # section_total_scores.append(section_scores)
         return section_wise_marks_list
-
+    
     def list(self, request):
         sections = Section.objects.all()
         section_data = []
@@ -134,6 +200,10 @@ class ScoreViewset(viewsets.ModelViewSet):
     serializer_class = ScoreSerializer
     # permission_classes = [IsAbleToSeePersonalInfo]
 
+class ApplicantStatusViewset(viewsets.ModelViewSet):
+    queryset = ApplicantStatus.objects.all()
+    serializer_class = ApplicantStatusSerializer
+
 # note: CUSTOMIZED VIEWSETS
 class SectionWiseQuestionViewset(viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -153,6 +223,63 @@ class SectionWiseQuestionViewset(viewsets.ModelViewSet):
                 model_data = QuestionSerializer(Question.objects.filter(section_id = r_id).filter(id = model_id), many = True)
                 return Response(model_data.data)
             return HttpResponse("check SectionWiseQuestionViewset") 
+
+class StatusAndSectionMarks(generics.CreateAPIView):
+
+    queryset = ApplicantStatus.objects.all()
+    serializer_class = ApplicantStatusSerializer
+
+    @action(detail=False, methods=['get'])
+    def get(self, request, **kwargs):
+        applicant_id = kwargs.get('applicant_id')
+        season_id = kwargs.get('season_id')
+        rounds = Round.objects.filter(season_id = season_id)
+
+        response_data = {}
+        for round in rounds:
+            response_data[round.id] = {}
+            try:
+                applicant_round = ApplicantStatus.objects.get(applicant_id = applicant_id, status_id=round.id)
+            except ObjectDoesNotExist:
+                print("^^^^^^^")
+                pass
+            else:
+                print("******888")
+                applicant_round_serializer = ApplicantStatusSerializer(applicant_round)
+                print(applicant_round_serializer.data)
+                print("*******")
+                round_total_marks = ScoreFunctions.get_applicant_total_marks({
+                    'applicant_id': applicant_id,
+                    'round_id': round.id
+                })
+
+                response_data[round.id]['status'] = applicant_round_serializer.data
+
+                response_data[round.id]['total_score'] = round_total_marks[applicant_id]
+        return Response(response_data)
+
+    def post(self, request):
+        applicant_list = request.data['applicant_list']
+        section_list = request.data['section_list']
+        applicant_section_marks_list = []
+        if len(applicant_list)>0 and len(section_list)>0:
+            for Applicant_id in applicant_list:
+                Applicant_section_data = {
+                    'Applicant_id': Applicant_id,
+                    'section_list': section_list
+                }
+                Applicant_section_marks = ScoreFunctions.get_section_scores(Applicant_section_data)
+                applicant_section_marks_list.append(Applicant_section_marks)
+        
+        response_data={
+            'status':'success',
+            'data':applicant_section_marks_list
+        }
+
+        return Response(response_data)
+
+# class Section
+
 
 class RoundWiseSectionViewset(viewsets.ModelViewSet):
     queryset = Round.objects.all()

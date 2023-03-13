@@ -26,8 +26,15 @@ class SectionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SectionWithRoundSerializer(serializers.ModelSerializer):
+    round_id = RoundSerializer()
     class Meta:
         model = Section
+        fields = '__all__'
+
+class ApplicantStatusSerializer(serializers.ModelSerializer):
+    status_id = RoundSerializer()
+    class Meta:
+        model = ApplicantStatus
         fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -82,7 +89,7 @@ class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
         fields = '__all__'
-        fields = ['marks_awarded', 'remarks', 'status', 'question_id', 'student_id']
+        # fields = ['marks_awarded', 'remarks', 'status', 'question_id', 'student_id', ]
 
 class ScoreSerializerNormal(serializers.ModelSerializer):
     class Meta:

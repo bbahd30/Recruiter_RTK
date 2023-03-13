@@ -43,6 +43,9 @@ urlpatterns = [
     #     }), name='get_data'),
     # '''
 
+
+
+
     # note:
     # '''
     #     Works by giving only the ids in kwargs
@@ -77,5 +80,14 @@ urlpatterns = [
 #     ({
 #          'get':'get_data'
 #     })),
+
+
+    re_path(r'^sectionWiseMarks/(?P<applicant_id>[0-9]+)/(?P<season_id>[0-9]+)/$', StatusAndSectionMarks.as_view()),
+
+     re_path('applicantStatus/', ApplicantStatusViewset.as_view({
+          'get': 'list'
+     }))
+
+
 ]
 urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))

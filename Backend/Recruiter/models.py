@@ -157,8 +157,11 @@ class ApplicantStatus(models.Model):
     )
     applicant_id = models.ForeignKey(Applicant, on_delete=CASCADE)
     interview_panel = models.ForeignKey(InterviewPanel, on_delete=CASCADE, null=True, blank=True)
-    date=models.DateField(null=True)
-    time=models.TimeField(null=True)
+    date=models.DateField(null=True, blank=True)
+    time=models.TimeField(null=True, blank=True)
     total_marks=models.IntegerField(null=True, blank=True)
     status_id = models.ForeignKey(Round, on_delete=CASCADE)
     status = models.CharField(max_length=20, choices=status_choice, default="NOTINFORMED")
+
+    def __str__(self):
+        return str(self.applicant_id)
