@@ -103,9 +103,9 @@ export const editSection = createAsyncThunk('section/editSection', (sectionData,
             alert(error))
 })
 
-export const deleteSection = createAsyncThunk('section/deleteSection', (id, { dispatch }) =>
+export const deleteSection = createAsyncThunk('section/deleteSection', (data, { dispatch }) =>
 {
-    const url = `${sections_api}${id}`
+    const url = `${sections_api}${data.id}`
     return axios
         .delete((url),
             {
@@ -113,7 +113,7 @@ export const deleteSection = createAsyncThunk('section/deleteSection', (id, { di
             })
         .then((response) =>
         {
-            dispatch(showSections(id))
+            dispatch(showSections(data.roundId))
             if (response.status === 204)
                 return response.data
             // alert("Deleted Successfully")

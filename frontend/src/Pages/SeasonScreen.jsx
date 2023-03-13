@@ -14,7 +14,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import AddIcon from '@mui/icons-material/Add'
 
 import { showSeasons, navigateToSeason} from '../Slices/seasonSlice'
-import { setOpen, setTitle, setDataChild, setButtonChild } from '../Slices/dialogBoxSlice'
+import { setOpen, setTitle, setDataChild } from '../Slices/dialogBoxSlice'
 import { setEditMode, setForm, setAddMode } from '../Slices/formSlice'
 
 const SeasonScreen = () =>
@@ -31,7 +31,6 @@ const SeasonScreen = () =>
     useEffect(() =>
     {
         dispatch(showSeasons())
-        dispatch(setButtonChild(<AddIcon />))
     }, [])
 
     const navigateTo = (id) =>
@@ -92,7 +91,7 @@ const SeasonScreen = () =>
                     }
                 </CarouselSlider>
                 <MyDialogBox
-                    icon = {<AddIcon />}
+                    icon={"Add Season"}
                     onClick = {AddForm}
                 />
             </div>

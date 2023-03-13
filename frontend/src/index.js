@@ -9,7 +9,7 @@ import reportWebVitals from './reportWebVitals';
 
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import store from '../src/Store/store';
+import store from './Store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render

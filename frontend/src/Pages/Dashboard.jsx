@@ -10,7 +10,7 @@ import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import TableProvider from '../Components/UtilityComponents/TableProvider';
 import Toolbar from '@mui/material/Toolbar';
-import { TextField } from '@mui/material/';
+import { TextField } from '@mui/material';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import MyDialogBox from '../Components/UtilityComponents/MyDialogBox';
 import CSVForm from '../Components/Forms/CSVForm';
@@ -117,15 +117,10 @@ function Dashboard(props)
                     <MyDialogBox
                         icon="Import CSV"
                         onClick={ImportCSV}
-                    // dataChild=
-                    // {
-                    //     <CSVForm season_id={id} />
-                    // }
-                    // title="Upload CSV File"
                     />
                 </div>
                 <div>
-                    <img src={require('../Images/welcome.svg').default} width="800px"></img>
+                    <img src={require('../Images/welcome.svg').default} width="75%"></img>
                 </div>
             </Box>
             <Box>

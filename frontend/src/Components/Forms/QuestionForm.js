@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Links from '../../Links';
 import axios from 'axios';
 import { Grid, Paper, Button, MenuItem, Select, OutlinedInput, InputLabel, FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import { TextareaAutosize } from '@mui/material';
 
 import { useSelector, useDispatch, } from 'react-redux'
 import { addQuestion, editQuestion, showQuestions, deleteQuestion, handleQuestionType, getQuestionsData } from '../../Slices/questionSlice';
 import { setOpen } from '../../Slices/dialogBoxSlice';
 import { setDeleteMode } from '../../Slices/formSlice';
 import { showMembers } from '../../Slices/memberSlice';
+import { setMembersDispatched, setLoading } from '../../Slices/trackerSlice'
 
 import { useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,6 +25,7 @@ const QuestionForm = (props) =>
     const formState = useSelector((state) => state.form)
     const questionState = useSelector((state) => state.question)
     const memberState = useSelector((state) => state.member)
+    const trackerState = useSelector((state) => state.tracker)
 
     const members = memberState.members
 
@@ -66,10 +69,11 @@ const QuestionForm = (props) =>
             dispatch(
                 addQuestion({
                     section_id: props.sectionId,
-                    question_name: questionText,
+                    question_text: questionText,
                     total_marks: totalMarks,
                     ans: ans,
                     assigneeId: assigneeId,
+                    round_id: roundId
                 })
             )
             dispatch(setOpen(false))
@@ -95,16 +99,20 @@ const QuestionForm = (props) =>
 
     useEffect(() =>
     {
-        console.log(members)
-    }, [members])
-    useEffect(() =>
-    {
         if (type === 'edit')
         {
             dispatch(getQuestionsData(props.questionId))
         }
-        dispatch(showMembers())
-    }, [])
+        console.log(trackerState.membersDispatched)
+        if (!trackerState.membersDispatched && !trackerState.isLoading)
+        {
+            console.log("&&&&&&&&&&&")
+            dispatch(setLoading(true));
+            dispatch(setMembersDispatched())
+            dispatch(showMembers())
+                .then(() => dispatch(setLoading(false)))
+        }
+    }, [trackerState.membersDispatched])
 
     return (
         <Grid textAlign={'center'}>
@@ -145,13 +153,14 @@ const QuestionForm = (props) =>
                 // error={Boolean(formErrors.totalMarks)}
                 // helperText={formErrors.totalMarks}
                 />
-                <FormControl fullWidth>
+                <FormControl fullWidth sx={{ marginBottom: '20px' }}>
                     <InputLabel
                         id="assign_to">Assignees</InputLabel>
                     <Select
                         labelId="assign_to"
                         variant='outlined'
                         name='assignee_id'
+                        input={<OutlinedInput label="Assignees" />}
                         id="outlined-basic"
                         multiple
                         value={assigneeId}
@@ -167,7 +176,10 @@ const QuestionForm = (props) =>
                         ))}
                     </Select>
                 </FormControl>
-                <TextField
+
+                <TextareaAutosize
+                    style={{ width: '100%' }}
+                    minRows={8}
                     id="outlined-basic"
                     label="Solution"
                     placeholder='Enter Solution'

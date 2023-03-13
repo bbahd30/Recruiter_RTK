@@ -23,6 +23,8 @@ export default function SideBar(props)
         setState(open);
     };
 
+    const seasonId = useParams()['id']
+
     const list = (anchor) => (
         <Box
             sx={{ width: 270 }}
@@ -31,9 +33,9 @@ export default function SideBar(props)
         >
             <List>
                 <ListItem>
-                    <div onClick={() => { navigate("applicants/") }}>
+                    <Link to={"/seasons/" + seasonId + "/applicants"}>
                         Dashboard
-                    </div>
+                    </Link>
                 </ListItem>
                 <ListItem>
                     <ListItemText>

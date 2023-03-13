@@ -28,7 +28,6 @@ const LoginButton = () =>
             {
                 if (res.data.status === 'alreadyLoggedIn')
                 {
-                    console.log("han")
                     navigate("/seasons/");
 
                 }

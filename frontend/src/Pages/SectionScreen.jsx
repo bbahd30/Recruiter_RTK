@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate} from 'react-router-dom'
-import axios from 'axios'
 
 import * as Links from '../Links'
 import LoginStatus from '../Components/LoginComp/LoginStatus'
@@ -13,7 +12,7 @@ import MyDialogBox from '../Components/UtilityComponents/MyDialogBox'
 import SectionForm from '../Components/Forms/SectionForm'
 import QuestionForm from '../Components/Forms/QuestionForm'
 
-import { setOpen, setTitle, setDataChild, setButtonChild } from '../Slices/dialogBoxSlice'
+import { setOpen, setTitle, setDataChild,  } from '../Slices/dialogBoxSlice'
 import { setEditMode, setAddMode } from '../Slices/formSlice'
 import { showSections, showSectionsWiseQuestions } from '../Slices/sectionSlice'
 import { editQuestion, showQuestions } from '../Slices/questionSlice'
@@ -52,7 +51,7 @@ const SectionScreen = () =>
     const sectionState = useSelector((state) => state.section)
     const sections = sectionState.sections
     const questions = sectionState.questions
-
+    
     const AddSection = () =>
     {
         dispatch(setOpen(true))
@@ -87,7 +86,6 @@ const SectionScreen = () =>
     useEffect(() =>
     {
         dispatch(showSections(roundId))
-        dispatch(setButtonChild(<AddIcon />))
     }, [])
 
     useEffect(() =>
@@ -97,10 +95,9 @@ const SectionScreen = () =>
             sections.map((section, key) =>
                 dispatch(showSectionsWiseQuestions(section.id)))
         }
-        console.log(questions)
     }, [sections])
     
-    return (
+    return (!sectionState.loading &&( 
          <>
             <SideBar id={seasonId} />
             <Box>
@@ -182,7 +179,7 @@ const SectionScreen = () =>
 
             </Box>
         </ >
-    );
+    ));
 };
 
 export default SectionScreen

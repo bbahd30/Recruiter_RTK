@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setOpen, setTitle, setDataChild, setButtonChild } from '../../Slices/dialogBoxSlice';
+import { setOpen, setTitle, setDataChild, } from '../../Slices/dialogBoxSlice';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -23,7 +23,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 function BootstrapDialogTitle(props)
 {
     const { children, onClose, ...other } = props;
-
     return (
         <DialogTitle sx={{ m: 0, p: 2 }} {...other} >
             {children}
@@ -54,7 +53,6 @@ export default function MyDialogBox(props)
 {
     const dispatch = useDispatch();
     const dialogBoxState = useSelector((state) => state.dialogBox);
-
     const handleClose = () =>
     {
         dispatch(setOpen(false));

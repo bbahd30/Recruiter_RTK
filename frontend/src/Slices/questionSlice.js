@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 import { questions_api, rounds_api, sections_api } from "../Links";
+import { showSections, showSectionsWiseQuestions } from "./sectionSlice";
 
 export const getQuestionsData = createAsyncThunk('question/getQuestionsData', (id) =>
 {
@@ -16,7 +17,6 @@ export const getQuestionsData = createAsyncThunk('question/getQuestionsData', (i
             const payload = {
                 data: response.data,
             }
-            console.log(payload)
             return payload;
         })
 });
@@ -39,7 +39,8 @@ export const addQuestion = createAsyncThunk('question/addQuestion', (questionDat
         )
         .then((response) =>
         {
-            dispatch(showQuestions(questionData['section_id']))
+            dispatch(showSectionsWiseQuestions(questionData['section_id']))
+            // dispatch(showSections(questionData['round_id']))
             return response.data;
         })
         .catch((error) =>

@@ -32,11 +32,8 @@ export const showSeasons = createAsyncThunk('season/showSeasons', () =>
         .then((response) =>
         {
             const payload = {
-                // type: season_type,
-                // type: season_name,
                 data: response.data
             }
-            console.log(payload)
             return payload
         })
 })
