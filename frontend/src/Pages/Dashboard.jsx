@@ -1,24 +1,25 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
+
+import { Box } from '@mui/system';
+import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { Button, Typography } from '@mui/material';
+
 import LoginStatus from '../Components/LoginComp/LoginStatus';
 import SideBar from '../Components/DashboardComponents/SideBar';
-import { Box } from '@mui/system';
-import { Button, Typography } from '@mui/material';
 import * as Links from '../Links';
-import axios from 'axios';
-import { useParams, useLocation, useNavigate, Route, Routes } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableRow } from '@mui/material';
-import TableProvider from '../Components/UtilityComponents/TableProvider';
-import Toolbar from '@mui/material/Toolbar';
-import { TextField } from '@mui/material';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import MyDialogBox from '../Components/UtilityComponents/MyDialogBox';
 import CSVForm from '../Components/Forms/CSVForm';
-import { setDataChild, setOpen } from '../Slices/dialogBoxSlice';
+import ApplicantCard from '../Components/ApplicantComponents/ApplicantCard';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { setDataChild, setOpen } from '../Slices/dialogBoxSlice';
 import { getSeasonData } from '../Slices/seasonSlice';
-import { showApplicants } from '../Slices/applicantSlice';
+import { setApplicantDetails, setApplicantId, setOpenModal, showApplicants } from '../Slices/applicantSlice';
+import { getSectionMarks, showSections } from '../Slices/sectionSlice';
+import { showRounds } from '../Slices/roundSlice';
+import { getStatusAndSectionMarks } from '../Slices/applicantSlice';
 
 // custom withRouter as it is not present in router 6
 function withRouter(Component)
@@ -41,15 +42,7 @@ function withRouter(Component)
 
 function Dashboard(props)
 {
-    const dispatch = useDispatch();
-    const seasonState = useSelector((state) => state.season);
-    const applicantState = useSelector((state) => state.applicant);
-    const seasonId = useParams()['id'];
-
-    // object fn in the filter function filterfn which has a function
-    const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
-    const [pageSize, setPageSize] = React.useState(5);
-
+    
     const arr = ['Test', 'Dev Round 1'];
     const columns = [
         {
@@ -92,11 +85,53 @@ function Dashboard(props)
         },
     ];
 
+    const dispatch = useDispatch();
+    const seasonState = useSelector((state) => state.season);
+    const applicantState = useSelector((state) => state.applicant);
+    const seasonId = useParams()['id'];
+    const sectionState = useSelector((state) => state.section)
+    const roundState = useSelector((state) => state.round)
+
+    // const section
+
+    // object fn in the filter function filterfn which has a function
+    const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
+    const [pageSize, setPageSize] = React.useState(5);
+
+
     const ImportCSV = () =>
     {
         dispatch(setOpen(true));
         dispatch(setDataChild(<CSVForm />));
     }
+    const type = 'test'
+    const openModal = (params) =>
+    {
+        dispatch(setOpenModal(true))
+        dispatch(setApplicantDetails({
+            'applicant': params.row,
+        }))
+        console.log(params.row['id'])
+        dispatch(setApplicantId({
+            id: params.row['id']
+        }))
+        dispatch(getSectionMarks())
+        if (roundState.rounds.len != 0)
+        {
+            dispatch(showRounds(seasonId))
+        }
+        dispatch(getStatusAndSectionMarks({
+            'applicant_id': params.row['id'],
+            'season_id': seasonId,
+        }))
+    }
+        
+    useEffect(() =>
+    {
+        roundState.rounds.map((round) => (
+            dispatch(showSections(round.id))
+        ))
+    }, [roundState.rounds])
 
     useEffect(() =>
     {
@@ -125,6 +160,7 @@ function Dashboard(props)
             </Box>
             <Box>
                 {
+                    <>
                     <div className='table'>
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid
@@ -134,13 +170,17 @@ function Dashboard(props)
                                 pagination
                                 pageSize={pageSize}
                                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-
+                                checkboxSelection
                                 rowsPerPageOptions={[5, 10, 15]}
                                 autoHeight
-                            />
+                                onRowClick={(params) => { openModal(params) }} 
+                                />
+                                <ApplicantCard/>
                         </div>
 
                     </div>
+                        {/* {applicantModal} */}
+                    </>
                 }
             </Box>
 
