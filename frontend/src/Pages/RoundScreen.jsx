@@ -28,7 +28,7 @@ const RoundScreen = () =>
 
     useEffect(() =>
     {
-        dispatch(showRounds())
+        dispatch(showRounds(id))
         dispatch((<AddIcon />))
     }, [])
 

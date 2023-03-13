@@ -45,7 +45,7 @@ export default function SideBar(props)
                     </ListItemText>
                 </ListItem>
                 <ListItem>
-                    <Link to={"/seasons/" + props.id + "/interviewstage"}>
+                    <Link to={"/seasons/" + props.id + "/interview/"}>
                         Interview Round
                     </Link>
                 </ListItem>

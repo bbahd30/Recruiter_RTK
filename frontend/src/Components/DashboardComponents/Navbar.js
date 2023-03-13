@@ -21,7 +21,7 @@ const Navbar = (props) =>
 
     return (
         <>
-            <AppBar position='static' sx={{ background: '#21b6ae' }}>
+            <AppBar position='static' sx={{ background: 'rgb(35 181 173)' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: "space-between" }}>
                     <div className='navSection' >
                         {
