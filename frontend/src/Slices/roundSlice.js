@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { rounds_api } from '../Links'
+import { rounds_api, seasons_api } from '../Links'
 
 export const getRoundData = createAsyncThunk('round/getRoundData', (id) =>
 {
@@ -20,11 +20,11 @@ export const getRoundData = createAsyncThunk('round/getRoundData', (id) =>
         })
 });
 
-export const showRounds = createAsyncThunk('round/showRounds', () =>
+export const showRounds = createAsyncThunk('round/showRounds', (season_id) =>
 {
     return axios
         .get(
-            `${rounds_api}`,
+            `${seasons_api}${season_id}/rounds`,
             {
                 withCredentials: true
             }

@@ -56,6 +56,24 @@ export const showSectionsWiseQuestions = createAsyncThunk('section/showSectionsW
         })
 })
 
+export const getSectionMarks = createAsyncThunk('section/getSectionMarks', () =>
+{
+    return axios
+        .get(
+            `${sections_api}`,
+            {
+                withCredentials: true
+            }
+        )
+        .then((response) =>
+        {
+            const payload = {
+                data: response.data
+            }
+            return payload
+        })
+})
+
 export const addSection = createAsyncThunk('section/addSection', (sectionData, { dispatch }) =>
 {
     return axios.post
@@ -137,6 +155,7 @@ const sectionSlice = createSlice
             weightage: "",
             round_id: 1,
             questions: {},
+            section_marks: {},
         },
         reducers:
         {
@@ -234,6 +253,20 @@ const sectionSlice = createSlice
                     state.questions[sectionId] = questionOfSection
                 })
                 .addCase(showSectionsWiseQuestions.rejected, (state, action) =>
+                {
+                    state.loading = false;
+                    state.error = action.error;
+                })
+                .addCase(getSectionMarks.pending, (state) =>
+                {
+                    state.loading = true;
+                })
+                .addCase(getSectionMarks.fulfilled, (state, action) =>
+                {
+                    state.loading = false;
+                    state.section_marks = action.payload['data']['section_total_scores_list']
+                })
+                .addCase(getSectionMarks.rejected, (state, action) =>
                 {
                     state.loading = false;
                     state.error = action.error;
