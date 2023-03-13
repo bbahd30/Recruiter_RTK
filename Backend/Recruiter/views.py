@@ -36,6 +36,32 @@ class RoundViewset(viewsets.ModelViewSet):
 class SectionViewset(viewsets.ModelViewSet):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
+
+    def get_section_scores(section_data, section_wise_marks_list):
+        # section_total_scores=[]
+        for section_id in section_data:
+            section_scores=0
+            questions = Question.objects.filter(section_id = section_id)
+            for question in questions:
+                section_scores += question.total_marks
+            section_wise_marks_list[section_id] = section_scores
+            # section_total_scores.append(section_scores)
+        return section_wise_marks_list
+
+    def list(self, request):
+        sections = Section.objects.all()
+        section_data = []
+        section_wise_marks_list = {}
+        for section in sections:
+            section_data.append(section.id)
+            section_wise_marks_list[section.id] = 0
+        section_wise_scores = SectionViewset.get_section_scores(section_data, section_wise_marks_list)
+        serializer = SectionWithRoundSerializer(sections,many=True)
+        response_data = {
+            'section_list': serializer.data,
+            'section_total_scores_list': section_wise_scores
+        }
+        return Response(response_data)
      
 class QuestionViewset(viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -46,8 +72,8 @@ class QuestionViewset(viewsets.ModelViewSet):
         score = Score.objects.create(
             question_id = Question.objects.last(),
             student_id = s_id,
-            marks_awarded = 0,
-            remarks = "",
+            scores_awarded = 0,
+            rescores = "",
             status = 0
         )
         score.save()
@@ -58,7 +84,7 @@ class QuestionViewset(viewsets.ModelViewSet):
         question = Question.objects.create(
             question_text = request.data.get('question_text'),
             ans = request.data.get('ans'),
-            total_marks = int(request.data.get('total_marks')),
+            total_scores = int(request.data.get('total_scores')),
             section_id = Section.objects.get(id=int(request.data.get('section_id')))
         )
         print("*************************************")

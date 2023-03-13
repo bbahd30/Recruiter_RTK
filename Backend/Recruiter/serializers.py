@@ -25,6 +25,11 @@ class SectionSerializer(serializers.ModelSerializer):
         model = Section
         fields = '__all__'
 
+class SectionWithRoundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = '__all__'
+
 class QuestionSerializer(serializers.ModelSerializer):
     assignee_id = MemberSerializer(many = True, read_only = True)
 
