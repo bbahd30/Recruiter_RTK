@@ -93,16 +93,18 @@ class Applicant(models.Model):
 
 class InterviewPanel(models.Model):
     status_choices = (
-        ("1", "Active"),
-        ("2", "Inactive")
+        ("ACTIVE", "Active"),
+        ("INACTIVE", "Inactive"),
+        ("UNASSIGNED", "Unassigned"),
     )
     # active, inactive, student late
     name = models.CharField(max_length=30)
-    status = models.CharField(max_length=12, choices=status_choices, default=2)
+    status = models.CharField(max_length=12, choices=status_choices, default='INACTIVE')
     members = models.ManyToManyField(Member)
     location = models.CharField(max_length=100)
     applicant_id = models.ManyToManyField(Applicant)
-
+    season_id = models.ForeignKey(Season, on_delete=CASCADE, default=1)
+    
     def __str__(self):
         return self.name
 
@@ -134,13 +136,29 @@ class Score(models.Model):
     question_id = models.ForeignKey(Question, on_delete = CASCADE)
     student_id = models.ForeignKey(Applicant, on_delete = CASCADE)
     marks_awarded = models.FloatField()
-    remarks = models.CharField(max_length=50)
+    remarks = models.CharField(max_length=1000)
     status_choices = (
-        ("0", "Not Evaluated"),
-        ("1", "Evaluated")
+        ("UNCHECKED", "Not Evaluated"),
+        ("CHECKED", "Evaluated")
     )
-    status = models.CharField(max_length=33, choices=status_choices, default=0)        # checked or not
+    status = models.CharField(max_length=33, choices=status_choices, default="UNCHECKED")        # checked or not
     
     # def __str__(self):
     #     return self.objects.select_related(Question).filter(id = self.question_id)
     
+class ApplicantStatus(models.Model):
+
+    status_choice = (
+        ("INFORMED", "Informed"),
+        ("NOTINFORMED", "Not Informed"),
+        ("SELECTED", "Selected"),
+        ("WAITING", "Waiting"),
+        ("INTERVIEW", "Interview")
+    )
+    applicant_id = models.ForeignKey(Applicant, on_delete=CASCADE)
+    interview_panel = models.ForeignKey(InterviewPanel, on_delete=CASCADE, null=True, blank=True)
+    date=models.DateField(null=True)
+    time=models.TimeField(null=True)
+    total_marks=models.IntegerField(null=True, blank=True)
+    status_id = models.ForeignKey(Round, on_delete=CASCADE)
+    status = models.CharField(max_length=20, choices=status_choice, default="NOTINFORMED")
