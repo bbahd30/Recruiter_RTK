@@ -9,7 +9,6 @@ const Login = () =>
     const navigate = useNavigate();
     useEffect(() =>
     {
-        console.log("*************************************")
         let params = new URLSearchParams(window.location.search);
         let auth_code = params.get("code");
 
@@ -29,7 +28,6 @@ const Login = () =>
                     {
                         setStatus({ "status": "loggedIn" })
                         navigate(`/seasons`);
-                        console.log("towards seasons")
                     }
                     else
                     {

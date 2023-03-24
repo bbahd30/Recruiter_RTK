@@ -6,7 +6,6 @@ const dialogBoxSlice = createSlice({
         open: false,
         title: '',
         dataChild: null,
-        buttonChild: '',
     },
     reducers: {
         setOpen: (state, action) =>
@@ -21,12 +20,8 @@ const dialogBoxSlice = createSlice({
         {
             state.dataChild = action.payload;
         },
-        setButtonChild: (state, action) =>
-        {
-            state.buttonChild = action.payload;
-        },
     },
 });
 
 export default dialogBoxSlice.reducer;
-export const { setOpen, setTitle, setDataChild, setButtonChild } = dialogBoxSlice.actions;
+export const { setOpen, setTitle, setDataChild, } = dialogBoxSlice.actions;

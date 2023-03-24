@@ -12,7 +12,6 @@ const LoginStatus = () =>
 
     useEffect(() =>
     {
-        console.log("called status checking");
         axios
             .create({
                 withCredentials: true

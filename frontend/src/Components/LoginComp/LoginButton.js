@@ -28,7 +28,6 @@ const LoginButton = () =>
             {
                 if (res.data.status === 'alreadyLoggedIn')
                 {
-                    console.log("han")
                     navigate("/seasons/");
 
                 }
@@ -57,7 +56,7 @@ const LoginButton = () =>
                                 <a href={Links.authorize} style={{ textDecoration: "none" }}>
                                     <Button style={{
                                         borderRadius: 35,
-                                        backgroundColor: "#21b6ae",
+                                        backgroundColor: "rgb(33 182 174)",
                                         padding: "18px 36px",
                                         fontSize: "18px"
                                     }} variant="contained">

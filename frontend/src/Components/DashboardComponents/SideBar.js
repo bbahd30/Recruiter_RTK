@@ -11,16 +11,19 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Navbar from './Navbar';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function SideBar(props)
 {
+    const navigate = useNavigate()
     const [state, setState] = useState(false);
     const toggleDrawer = (open) => (event) =>
     {
         setState(open);
     };
+
+    const seasonId = useParams()['id']
 
     const list = (anchor) => (
         <Box
@@ -30,19 +33,19 @@ export default function SideBar(props)
         >
             <List>
                 <ListItem>
-                    <Link to={"/seasons/" + props.id}>
+                    <Link to={"/seasons/" + seasonId + "/applicants"}>
                         Dashboard
                     </Link>
                 </ListItem>
                 <ListItem>
                     <ListItemText>
-                        <Link to={"/seasons/" + props.id + "/rtstage"}>
+                        <Link to={"/seasons/" + props.id}>
                             Rounds and Tests
                         </Link>
                     </ListItemText>
                 </ListItem>
                 <ListItem>
-                    <Link to={"/seasons/" + props.id + "/interviewstage"}>
+                    <Link to={"/seasons/" + props.id + "/interview/"}>
                         Interview Round
                     </Link>
                 </ListItem>
