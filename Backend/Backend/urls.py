@@ -81,8 +81,11 @@ urlpatterns = [
 #          'get':'get_data'
 #     })),
 
+     # tells the total marks for the section and status === which round has reached
+     re_path(r'^statusSectionMarks/(?P<applicant_id>[0-9]+)/(?P<season_id>[0-9]+)/$', StatusAndSectionMarks.as_view()),
 
-    re_path(r'^sectionWiseMarks/(?P<applicant_id>[0-9]+)/(?P<season_id>[0-9]+)/$', StatusAndSectionMarks.as_view()),
+     # gives the question information, of all the required sections, similar to previous modal handling but has the status and score combined here, needed and important to secure, shows only those whose status has been set
+     re_path(r'^questionInfoSectionWise/(?P<applicant_id>[0-9]+)/(?P<round_id>[0-9]+)/$', QuestionInfoSectionWise.as_view()),
 
      re_path('applicantStatus/', ApplicantStatusViewset.as_view({
           'get': 'list'

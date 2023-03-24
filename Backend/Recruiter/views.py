@@ -12,18 +12,19 @@ from django.contrib.auth import login, logout
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 from .csv_view import *
+from rest_framework.views import APIView
 
 class ScoreFunctions:
 
     def get_section_scores(section_data):
         section_total_scores=[]
+        print("\n\n\n*********")
         print(section_data)
         for section_id in section_data['section_list']:
             section_scores=0
-            print("``````````")
             print(section_id)
             questions = Question.objects.filter(section_id = section_id)
-            print(questions)
+            # print(questions)
             for question in questions:
                 section_scores += question.total_marks
             # section_wise_marks_list[section_id] = section_scores
@@ -49,23 +50,62 @@ class ScoreFunctions:
     
     def get_question_info(section_data):
 
-        section_marks = []
-        score_data = Score.objects.filter(student_id = section_data['applicant_id'], question_id__section_id = section_data['section_id'])
+        section_marks = {}
+        score_data = []
+        # given round_id need to get all its section ids
+        # section_ids = SectionSerializer(Section.objects.filter(round_id = section_data['round_id']), many=True)
+        section_ids = Section.objects.filter(round_id=section_data['round_id']).values_list('id', flat=True)
+        print(section_ids)
+        score_data = Score.objects.filter(student_id=section_data['applicant_id'], question_id__section_id__in=section_ids)
+        print(score_data)
 
+        # section_ids = Section.objects.filter(round_id=section_data['round_id'])
+        # serializer = SectionSerializer(section_ids, many=True)
+        # print(serializer.data)
+        # score_data = Score.objects.filter(student_id = section_data['applicant_id'], question_id__section_id = section_data['section_id'])
+
+        # if section_data['section_id'] is not None and section_data['section_id']!='':
+        #     score_data = Score.objects.filter(student_id = section_data['applicant_id'], question_id__section_id = section_data['section_id'])
+        # if section_data['question_id_list'] is not None and section_data['question_id_list']!='':
+        #     score_data = Score.objects.filter(aplicant_id=section_data['aplicant_id'], question_id__in=section_data['question_id_list'])
+
+        # for score_instance in score_data:
+        #     id = score_instance.id
+        #     score = score_instance.marks_awarded
+        #     remarks = score_instance.remarks
+        #     status = score_instance.status
+        #     question = Question.objects.get(id = score_instance.question_id.id)
+
+        #     question_data = QuestionSerializer(question)  
+            
+        #     assignees = []
+        #     for member in question.assignee_id.prefetch_related('id').values('id', 'name', 'academic_year', 'username'):
+
+        #         member_data = MemberSerializer(member)
+        #         assignees.append(member_data.data)
+
+        #     response = {
+        #         'id': id,
+        #         'question': question_data.data,
+        #         'score': score,
+        #         'remarks': remarks,
+        #         'status': status,
+        #     }
+        #     section_marks.append(response)
+        section_marks = {}
         for score_instance in score_data:
             id = score_instance.id
-            score = score_instance.score
+            score = score_instance.marks_awarded
             remarks = score_instance.remarks
             status = score_instance.status
-            question = Question.objects.get(id = score_instance.question_id.id)
+            question = score_instance.question_id
+            section_id = question.section_id.id
 
-            question_data = QuestionSerializer(question)  
-            
+            question_data = QuestionSerializer(question)
             assignees = []
-            for member in question.assignees:
+            for member in question.assignee_id.prefetch_related('id').values('id', 'name', 'academic_year', 'username'):
                 member_data = MemberSerializer(member)
                 assignees.append(member_data.data)
-            print(assignees)
 
             response = {
                 'id': id,
@@ -73,11 +113,18 @@ class ScoreFunctions:
                 'score': score,
                 'remarks': remarks,
                 'status': status,
-                'assignee': assignees
             }
-            section_marks.append(response)
-        return section_marks
-    
+
+            # Add the response to the section's array of responses
+            if section_id in section_marks:
+                section_marks[section_id].append(response)
+            else:
+                section_marks[section_id] = [response]
+
+        round_key_sections_data = {}
+        round_key_sections_data[section_data['round_id']] = section_marks
+        # section_marks[section_data['round_id']] = response
+        return round_key_sections_data
 
 class MemberViewset(viewsets.ModelViewSet):
     queryset = Member.objects.all()
@@ -241,13 +288,9 @@ class StatusAndSectionMarks(generics.CreateAPIView):
             try:
                 applicant_round = ApplicantStatus.objects.get(applicant_id = applicant_id, status_id=round.id)
             except ObjectDoesNotExist:
-                print("^^^^^^^")
                 pass
             else:
-                print("******888")
                 applicant_round_serializer = ApplicantStatusSerializer(applicant_round)
-                print(applicant_round_serializer.data)
-                print("*******")
                 round_total_marks = ScoreFunctions.get_applicant_total_marks({
                     'applicant_id': applicant_id,
                     'round_id': round.id
@@ -256,6 +299,25 @@ class StatusAndSectionMarks(generics.CreateAPIView):
                 response_data[round.id]['status'] = applicant_round_serializer.data
 
                 response_data[round.id]['total_score'] = round_total_marks[applicant_id]
+
+                # round_info.append([applicant_round_serializer.data, round_total_marks[applicant_id]])
+
+                # sections = Section.objects.filter(round_id=round.id)
+
+                # applicant_section_data = {
+                #     'applicant_id': applicant_id,
+                #     'section_list': [section.id for section in sections]
+                # }
+                # applicant_section_wise_marks = ScoreFunctions.get_section_scores(applicant_section_data)
+                # print("^^^^^^^^^^^")
+
+                # index=0
+                # for section in sections:
+                #     round_info.append([section.section_name, applicant_section_wise_marks[index]])
+                #     index+=1
+                # print("^^^^^^^^^^^")
+                # response_data[round.id] = round_info
+
         return Response(response_data)
 
     def post(self, request):
@@ -278,8 +340,23 @@ class StatusAndSectionMarks(generics.CreateAPIView):
 
         return Response(response_data)
 
-# class Section
+class QuestionInfoSectionWise(APIView):
 
+    def get(self, request, **kwargs):
+        data = {
+            'applicant_id': kwargs.get('applicant_id'),
+            'round_id': kwargs.get('round_id'),
+            'question_id_list': kwargs.get('question_id')
+        }
+        return Response(ScoreFunctions.get_question_info(data))
+
+    # def post(self, request):
+    #     section_total_marks = get_interview_candidate_all_section_total_marks(request.data)
+    #     response_data = {
+    #         'status':'success',
+    #         'data':section_total_marks
+    #     }
+    #     return Response(response_data)
 
 class RoundWiseSectionViewset(viewsets.ModelViewSet):
     queryset = Round.objects.all()
