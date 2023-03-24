@@ -185,9 +185,8 @@ class QuestionViewset(viewsets.ModelViewSet):
         score = Score.objects.create(
             question_id = Question.objects.last(),
             student_id = s_id,
-            scores_awarded = 0,
-            rescores = "",
-            status = 0
+            marks_awarded = 0,
+            remarks = "",
         )
         score.save()
         print("saved")
@@ -197,7 +196,7 @@ class QuestionViewset(viewsets.ModelViewSet):
         question = Question.objects.create(
             question_text = request.data.get('question_text'),
             ans = request.data.get('ans'),
-            total_scores = int(request.data.get('total_scores')),
+            total_marks = int(request.data.get('total_marks')),
             section_id = Section.objects.get(id=int(request.data.get('section_id')))
         )
         print("*************************************")
@@ -213,9 +212,20 @@ class QuestionViewset(viewsets.ModelViewSet):
         for applicant in applicants:
             print('calling applicants')
             QuestionViewset.create_score(applicant)
-
-
         return Response("post")
+    
+    def update(self, request, pk=None, **kwargs):
+
+        print(request.data)
+        question = self.get_object()
+        question.question_text = request.data.get('question_text')
+        question.ans = request.data.get('ans')
+        question.total_marks = int(request.data.get('total_marks'))
+        question.section_id = Section.objects.get(id=int(request.data.get('section_id')))
+        question.assignee_id.set(request.data.get('assigneeId'))
+        question.save()
+        return Response("patch")
+
 
 class QuestionViewsetNoMemberData(viewsets.ModelViewSet):
     queryset = Question.objects.all()

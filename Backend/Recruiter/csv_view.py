@@ -7,6 +7,7 @@ from .models import Applicant, Season
 from rest_framework import status
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from Recruiter.models import Question, Score
 
 class UploadCSV(generics.CreateAPIView):
     serializer_class = CSVUploadSerializer
@@ -35,6 +36,22 @@ class UploadCSV(generics.CreateAPIView):
                                 status_id = 1
                                )
                 new_applicant.season_id.add(Season.objects.get(id=int(season_id)))
+
+                questions = Question.objects.filter(section_id__round_id__season_id = int(season_id))
+                print(questions)
+
+                for question in questions:
+                    question_obj = Question.objects.get(id=question.id)
+                    applicant_obj = Applicant.objects.last()
+                    if not Score.objects.filter(question_id=question_obj, student_id=applicant_obj).exists():
+                        score = Score.objects.create(
+                            question_id=question_obj,
+                            student_id=applicant_obj,
+                            marks_awarded=0,
+                            remarks="",
+                        )
+                        score.save()
+
             else:
                 applicant.name = row['Name']
                 applicant.academic_year = row['Academic Year']

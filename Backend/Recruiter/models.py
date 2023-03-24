@@ -32,6 +32,7 @@ class Round(models.Model):
     '''
         Used for creating various rounds, interview or test and linked using season id
     '''
+    id = models.AutoField(primary_key=True)
     round_choices = (
         ("t", "Test"),
         ("int", "Interview"),
@@ -39,7 +40,7 @@ class Round(models.Model):
     round_name = models.CharField(max_length=100)
     round_type = models.CharField(max_length=20, choices=round_choices, default="int")
     # can this be a foreign key?
-    season_id = models.ForeignKey(Season, on_delete = CASCADE, default= 1)
+    season_id = models.ForeignKey(Season, on_delete = CASCADE)
 
     def __str__(self):
         return self.round_name 
@@ -83,7 +84,7 @@ class Applicant(models.Model):
     project = models.BooleanField(default=False)
     project_link = models.CharField(max_length=500, null=True, blank=True)
     cg = models.IntegerField(blank=True, null=True)
-    status = models.ForeignKey(Round, on_delete=CASCADE)        # at which round the student has reached
+    status = models.ForeignKey(Round, on_delete=models.SET_NULL, null=True)        # at which round the student has reached
     phone_no = models.BigIntegerField(blank= True, null = True)
     # converted season_id to foreign key
     # season_id = models.ForeignKey(Season, on_delete = CASCADE)
@@ -145,7 +146,8 @@ class Score(models.Model):
     
     # def __str__(self):
     #     return self.objects.select_related(Question).filter(id = self.question_id)
-    
+    def __str__(self):
+        return str(self.student_id.name) + " "+str(self.question_id.question_text)
 class ApplicantStatus(models.Model):
 
     status_choice = (
