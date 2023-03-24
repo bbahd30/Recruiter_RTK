@@ -52,6 +52,7 @@ export const addQuestion = createAsyncThunk('question/addQuestion', (questionDat
 
 export const editQuestion = createAsyncThunk('question/editQuestion', (questionData, { dispatch }) =>
 {
+    console.log(questionData)
     return axios
         .patch(
             `${questions_api}${questionData['questionId']}/`,
@@ -67,7 +68,9 @@ export const editQuestion = createAsyncThunk('question/editQuestion', (questionD
             })
         .then((response) =>
         {
-            dispatch(showQuestions(questionData['question_id']))
+            // dispatch(showQuestions(questionData['question_id']))
+            dispatch(showSectionsWiseQuestions(questionData['section_id']))
+            console.log(response.data)
             return response.data
         })
         .catch((error) =>

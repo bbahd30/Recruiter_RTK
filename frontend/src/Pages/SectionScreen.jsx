@@ -138,7 +138,7 @@ const SectionScreen = () =>
                                                             <AccordionSummary>
                                                                 <div className='questionAcc' style={{marginRight: '10px'}}>
                                                                     <div>
-                                                                        {question.question_text} {question.id}
+                                                                        {question.question_text} 
                                                                     </div>
                                                                     <div id='questionMarks'>
                                                                         <div>

@@ -42,7 +42,11 @@ const QuestionForm = (props) =>
             setQuestionText(toBeEditQuestionData['question_text'])
             setTotalMarks(toBeEditQuestionData['total_marks'])
             setAns(toBeEditQuestionData['ans'])
-            setAssigneeId(toBeEditQuestionData['assigneeId'])
+            let assigneeIds = []
+            toBeEditQuestionData['assigneeId'].map((assignee) => (
+                assigneeIds.push(assignee.id)
+            ))
+            setAssigneeId(assigneeIds)
         }
     }, [toBeEditQuestionData])
 
@@ -59,6 +63,7 @@ const QuestionForm = (props) =>
 
     const handleAssigneeId = (event) =>
     {
+        console.log(event.target.value)
         setAssigneeId(event.target.value);
     };
 
@@ -66,6 +71,7 @@ const QuestionForm = (props) =>
     {
         if (type === 'add')
         {
+            console.log(assigneeId)
             dispatch(
                 addQuestion({
                     section_id: props.sectionId,
@@ -79,12 +85,15 @@ const QuestionForm = (props) =>
             dispatch(setOpen(false))
         } else
         {
+            console.log("edit")
             dispatch(
                 editQuestion({
                     section_id: props.sectionId,
                     questionId: formState.formId,
-                    question_name: questionText,
+                    question_text: questionText,
                     total_marks: totalMarks,
+                    assigneeId: assigneeId,
+                    ans: ans
                 })
             )
             dispatch(setOpen(false))
@@ -103,10 +112,8 @@ const QuestionForm = (props) =>
         {
             dispatch(getQuestionsData(props.questionId))
         }
-        console.log(trackerState.membersDispatched)
         if (!trackerState.membersDispatched && !trackerState.isLoading)
         {
-            console.log("&&&&&&&&&&&")
             dispatch(setLoading(true));
             dispatch(setMembersDispatched())
             dispatch(showMembers())
@@ -184,7 +191,6 @@ const QuestionForm = (props) =>
                     label="Solution"
                     placeholder='Enter Solution'
                     variant="outlined"
-                    fullWidth
                     onChange={handleAnsChange}
                     name="ans"
                     value={ans}

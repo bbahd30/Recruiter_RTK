@@ -86,10 +86,10 @@ const ApplicantCard = () =>
                                        showSectionMarksFor(round.id)
                                     }}
                                 >
-                                <Typography variant="subtitle1">{round.round_name}</Typography>
-                                <Typography variant="body2">
-                                    {round.round_type === 't' ? 'Test' : 'Interview'}
-                                </Typography>
+                                    <Typography variant="subtitle1">{round.round_name}</Typography>
+                                    <Typography variant="body2">
+                                        {round.round_type === 't' ? 'Test' : 'Interview'}
+                                    </Typography>
                                 </Box>
                             ))}
                             </Stack>
@@ -110,33 +110,32 @@ const ApplicantCard = () =>
                                         >
                                             {Object.entries(filteredSectionWiseData).map(([key, value]) => 
                                             {
-                                                return value.map((questionData, key) =>
-                                                { 
-                                                    return(
-                                                    <>
-                                                        <h4>{questionData.status}</h4> 
-                                                        <Typography variant="h5">
-                                                            Question:
-                                                            {questionData.question.question_text}
-                                                            {questionData.question.total_marks}
-                                                            {questionData.question.assignee_id.map((assignee) => (
-                                                                <Typography variant="h6">
-                                                                   { assignee.name}
+                                                return (
+                                                    <div key={key}>
+                                                        {value.map((questionData, key) =>
+                                                        { 
+                                                            return(
+                                                            <div key={key}>
+                                                                <Typography variant='h5'>{questionData.status}</Typography> 
+                                                                <Typography variant="body">
+                                                                    {questionData.question.question_text}
+                                                                    {questionData.question.total_marks}
+                                                                    {questionData.question.assignee_id.map((assignee, key) => (
+                                                                        <Typography variant="subtitle1" key={key}>
+                                                                        { assignee.name}
+                                                                        </Typography>
+                                                                    ))}
                                                                 </Typography>
-                                                            ))}
-                                                        </Typography>
-                                                        <Typography variant="subtitle1" sx={{ marginTop: '8px' }}>
-                                                        Details:
-                                                        </Typography>
-                                                            <Typography variant="body1">
-                                                                    <>
-                                                                        <h3>{questionData.score}</h3>
-                                                                <h4>{questionData.remarks}</h4>                                                                 
-                                                                    </>
-                                                        </Typography>
-                                                        <hr/>
-                                                        </>
-                                                )})
+                                                                <Typography variant="subtitle2" sx={{ marginTop: '8px' }}>
+                                                                Details:
+                                                                </Typography>
+                                                                    <h3>{questionData.score}</h3>
+                                                                    <h4>{questionData.remarks}</h4>  
+                                                                <hr/>
+                                                            </div>
+                                                        )})}
+                                                    </div>
+                                                )
                                             })}
                                     </Box>
                                     )}
