@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { seasons_api, status_section_marks } from "../Links";
+import { question_info, question_info_section_wise, seasons_api, status_section_marks } from "../Links";
 
 export const showApplicants = createAsyncThunk('applicant/showApplicants', (id) =>
 {
@@ -27,13 +27,65 @@ export const showApplicants = createAsyncThunk('applicant/showApplicants', (id) 
 
 })
 
-export const getStatusAndSectionMarks = createAsyncThunk('applicant/getStatusAndSectionMarks', (data, { dispatch }) =>
+export const getStatusAndSectionMarks = createAsyncThunk('applicant/getStatusAndSectionMarks', (data) =>
 {
     const applicantsApi = `${status_section_marks}${data['applicant_id']}/${data['season_id']}/`;
     return axios
         .get
         (
             applicantsApi,
+            {
+                withCredentials: true,
+            }
+        )
+        .then((response) =>
+        {
+            const payload = {
+                data: response.data,
+            };
+            console.log(payload)
+            return payload;
+        })
+        .catch((error) =>
+        {
+            alert(error.message);
+        })
+
+})
+
+export const getApplicantSectionMarks = createAsyncThunk('applicant/getApplicantSectionMarks', (data) =>
+{
+    const applicantsApi = `${status_section_marks}${data['applicant_id']}/${data['season_id']}/`;
+    return axios
+        .get
+        (
+            applicantsApi,
+            {
+                withCredentials: true,
+            }
+        )
+        .then((response) =>
+        {
+            const payload = {
+                data: response.data,
+            };
+            console.log(payload)
+            return payload;
+        })
+        .catch((error) =>
+        {
+            alert(error.message);
+        })
+
+})
+
+export const getQuestionMarksAwarded = createAsyncThunk('applicant/getQuestionMarksAwarded', (data) =>
+{
+    const api = `${question_info_section_wise}${data['applicant_id']}/${data['round_id']}/`;
+    return axios
+        .get
+        (
+            api,
             {
                 withCredentials: true,
             }
@@ -64,10 +116,13 @@ const applicantSlice = createSlice(
             roundStatus: {},
             questionList: [],
             statusSectionMarks: {},
+            question_info_section_wise: [],
             section_id: 0,
             error: '',
             id: 0,
-
+            pageSize: 5,
+            movingMode: false,
+            selectedApplicants: []
         },
         reducers: {
             setOpenModal: (state, action) =>
@@ -82,7 +137,19 @@ const applicantSlice = createSlice(
             setApplicantId: (state, action) =>
             {
                 state.id = action.payload['id']
-            }
+            },
+            setSelectedApplicants: (state, action) =>
+            {
+                state.selectedApplicants = action.payload['applicants'];
+            },
+            changeMovingMode: (state) =>
+            {
+                state.movingMode = !state.movingMode;
+            },
+            setPageSize: (state, action) =>
+            {
+                state.pageSize = action.payload;
+            },
         },
         extraReducers: (builder) =>
         {
@@ -117,9 +184,25 @@ const applicantSlice = createSlice(
                     state.error = action.error.message
                     state.statusSectionMarks = {}
                 })
+                .addCase(getQuestionMarksAwarded.pending, (state) =>
+                {
+                    state.loading = true
+                })
+                .addCase(getQuestionMarksAwarded.fulfilled, (state, action) =>
+                {
+                    state.loading = false
+                    state.error = ''
+                    state.question_info_section_wise = [...state.question_info_section_wise, action.payload['data']]
+                })
+                .addCase(getQuestionMarksAwarded.rejected, (state, action) =>
+                {
+                    state.loading = false
+                    state.error = action.error.message
+                    state.question_info_section_wise = {}
+                })
         }
     }
 )
 
 export default applicantSlice.reducer
-export const { setOpenModal, setApplicantDetails, setApplicantId } = applicantSlice.actions 
+export const { setOpenModal, setApplicantDetails, setApplicantId, changeMovingMode, setSelectedApplicants, setPageSize } = applicantSlice.actions 

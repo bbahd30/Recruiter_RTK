@@ -11,3 +11,5 @@ export const questions_api = `${localhost}questions/`
 export const questions_member_api = `${localhost}questionswithmembers/`
 export const csv_upload_api = `${localhost}upload/`
 export const status_section_marks = `${localhost}statusSectionMarks/`
+export const question_info_section_wise = `${localhost}questionInfoSectionWise/`
+

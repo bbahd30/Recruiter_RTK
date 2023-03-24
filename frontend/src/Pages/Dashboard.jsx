@@ -16,7 +16,7 @@ import ApplicantCard from '../Components/ApplicantComponents/ApplicantCard';
 
 import { setDataChild, setOpen } from '../Slices/dialogBoxSlice';
 import { getSeasonData } from '../Slices/seasonSlice';
-import { setApplicantDetails, setApplicantId, setOpenModal, showApplicants } from '../Slices/applicantSlice';
+import { setApplicantDetails, setApplicantId, setOpenModal, setPageSize, setSelectedApplicants, showApplicants, changeMovingMode, getQuestionMarksAwarded } from '../Slices/applicantSlice';
 import { getSectionMarks, showSections } from '../Slices/sectionSlice';
 import { showRounds } from '../Slices/roundSlice';
 import { getStatusAndSectionMarks } from '../Slices/applicantSlice';
@@ -96,7 +96,7 @@ function Dashboard(props)
 
     // object fn in the filter function filterfn which has a function
     const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
-    const [pageSize, setPageSize] = React.useState(5);
+    // const [pageSize, setPageSize] = React.useState(5);
 
 
     const ImportCSV = () =>
@@ -125,12 +125,20 @@ function Dashboard(props)
             'season_id': seasonId,
         }))
     }
-        
+
     useEffect(() =>
     {
-        roundState.rounds.map((round) => (
-            dispatch(showSections(round.id))
-        ))
+        roundState.rounds.map((round) => {
+            dispatch(showSections(round.id));
+            if (applicantState.openModal)
+            {
+                dispatch(getQuestionMarksAwarded({
+                'applicant_id': applicantState.selectedApplicants[0],
+                'round_id': round.id
+            }));
+            }
+        });
+        console.log("********8")
     }, [roundState.rounds])
 
     useEffect(() =>
@@ -168,18 +176,28 @@ function Dashboard(props)
                                 rows={applicantState.applicantList}
                                 columns={columns}
                                 pagination
-                                pageSize={pageSize}
-                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                checkboxSelection
+                                pageSize={applicantState.pageSize}
+                                onPageSizeChange={(newPageSize) => {dispatch(setPageSize(newPageSize))}}
+                                checkboxSelection={applicantState.movingMode}
+                                    onSelectionModelChange={(selection) =>
+                                    {
+                                        dispatch(setSelectedApplicants({ 'applicants': selection }))
+                                        console.log("*******")
+                                        console.log(selection)
+                                    }}
+                                    
                                 rowsPerPageOptions={[5, 10, 15]}
                                 autoHeight
                                 onRowClick={(params) => { openModal(params) }} 
                                 />
+                                <button onClick={() => dispatch(changeMovingMode())}>
+                                    {applicantState.movingMode ? 'Cancel Select Multiple' : 'Select Multiple'}
+                                </button>
+                                <ApplicantCard selectedApplicants={applicantState.selectedApplicants} />
                                 <ApplicantCard/>
                         </div>
 
                     </div>
-                        {/* {applicantModal} */}
                     </>
                 }
             </Box>

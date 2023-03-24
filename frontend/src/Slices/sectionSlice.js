@@ -32,8 +32,10 @@ export const showSections = createAsyncThunk('section/showSections', (roundId) =
         .then((response) =>
         {
             const payload = {
-                data: response.data
+                data: response.data,
+                round_id: roundId
             }
+            console.log(payload)
             return payload
         })
 })
@@ -52,6 +54,7 @@ export const showSectionsWiseQuestions = createAsyncThunk('section/showSectionsW
             const payload = {
                 data: response.data
             }
+            console.log(payload['data'])
             return payload
         })
 })
@@ -156,6 +159,7 @@ const sectionSlice = createSlice
             round_id: 1,
             questions: {},
             section_marks: {},
+            section_list: {},
         },
         reducers:
         {
@@ -265,6 +269,8 @@ const sectionSlice = createSlice
                 {
                     state.loading = false;
                     state.section_marks = action.payload['data']['section_total_scores_list']
+                    state.section_list = action.payload['data']['section_list']
+                    // state.sections = action.payload['data']//todo:
                 })
                 .addCase(getSectionMarks.rejected, (state, action) =>
                 {

@@ -16,7 +16,7 @@ export const getRoundData = createAsyncThunk('round/getRoundData', (id) =>
             const payload = {
                 data: response.data,
             }
-            return response;
+            return payload;
         })
 });
 

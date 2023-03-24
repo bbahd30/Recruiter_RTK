@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import applicantSlice, { getStatusAndSectionMarks, setOpenModal } from '../../Slices/applicantSlice'
 import Navbar from '../DashboardComponents/Navbar';
 import { useParams } from 'react-router-dom';
+import { showSections } from '../../Slices/sectionSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 return <Slide direction="up" ref={ref} {...props} />;
@@ -20,7 +21,10 @@ const ApplicantCard = () =>
     const dispatch = useDispatch();
     const applicantState = useSelector((state) => state.applicant)
     const roundState = useSelector((state) => state.round)
+    const sectionState = useSelector((state) => state.section)
+    const question_info_section_wise = applicantState.question_info_section_wise
 
+    const [filteredSectionWiseData, setFilteredSectionWiseData] = useState({}) 
     const season_id = useParams()['id']
     const applicant = applicantState.applicantDetails
 
@@ -30,10 +34,21 @@ const ApplicantCard = () =>
         console.log(roundState)
     };
 
-    const showSectionMarksFor = () =>
+    const showSectionMarksFor = (roundId) =>
     {
-        
+        if (selectedRound === roundId)
+            setSelectedRound(null);
+        else
+            setSelectedRound(roundId);
+        setFilteredSectionWiseData(question_info_section_wise.filter(obj => Object.keys(obj)[0] == roundId)[0][roundId])
     }
+
+    // useEffect(() =>
+    // {
+    //     if (sectionState.sections.len === 0)
+    //     {
+    //     }
+    // }, [])
 
     return (
         <Dialog
@@ -68,11 +83,7 @@ const ApplicantCard = () =>
                                       cursor: 'pointer',
                                     }}
                                      onClick={() => {
-                                      if (selectedRound === round.id) {
-                                        setSelectedRound(null);
-                                      } else {
-                                        setSelectedRound(round.id);
-                                      }
+                                       showSectionMarksFor(round.id)
                                     }}
                                 >
                                 <Typography variant="subtitle1">{round.round_name}</Typography>
@@ -86,7 +97,6 @@ const ApplicantCard = () =>
                         <Box sx={{ flexGrow: 1, padding: '2rem' }}>
                           {
                             <Stack spacing={3}>
-
                                 <Box sx={{ flexGrow: 1 }}>
                                     {selectedRound !== null && (
                                     <Box
@@ -97,18 +107,37 @@ const ApplicantCard = () =>
                                         backgroundColor: '#f9f9f9',
                                         height: '100%',
                                         }}
-                                    >
-                                        <Typography variant="h6">
-                                            {selectedRound}
-                                        {/* {rounds[selectedRound].round_name} */}
-                                        </Typography>
-                                        <Typography variant="subtitle1" sx={{ marginTop: '8px' }}>
-                                        Details:
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            jflsj
-                                        {/* {rounds[selectedRound].details} */}
-                                        </Typography>
+                                        >
+                                            {Object.entries(filteredSectionWiseData).map(([key, value]) => 
+                                            {
+                                                return value.map((questionData, key) =>
+                                                { 
+                                                    return(
+                                                    <>
+                                                        <h4>{questionData.status}</h4> 
+                                                        <Typography variant="h5">
+                                                            Question:
+                                                            {questionData.question.question_text}
+                                                            {questionData.question.total_marks}
+                                                            {questionData.question.assignee_id.map((assignee) => (
+                                                                <Typography variant="h6">
+                                                                   { assignee.name}
+                                                                </Typography>
+                                                            ))}
+                                                        </Typography>
+                                                        <Typography variant="subtitle1" sx={{ marginTop: '8px' }}>
+                                                        Details:
+                                                        </Typography>
+                                                            <Typography variant="body1">
+                                                                    <>
+                                                                        <h3>{questionData.score}</h3>
+                                                                <h4>{questionData.remarks}</h4>                                                                 
+                                                                    </>
+                                                        </Typography>
+                                                        <hr/>
+                                                        </>
+                                                )})
+                                            })}
                                     </Box>
                                     )}
                                 </Box>
